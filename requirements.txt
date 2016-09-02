@@ -1,1 +1,3 @@
-six
+nose==1.3.7
+coverage=3.6
+six==1.9.0
