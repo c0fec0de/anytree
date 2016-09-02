@@ -29,7 +29,7 @@ Node('Udo/Dan/Joe')
 Tree
 ~~~~
 
->>> for pre, node in RenderTree(udo):
+>>> for pre, fill, node in RenderTree(udo):
 ...     print("%s%s" % (pre, node.name))
 Udo
 ├── Marc
