@@ -1,0 +1,24 @@
+{
+    "folders":
+    [
+        {
+            "path": "."
+        }
+    ],
+    "settings":
+    {
+        "tab_size": 4,
+        "translate_tabs_to_spaces": true,
+        "use_tab_stops": false,
+        "trim_trailing_white_space_on_save": true,
+        "rulers": [79],
+        "ensure_newline_at_eof_on_save": true,
+    },
+    "build_systems":
+    [
+        {
+            "name": "make all",
+            "shell_cmd": "cd $project_path && make all"
+        }
+    ]
+}
