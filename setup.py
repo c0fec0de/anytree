@@ -15,7 +15,7 @@ config = {
     'author_email': 'c0fec0de@gmail.com',
     'description': "Python Tree Data.",
     'url': "http://anytree.readthedocs.io",
-    'license': 'GPL',
+    'license': 'Apache 2.0',
     'classifiers': [
         'Development Status :: 3 - Alpha',
         'Programming Language :: Python :: 2',
