@@ -1,7 +1,10 @@
+***************
 Getting started
-===============
+***************
 
 .. _getting_started:
+
+Usage is simple.
 
 Construction
 ~~~~~~~~~~~~
@@ -84,8 +87,9 @@ Node('Dan')
 
 .. _Tree: https://en.wikipedia.org/wiki/Tree_(data_structure)
 
+************
 Installation
-============
+************
 
 To install the `anytree` module run:
 
