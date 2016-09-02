@@ -8,8 +8,13 @@ python:
   - "3.5"
 
 install:
-  - "pip install -r requirements.txt"
   - "python setup.py install"
+  - "pip install nose==1.3.7"
+  - "pip install coverage==3.6"
+  - "pip install coveralls"
 
 script:
   - nosetests
+
+after_success:
+  coveralls
