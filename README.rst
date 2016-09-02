@@ -1,3 +1,16 @@
+.. image:: https://badge.fury.io/py/anytree.svg
+    :target: https://badge.fury.io/py/anytree
+
+.. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
+    :target: https://travis-ci.org/c0fec0de/anytree
+
+.. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
+    :target: https://coveralls.io/github/c0fec0de/anytree
+
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=latest
+    :target: http://anytree.readthedocs.io/en/latest/?badge=latest
+
+
 ***************
 Getting started
 ***************
