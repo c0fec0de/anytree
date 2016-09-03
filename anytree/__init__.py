@@ -406,14 +406,11 @@ class PreOrderIter(object):
         self.node = node
 
     def __iter__(self):
-        return self.__next([self.node])
-
-    @classmethod
-    def __next(cls, children):
-        for child in children:
-            yield child
-            for grandchild in cls.__next(child.children):
-                yield grandchild
+        stack = tuple([self.node])
+        while stack:
+            node = stack[0]
+            yield node
+            stack = node.children + stack[1:]
 
 
 class PostOrderIter(object):
