@@ -29,7 +29,7 @@ def _read_metainfo(filepath):
     return metainfo
 
 name = "anytree"
-version = "0.0.1"
+version = "1.0.0"
 author = 'c0fec0de'
 description = "Python Tree Data"
 
