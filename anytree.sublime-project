@@ -17,8 +17,8 @@
     "build_systems":
     [
         {
-            "name": "make all",
-            "shell_cmd": "cd $project_path && make all"
+            "name": "Anytree All",
+            "shell_cmd": "(cd $project_path && nosetests --with-doctest); (cd $project_path/docs && make html)"
         }
     ]
 }

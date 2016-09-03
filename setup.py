@@ -1,5 +1,5 @@
 """
-Python Tree Data.
+Powerful and Lightweight Python Tree Data Structure with various plugins.
 """
 
 # Always prefer setuptools over distutils
@@ -13,7 +13,7 @@ config = {
     'version': "0.0.1",
     'author': 'c0fec0de',
     'author_email': 'c0fec0de@gmail.com',
-    'description': "Python Tree Data.",
+    'description': "Powerful and Lightweight Python Tree Data Structure with various plugins.",
     'url': "http://anytree.readthedocs.io",
     'license': 'Apache 2.0',
     'classifiers': [

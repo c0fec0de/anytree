@@ -7,6 +7,9 @@ Simple, lightweight and extensible Tree_ data structure.
 .. toctree::
    :maxdepth: 1
 
+   installation
+   gettingstarted
    api
 
-.. include:: ../README.rst
+
+.. _Tree: https://en.wikipedia.org/wiki/Tree_(data_structure)

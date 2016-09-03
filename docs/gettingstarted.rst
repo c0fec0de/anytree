@@ -1,30 +1,3 @@
-.. image:: https://badge.fury.io/py/anytree.svg
-    :target: https://badge.fury.io/py/anytree
-
-.. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
-    :target: https://travis-ci.org/c0fec0de/anytree
-
-.. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
-    :target: https://coveralls.io/github/c0fec0de/anytree
-
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=latest
-    :target: http://anytree.readthedocs.io/en/latest/?badge=latest
-
-
-*******
-anytree
-*******
-
-Powerful and Lightweight Python Tree Data Structure with various plugins.
-
-
-Documentation
-=============
-
-The Documentation_ is hosted on http://anytree.readthedocs.io/en/latest/
-
-.. _Documentation: http://anytree.readthedocs.io/en/latest/
-
 Getting started
 ===============
 
@@ -106,15 +79,3 @@ Node('Dan')
 ├── Node('Dan/Jet')
 ├── Node('Dan/Jan')
 └── Node('Dan/Joe')
-
-
-Installation
-============
-
-To install the `anytree` module run::
-
-    pip install anytree
-
-If you do not have write-permissions to the python installation, try::
-
-    pip install anytree --user
