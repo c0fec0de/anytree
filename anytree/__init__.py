@@ -1,5 +1,30 @@
 # -*- coding: utf-8 -*-
-"""Python Tree Data."""
+"""
+Powerful and Lightweight Python Tree Data Structure.
+
+Overview
+~~~~~~~~
+
+The :any:`anytree` API is splitted into the following parts:
+
+* Node classes:
+    * :any:`Node`: a simple tree node
+    * :any:`NodeMixin`: extends any python class to a tree node.
+
+* Tree Traversal strategies:
+    * :any:`PreOrderIter`: iterate over tree using pre-order strategy
+    * :any:`PostOrderIter`: iterate over tree using post-order strategy
+
+* Tree Rendering:
+    * :any:`RenderTree` using the following styles:
+        * :any:`AsciiStyle`
+        * :any:`ContStyle`
+        * :any:`ContRoundStyle`
+        * :any:`DoubleStyle`
+
+Classes
+~~~~~~~
+"""
 
 from __future__ import print_function
 
@@ -10,6 +35,10 @@ class NodeMixin(object):
 
     u"""
     The :any:`NodeMixin` class extends any Python class to a tree node.
+
+    The only tree relevant information is the `parent` attribute.
+    If `None` the :any:`NodeMixin` is root node.
+    If set to another node, the :any:`NodeMixin` becomes the child of it.
 
     >>> class MyBaseClass(object):
     ...     foo = 4
