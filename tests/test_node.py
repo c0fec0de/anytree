@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from nose.tools import assert_raises
 from nose.tools import eq_
 
 from anytree import LoopError
@@ -115,15 +114,20 @@ def test_recursion_detection():
     s0a = Node("sub0A", parent=s0)
 
     # try recursion
-    with assert_raises(LoopError) as raised:
+    try:
         root.parent = root
-    eq_(str(raised.exception),
-        "Cannot set parent. Node('root') cannot be parent of itself.")
-    with assert_raises(LoopError) as raised:
+    except LoopError as exc:
+        eq_(str(exc), "Cannot set parent. Node('root') cannot be parent of itself.")
+    else:
+        assert False
+    try:
         root.parent = s0a
-    eq_(str(raised.exception), (
-        "Cannot set parent. "
-        "Node('root') is parent of Node('root/sub0/sub0A')."))
+    except LoopError as exc:
+        eq_(str(exc), (
+            "Cannot set parent. "
+            "Node('root') is parent of Node('root/sub0/sub0A')."))
+    else:
+        assert False
 
 
 def test_repr():
