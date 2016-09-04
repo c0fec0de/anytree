@@ -35,6 +35,12 @@ Udo
     ├── Jan
     └── Joe
 
+>>> from anytree.dotexport import RenderTreeGraph
+>>> # graphviz needs to be installed for the next line!
+>>> RenderTreeGraph(root).to_picture("udo.png")
+
+.. image:: static/udo.png
+
 **Manipulation**
 
 A second tree:
