@@ -10,6 +10,7 @@ Simple, lightweight and extensible Tree_ data structure.
    installation
    gettingstarted
    api
+   dotexport
 
 
 .. _Tree: https://en.wikipedia.org/wiki/Tree_(data_structure)
