@@ -17,19 +17,8 @@ import sys
 import os
 
 
-def _read_metainfo(filepath):
-    import re
-    pat = re.compile(r"(?P<name>[a-z_]+).*(?P<expr>.*)")
-    metainfo = {}
-    with open(filepath) as fh:
-        for line in fh:
-            match = pat.match(line)
-            if match:
-                metainfo[match.group("name")] = eval(match.group("expr"))
-    return metainfo
-
 name = "anytree"
-version = "1.0.0"
+version = "1.0.1"
 author = 'c0fec0de'
 description = "Python Tree Data"
 
