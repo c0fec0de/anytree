@@ -43,9 +43,9 @@ class _Render(object):
         *`graphviz` needs to be installed, before usage of this method.*
         """
         fileformat = path.splitext(filename)[1][1:]
-        with NamedTemporaryFile("w") as dotfile:
+        with NamedTemporaryFile("wb") as dotfile:
             for line in self:
-                dotfile.write("%s\n".encode("utf-8") % line)
+                dotfile.write(("%s\n" % line).encode("utf-8"))
             dotfile.flush()
             cmd = ["dot", dotfile.name, "-T", fileformat, "-o", filename]
             check_call(cmd)
