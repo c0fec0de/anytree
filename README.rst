@@ -11,13 +11,6 @@
     :target: http://anytree.readthedocs.io/en/latest/?badge=latest
 
 
-*******
-anytree
-*******
-
-Powerful and Lightweight Python Tree Data Structure with various plugins.
-
-
 Documentation
 =============
 
