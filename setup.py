@@ -14,7 +14,7 @@ config = {
     'author': 'c0fec0de',
     'author_email': 'c0fec0de@gmail.com',
     'description': "Powerful and Lightweight Python Tree Data Structure with various plugins.",
-    'url': "http://anytree.readthedocs.io",
+    'url': "https://github.com/c0fec0de/anytree",
     'license': 'Apache 2.0',
     'classifiers': [
         'Development Status :: 3 - Alpha',
