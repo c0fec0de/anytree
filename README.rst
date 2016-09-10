@@ -55,10 +55,11 @@ Udo
     ├── Jan
     └── Joe
 
-    >>> from anytree.dotexport import RenderTreeGraph
-    >>> RenderTreeGraph(root).to_picture("tree.png")
+>>> from anytree.dotexport import RenderTreeGraph
+>>> # graphviz needs to be installed for the next line!
+>>> RenderTreeGraph(root).to_picture("tree.png")
 
-http://anytree.readthedocs.io/en/latest/_images/tree.png
+.. image:: http://anytree.readthedocs.io/en/latest/_images/tree.png
 
 **Manipulation**
 
