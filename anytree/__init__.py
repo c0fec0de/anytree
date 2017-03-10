@@ -11,6 +11,9 @@ The :any:`anytree` API is splitted into the following parts:
     * :any:`Node`: a simple tree node
     * :any:`NodeMixin`: extends any python class to a tree node.
 
+# Node resolution:
+    * :any:`Resolver`: retrieve node via absolute or relative path.
+
 * Tree Traversal strategies:
     * :any:`PreOrderIter`: iterate over tree using pre-order strategy
     * :any:`PostOrderIter`: iterate over tree using post-order strategy
@@ -27,7 +30,7 @@ Classes
 """
 
 from __future__ import print_function
-
+import collections
 import six
 
 
@@ -381,6 +384,104 @@ class Node(NodeMixin, object):
                                         key=lambda item: item[0])):
             args.append("%s=%r" % (key, value))
         return "%s(%s)" % (classname, ", ".join(args))
+
+
+class Resolver(object):
+
+    def __init__(self, pathattr='name'):
+        """Resolve :any:`NodeMixin` paths using attribute `pathattr`."""
+        super().__init__()
+        self.pathattr = pathattr
+
+    def get(self, node, path):
+        """
+        Return instance at `path`.
+
+        An example module tree:
+
+        >>> top = Node("top", parent=None)
+        >>> sub0 = Node("sub0", parent=top)
+        >>> sub0sub0 = Node("sub0sub0", parent=sub0)
+        >>> sub0sub1 = Node("sub0sub1", parent=sub0)
+        >>> sub1 = Node("sub1", parent=top)
+
+        A resolver using the `name` attribute:
+
+        >>> r = Resolver('name')
+
+        Relative paths:
+
+        >>> r.get(top, "sub0/sub0sub0")
+        Node('top/sub0/sub0sub0')
+        >>> r.get(sub1, "..")
+        Node('top')
+        >>> r.get(sub1, "../sub0/sub0sub1")
+        Node('top/sub0/sub0sub1')
+        >>> r.get(sub1, ".")
+        Node('top/sub1')
+        >>> r.get(sub1, "")
+        Node('top/sub1')
+        >>> r.get(top, "sub2")
+        Traceback (most recent call last):
+          ...
+        anytree.ResolverError: Node('top') has no child sub2. Children are: 'sub0', 'sub1'.
+
+        Absolute paths:
+
+        >>> r.get(sub0sub0, "/top")
+        Node('top')
+        >>> r.get(sub0sub0, "/top/sub0")
+        Node('top/sub0')
+        >>> r.get(sub0sub0, "/")
+        Traceback (most recent call last):
+          ...
+        anytree.ResolverError: root node needs to be specified '/top'.
+        >>> r.get(sub0sub0, "/bar")
+        Traceback (most recent call last):
+          ...
+        anytree.ResolverError: root node is named '/top', not '/bar'.
+        """
+        parts = path.split("/")
+        if path.startswith("/"):
+            node = node.root
+            rootpart = self._get_part(node)
+            parts.pop(0)
+            if not parts[0]:
+                msg = "root node needs to be specified '/%s'."
+                raise ResolverError(node, "", msg % str(rootpart))
+            elif parts[0] != rootpart:
+                msg = "root node is named '/%s', not '/%s'."
+                raise ResolverError(node, "", msg % (str(rootpart), parts[0]))
+            parts.pop(0)
+        for part in parts:
+            if part == "..":
+                node = node.parent
+            elif part in ("", "."):
+                pass
+            else:
+                subnodes = [(self._get_part(child), child)
+                            for child in node.children]
+                nodemap = collections.OrderedDict(subnodes)
+                try:
+                    node = nodemap[part]
+                except KeyError:
+                    names = ", ".join([repr(key) for key in nodemap.keys()])
+                    msg = "%r has no child %s. Children are: %s."
+                    msg = msg  % (node, part, names)
+                    raise ResolverError(node, part, msg) from None
+        return node
+
+    def _get_part(self, node):
+        return getattr(node, self.pathattr)
+
+
+class ResolverError(RuntimeError):
+
+    def __init__(self, node, child, msg):
+        """Resolver Error at `node` handling `child`."""
+        super(ResolverError, self).__init__(msg)
+        self.node = node
+        self.child = child
 
 
 class PreOrderIter(object):
