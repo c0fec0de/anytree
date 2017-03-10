@@ -39,9 +39,9 @@ Usage is simple.
 **Node**
 
 >>> print(udo)
-Node('Udo')
+Node('/Udo')
 >>> print(joe)
-Node('Udo/Dan/Joe')
+Node('/Udo/Dan/Joe')
 
 **Tree**
 
@@ -70,41 +70,41 @@ A second tree:
 >>> chris = Node("Chris", parent=mary)
 >>> marta = Node("Marta", parent=mary)
 >>> print(RenderTree(mary))
-Node('Mary')
-├── Node('Mary/Urs')
-├── Node('Mary/Chris')
-└── Node('Mary/Marta')
+Node('/Mary')
+├── Node('/Mary/Urs')
+├── Node('/Mary/Chris')
+└── Node('/Mary/Marta')
 
 Append:
 
 >>> udo.parent = mary
 >>> print(RenderTree(mary))
-Node('Mary')
-├── Node('Mary/Urs')
-├── Node('Mary/Chris')
-├── Node('Mary/Marta')
-└── Node('Mary/Udo')
-    ├── Node('Mary/Udo/Marc')
-    │   └── Node('Mary/Udo/Marc/Lian')
-    └── Node('Mary/Udo/Dan')
-        ├── Node('Mary/Udo/Dan/Jet')
-        ├── Node('Mary/Udo/Dan/Jan')
-        └── Node('Mary/Udo/Dan/Joe')
+Node('/Mary')
+├── Node('/Mary/Urs')
+├── Node('/Mary/Chris')
+├── Node('/Mary/Marta')
+└── Node('/Mary/Udo')
+    ├── Node('/Mary/Udo/Marc')
+    │   └── Node('/Mary/Udo/Marc/Lian')
+    └── Node('/Mary/Udo/Dan')
+        ├── Node('/Mary/Udo/Dan/Jet')
+        ├── Node('/Mary/Udo/Dan/Jan')
+        └── Node('/Mary/Udo/Dan/Joe')
 
 Subtree rendering:
 
 >>> print(RenderTree(marc))
-Node('Mary/Udo/Marc')
-└── Node('Mary/Udo/Marc/Lian')
+Node('/Mary/Udo/Marc')
+└── Node('/Mary/Udo/Marc/Lian')
 
 Cut:
 
 >>> dan.parent = None
 >>> print(RenderTree(dan))
-Node('Dan')
-├── Node('Dan/Jet')
-├── Node('Dan/Jan')
-└── Node('Dan/Joe')
+Node('/Dan')
+├── Node('/Dan/Jet')
+├── Node('/Dan/Jan')
+└── Node('/Dan/Joe')
 
 
 Installation
