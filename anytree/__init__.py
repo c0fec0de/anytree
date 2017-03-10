@@ -375,7 +375,7 @@ class Node(NodeMixin, object):
 
     def __repr__(self):
         classname = self.__class__.__name__
-        args = ["%r" % "/".join([node.name for node in self.path])]
+        args = ["%r" % "/".join([str(node.name) for node in self.path])]
         for key, value in filter(lambda item: not item[0].startswith("_"),
                                  sorted(self.__dict__.items(),
                                         key=lambda item: item[0])):

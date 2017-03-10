@@ -295,6 +295,7 @@ def test_parent():
 
 
 def test_pre_order_iter():
+    """Pre-Order Iterator."""
     f = Node("f")
     b = Node("b", parent=f)
     a = Node("a", parent=b)
@@ -311,6 +312,7 @@ def test_pre_order_iter():
 
 
 def test_post_order_iter():
+    """Post-Order Iterator."""
     f = Node("f")
     b = Node("b", parent=f)
     a = Node("a", parent=b)
@@ -324,3 +326,10 @@ def test_post_order_iter():
     result = [node.name for node in PostOrderIter(f)]
     expected = ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
     eq_(result, expected)
+
+
+def test_anyname():
+    """Support any type as name."""
+    myroot = Node([1, 2, 3])
+    Node('foo', parent=myroot)
+    eq_(str(myroot), "Node('[1, 2, 3]')")
