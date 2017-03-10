@@ -468,7 +468,7 @@ class Resolver(object):
                     names = ", ".join([repr(key) for key in nodemap.keys()])
                     msg = "%r has no child %s. Children are: %s."
                     msg = msg % (node, part, names)
-                    raise ResolverError(node, part, msg) from None
+                    raise ResolverError(node, part, msg)
         return node
 
     def _get_part(self, node):
