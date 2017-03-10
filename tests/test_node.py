@@ -117,7 +117,7 @@ def test_recursion_detection():
     try:
         root.parent = root
     except LoopError as exc:
-        eq_(str(exc), "Cannot set parent. Node('root') cannot be parent of itself.")
+        eq_(str(exc), "Cannot set parent. Node('/root') cannot be parent of itself.")
     else:
         assert False
     try:
@@ -125,7 +125,7 @@ def test_recursion_detection():
     except LoopError as exc:
         eq_(str(exc), (
             "Cannot set parent. "
-            "Node('root') is parent of Node('root/sub0/sub0A')."))
+            "Node('/root') is parent of Node('/root/sub0/sub0A')."))
     else:
         assert False
 
@@ -136,9 +136,9 @@ def test_repr():
     s0 = Node("sub0", parent=root)
     s1 = Node("sub1", parent=root, foo=42, bar="c0fe")
 
-    eq_(repr(root), "Node('root')")
-    eq_(repr(s0), "Node('root/sub0')")
-    eq_(repr(s1), "Node('root/sub1', bar='c0fe', foo=42)")
+    eq_(repr(root), "Node('/root')")
+    eq_(repr(s0), "Node('/root/sub0')")
+    eq_(repr(s1), "Node('/root/sub1', bar='c0fe', foo=42)")
 
 
 def test_anchestors():
@@ -331,5 +331,5 @@ def test_post_order_iter():
 def test_anyname():
     """Support any type as name."""
     myroot = Node([1, 2, 3])
-    Node('foo', parent=myroot)
-    eq_(str(myroot), "Node('[1, 2, 3]')")
+    Node('/foo', parent=myroot)
+    eq_(str(myroot), "Node('/[1, 2, 3]')")

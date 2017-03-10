@@ -15,11 +15,11 @@ def test_render_str():
     r = anytree.RenderTree(root)
 
     expected = u"\n".join([
-        u"Node('root')",
-        u"├── Node('root/sub0')",
-        u"│   ├── Node('root/sub0/sub0B')",
-        u"│   └── Node('root/sub0/sub0A')",
-        u"└── Node('root/sub1')",
+        u"Node('/root')",
+        u"├── Node('/root/sub0')",
+        u"│   ├── Node('/root/sub0/sub0B')",
+        u"│   └── Node('/root/sub0/sub0A')",
+        u"└── Node('/root/sub1')",
     ])
     if six.PY2:
         eq_(str(r).decode('utf-8'), expected)
@@ -34,10 +34,10 @@ def test_render_repr():
     r = anytree.RenderTree(root)
 
     if six.PY2:
-        expected = ("RenderTree(Node('root'), style=ContStyle(), "
+        expected = ("RenderTree(Node('/root'), style=ContStyle(), "
                     "childiter=<type 'list'>)")
     else:
-        expected = ("RenderTree(Node('root'), style=ContStyle(), "
+        expected = ("RenderTree(Node('/root'), style=ContStyle(), "
                     "childiter=<class 'list'>)")
     eq_(repr(r), expected)
 

@@ -78,18 +78,18 @@ class NodeMixin(object):
         >>> marc = Node("Marc")
         >>> lian = Node("Lian", parent=marc)
         >>> print(RenderTree(udo))
-        Node('Udo')
+        Node('/Udo')
         >>> print(RenderTree(marc))
-        Node('Marc')
-        └── Node('Marc/Lian')
+        Node('/Marc')
+        └── Node('/Marc/Lian')
 
         Attach:
 
         >>> marc.parent = udo
         >>> print(RenderTree(udo))
-        Node('Udo')
-        └── Node('Udo/Marc')
-            └── Node('Udo/Marc/Lian')
+        Node('/Udo')
+        └── Node('/Udo/Marc')
+            └── Node('/Udo/Marc/Lian')
 
         To make a node to a root node, just set this attribute to `None`.
         """
@@ -154,7 +154,7 @@ class NodeMixin(object):
         >>> jan = Node("Jan", parent=dan)
         >>> joe = Node("Joe", parent=dan)
         >>> dan.children
-        (Node('Dan/Jet'), Node('Dan/Jan'), Node('Dan/Joe'))
+        (Node('/Dan/Jet'), Node('/Dan/Jan'), Node('/Dan/Joe'))
         """
         return tuple(self._children)
 
@@ -167,11 +167,11 @@ class NodeMixin(object):
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
         >>> udo.path
-        (Node('Udo'),)
+        (Node('/Udo'),)
         >>> marc.path
-        (Node('Udo'), Node('Udo/Marc'))
+        (Node('/Udo'), Node('/Udo/Marc'))
         >>> lian.path
-        (Node('Udo'), Node('Udo/Marc'), Node('Udo/Marc/Lian'))
+        (Node('/Udo'), Node('/Udo/Marc'), Node('/Udo/Marc/Lian'))
         """
         return self._path
 
@@ -195,9 +195,9 @@ class NodeMixin(object):
         >>> udo.anchestors
         ()
         >>> marc.anchestors
-        (Node('Udo'),)
+        (Node('/Udo'),)
         >>> lian.anchestors
-        (Node('Udo'), Node('Udo/Marc'))
+        (Node('/Udo'), Node('/Udo/Marc'))
         """
         return self._path[:-1]
 
@@ -211,9 +211,9 @@ class NodeMixin(object):
         >>> lian = Node("Lian", parent=marc)
         >>> loui = Node("Loui", parent=marc)
         >>> udo.descendants
-        (Node('Udo/Marc'), Node('Udo/Marc/Lian'), Node('Udo/Marc/Loui'))
+        (Node('/Udo/Marc'), Node('/Udo/Marc/Lian'), Node('/Udo/Marc/Loui'))
         >>> marc.descendants
-        (Node('Udo/Marc/Lian'), Node('Udo/Marc/Loui'))
+        (Node('/Udo/Marc/Lian'), Node('/Udo/Marc/Loui'))
         >>> lian.descendants
         ()
         """
@@ -230,9 +230,9 @@ class NodeMixin(object):
         >>> udo.root is None
         True
         >>> marc.root
-        Node('Udo')
+        Node('/Udo')
         >>> lian.root
-        Node('Udo')
+        Node('/Udo')
         """
         if self.parent:
             return self._path[0]
@@ -254,9 +254,9 @@ class NodeMixin(object):
         >>> marc.siblings
         ()
         >>> lian.siblings
-        (Node('Udo/Marc/Loui'), Node('Udo/Marc/Lazy'))
+        (Node('/Udo/Marc/Loui'), Node('/Udo/Marc/Lazy'))
         >>> loui.siblings
-        (Node('Udo/Marc/Lian'), Node('Udo/Marc/Lazy'))
+        (Node('/Udo/Marc/Lian'), Node('/Udo/Marc/Lazy'))
         """
         parent = self.parent
         if parent is None:
@@ -353,15 +353,15 @@ class Node(NodeMixin, object):
         >>> s1ca = Node("sub1Ca", parent=s1c)
 
         >>> print(RenderTree(root))
-        Node('root')
-        ├── Node('root/sub0')
-        │   ├── Node('root/sub0/sub0B', bar=109, foo=4)
-        │   └── Node('root/sub0/sub0A')
-        └── Node('root/sub1')
-            ├── Node('root/sub1/sub1A')
-            ├── Node('root/sub1/sub1B', bar=8)
-            └── Node('root/sub1/sub1C')
-                └── Node('root/sub1/sub1C/sub1Ca')
+        Node('/root')
+        ├── Node('/root/sub0')
+        │   ├── Node('/root/sub0/sub0B', bar=109, foo=4)
+        │   └── Node('/root/sub0/sub0A')
+        └── Node('/root/sub1')
+            ├── Node('/root/sub1/sub1A')
+            ├── Node('/root/sub1/sub1B', bar=8)
+            └── Node('/root/sub1/sub1C')
+                └── Node('/root/sub1/sub1C/sub1Ca')
         """
         self.name = name
         self.parent = parent
@@ -378,7 +378,7 @@ class Node(NodeMixin, object):
 
     def __repr__(self):
         classname = self.__class__.__name__
-        args = ["%r" % "/".join([str(node.name) for node in self.path])]
+        args = ["%r" % "/".join([""] + [str(node.name) for node in self.path])]
         for key, value in filter(lambda item: not item[0].startswith("_"),
                                  sorted(self.__dict__.items(),
                                         key=lambda item: item[0])):
@@ -412,26 +412,26 @@ class Resolver(object):
         Relative paths:
 
         >>> r.get(top, "sub0/sub0sub0")
-        Node('top/sub0/sub0sub0')
+        Node('/top/sub0/sub0sub0')
         >>> r.get(sub1, "..")
-        Node('top')
+        Node('/top')
         >>> r.get(sub1, "../sub0/sub0sub1")
-        Node('top/sub0/sub0sub1')
+        Node('/top/sub0/sub0sub1')
         >>> r.get(sub1, ".")
-        Node('top/sub1')
+        Node('/top/sub1')
         >>> r.get(sub1, "")
-        Node('top/sub1')
+        Node('/top/sub1')
         >>> r.get(top, "sub2")
         Traceback (most recent call last):
           ...
-        anytree.ResolverError: Node('top') has no child sub2. Children are: 'sub0', 'sub1'.
+        anytree.ResolverError: Node('/top') has no child sub2. Children are: 'sub0', 'sub1'.
 
         Absolute paths:
 
         >>> r.get(sub0sub0, "/top")
-        Node('top')
+        Node('/top')
         >>> r.get(sub0sub0, "/top/sub0")
-        Node('top/sub0')
+        Node('/top/sub0')
         >>> r.get(sub0sub0, "/")
         Traceback (most recent call last):
           ...
@@ -467,7 +467,7 @@ class Resolver(object):
                 except KeyError:
                     names = ", ".join([repr(key) for key in nodemap.keys()])
                     msg = "%r has no child %s. Children are: %s."
-                    msg = msg  % (node, part, names)
+                    msg = msg % (node, part, names)
                     raise ResolverError(node, part, msg) from None
         return node
 
@@ -592,11 +592,11 @@ class AsciiStyle(AbstractStyle):
         >>> s1 = Node("sub1", parent=root)
 
         >>> print(RenderTree(root, style=AsciiStyle()))
-        Node('root')
-        |-- Node('root/sub0')
-        |   |-- Node('root/sub0/sub0B')
-        |   +-- Node('root/sub0/sub0A')
-        +-- Node('root/sub1')
+        Node('/root')
+        |-- Node('/root/sub0')
+        |   |-- Node('/root/sub0/sub0B')
+        |   +-- Node('/root/sub0/sub0A')
+        +-- Node('/root/sub1')
         """
         super(AsciiStyle, self).__init__(u'|   ', u'|-- ', u'+-- ')
 
@@ -614,11 +614,11 @@ class ContStyle(AbstractStyle):
         >>> s1 = Node("sub1", parent=root)
 
         >>> print(RenderTree(root, style=ContStyle()))
-        Node('root')
-        ├── Node('root/sub0')
-        │   ├── Node('root/sub0/sub0B')
-        │   └── Node('root/sub0/sub0A')
-        └── Node('root/sub1')
+        Node('/root')
+        ├── Node('/root/sub0')
+        │   ├── Node('/root/sub0/sub0B')
+        │   └── Node('/root/sub0/sub0A')
+        └── Node('/root/sub1')
         """
         super(ContStyle, self).__init__(u'\u2502   ',
                                         u'\u251c\u2500\u2500 ',
@@ -638,11 +638,11 @@ class ContRoundStyle(AbstractStyle):
         >>> s1 = Node("sub1", parent=root)
 
         >>> print(RenderTree(root, style=ContRoundStyle()))
-        Node('root')
-        ├── Node('root/sub0')
-        │   ├── Node('root/sub0/sub0B')
-        │   ╰── Node('root/sub0/sub0A')
-        ╰── Node('root/sub1')
+        Node('/root')
+        ├── Node('/root/sub0')
+        │   ├── Node('/root/sub0/sub0B')
+        │   ╰── Node('/root/sub0/sub0A')
+        ╰── Node('/root/sub1')
         """
         super(ContRoundStyle, self).__init__(u'\u2502   ',
                                              u'\u251c\u2500\u2500 ',
@@ -662,11 +662,11 @@ class DoubleStyle(AbstractStyle):
         >>> s1 = Node("sub1", parent=root)
 
         >>> print(RenderTree(root, style=DoubleStyle))
-        Node('root')
-        ╠══ Node('root/sub0')
-        ║   ╠══ Node('root/sub0/sub0B')
-        ║   ╚══ Node('root/sub0/sub0A')
-        ╚══ Node('root/sub1')
+        Node('/root')
+        ╠══ Node('/root/sub0')
+        ║   ╠══ Node('/root/sub0/sub0B')
+        ║   ╚══ Node('/root/sub0/sub0A')
+        ╚══ Node('/root/sub1')
 
         """
         super(DoubleStyle, self).__init__(u'\u2551   ',
