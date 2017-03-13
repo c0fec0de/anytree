@@ -7,28 +7,107 @@ Overview
 
 The :any:`anytree` API is splitted into the following parts:
 
-*Node Classes*
-    * :any:`Node`: a simple tree node
-    * :any:`NodeMixin`: extends any python class to a tree node.
+**Node Classes**
 
-*Node Resolution*
-    * :any:`Resolver`: retrieve node via absolute or relative path.
-    * :any:`Walker`: walk from one node to an other.
+* :any:`Node`: a simple tree node
+* :any:`NodeMixin`: extends any python class to a tree node.
 
-*Tree Iteration Strategies*
-    * :any:`PreOrderIter`: iterate over tree using pre-order strategy
-    * :any:`PostOrderIter`: iterate over tree using post-order strategy
+**Node Resolution**
 
-*Tree Rendering*
+* :any:`Resolver`: retrieve node via absolute or relative path.
+* :any:`Walker`: walk from one node to an other.
 
-    * :any:`RenderTree` using the following styles:
-        * :any:`AsciiStyle`
-        * :any:`ContStyle`
-        * :any:`ContRoundStyle`
-        * :any:`DoubleStyle`
+**Tree Iteration Strategies**
 
+* :any:`PreOrderIter`: iterate over tree using pre-order strategy
+* :any:`PostOrderIter`: iterate over tree using post-order strategy
 
--------------------------------------------------------------------------------
+**Tree Rendering**
+
+* :any:`RenderTree` using the following styles:
+    * :any:`AsciiStyle`
+    * :any:`ContStyle`
+    * :any:`ContRoundStyle`
+    * :any:`DoubleStyle`
+
+Basics
+~~~~~~
+
+The only tree relevant information is the `parent` attribute.
+If `None` the :any:`NodeMixin` is root node.
+If set to another node, the :any:`NodeMixin` becomes the child of it.
+
+>>> udo = Node("Udo")
+>>> marc = Node("Marc")
+>>> lian = Node("Lian", parent=marc)
+>>> print(RenderTree(udo))
+Node('/Udo')
+>>> print(RenderTree(marc))
+Node('/Marc')
+└── Node('/Marc/Lian')
+
+**Attach**
+
+>>> marc.parent = udo
+>>> print(RenderTree(udo))
+Node('/Udo')
+└── Node('/Udo/Marc')
+    └── Node('/Udo/Marc/Lian')
+
+**Detach**
+
+To make a node to a root node, just set this attribute to `None`.
+
+>>> marc.is_root
+False
+>>> marc.parent = None
+>>> marc.is_root
+True
+
+Detach/Attach Protocol
+~~~~~~~~~~~~~~~~~~~~~~
+
+A node class implementation might implement the notification slots
+:any:`_pre_detach(parent)`, :any:`_post_detach(parent)`,
+:any:`_pre_attach(parent)`, :any:`_post_attach(parent)`.
+
+>>> class NotifiedNode(Node):
+...     def _pre_detach(self, parent):
+...         print("_pre_detach", parent)
+...     def _post_detach(self, parent):
+...         print("_post_detach", parent)
+...     def _pre_attach(self, parent):
+...         print("_pre_attach", parent)
+...     def _post_attach(self, parent):
+...         print("_post_attach", parent)
+
+Notification on attach:
+
+>>> a = NotifiedNode("a")
+>>> b = NotifiedNode("b")
+>>> c = NotifiedNode("c")
+>>> c.parent = a
+_pre_attach NotifiedNode('/a')
+_post_attach NotifiedNode('/a')
+
+Notification on change:
+
+>>> c.parent = b
+_pre_detach NotifiedNode('/a')
+_post_detach NotifiedNode('/a')
+_pre_attach NotifiedNode('/b')
+_post_attach NotifiedNode('/b')
+
+If the parent equals the old value, the notification is not triggered:
+
+>>> c.parent = b
+
+Notification on detach:
+
+>>> c.parent = None
+_pre_detach NotifiedNode('/b')
+_post_detach NotifiedNode('/b')
+
 
 Classes
 ~~~~~~~
@@ -70,7 +149,6 @@ class NodeMixin(object):
     >>> my1 = MyClass('my1', 1, 0, parent=my0)
     >>> my2 = MyClass('my2', 0, 2, parent=my0)
 
-
     >>> for pre, _, node in RenderTree(my0):
     ...     treestr = u"%s%s" % (pre, node.name)
     ...     print(treestr.ljust(8), node.length, node.width)
@@ -96,7 +174,7 @@ class NodeMixin(object):
         Node('/Marc')
         └── Node('/Marc/Lian')
 
-        Attach:
+        **Attach**
 
         >>> marc.parent = udo
         >>> print(RenderTree(udo))
@@ -104,7 +182,15 @@ class NodeMixin(object):
         └── Node('/Udo/Marc')
             └── Node('/Udo/Marc/Lian')
 
+        **Detach**
+
         To make a node to a root node, just set this attribute to `None`.
+
+        >>> marc.is_root
+        False
+        >>> marc.parent = None
+        >>> marc.is_root
+        True
         """
         try:
             return self._parent
@@ -120,17 +206,21 @@ class NodeMixin(object):
         if value is None:
             # make this Node to root node
             if parent:
+                self._pre_detach(parent)
                 # unregister at parent
                 parentchildren = parent._children
                 assert self in parentchildren, "Tree internal data is corrupt."
                 parentchildren.remove(self)
+                self._post_detach(parent)
         elif parent is not value:
             # change parent node
             if parent:
-                parentchildren = parent._children
+                self._pre_detach(parent)
                 # unregister at old parent
+                parentchildren = parent._children
                 assert self in parentchildren, "Tree internal data is corrupt."
                 parentchildren.remove(self)
+                self._post_detach(parent)
             # check for loop
             if value is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
@@ -139,10 +229,12 @@ class NodeMixin(object):
                 msg = "Cannot set parent. %r is parent of %r."
                 raise LoopError(msg % (self, value))
 
+            self._pre_attach(value)
             # register at new parent
             parentchildren = value._children
             assert self not in parentchildren, "Tree internal data is corrupt."
             parentchildren.append(self)
+            self._post_attach(value)
         else:
             # keep parent
             pass
@@ -348,6 +440,22 @@ class NodeMixin(object):
         2
         """
         return len(self._path) - 1
+
+    def _pre_detach(self, parent):
+        """Method call before detaching from `parent`."""
+        pass
+
+    def _post_detach(self, parent):
+        """Method call after detaching from `parent`."""
+        pass
+
+    def _pre_attach(self, parent):
+        """Method call before attaching to `parent`."""
+        pass
+
+    def _post_attach(self, parent):
+        """Method call after attaching to `parent`."""
+        pass
 
 
 class Node(NodeMixin, object):
