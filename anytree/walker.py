@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import six
 
-
-@six.python_2_unicode_compatible
 class Walker(object):
 
     def __init__(self):
@@ -11,7 +8,7 @@ class Walker(object):
         super(Walker, self).__init__()
 
     def walk(self, start, end):
-        u"""
+        """
         Walk from `start` node to `end` node.
 
         Returns:
@@ -21,7 +18,7 @@ class Walker(object):
         Raises:
             WalkError: on no common root node.
 
-        >>> from anytree import Node, RenderTree
+        >>> from anytree import Node, RenderTree, AsciiStyle
         >>> f = Node("f")
         >>> b = Node("b", parent=f)
         >>> a = Node("a", parent=b)
@@ -31,16 +28,16 @@ class Walker(object):
         >>> g = Node("g", parent=f)
         >>> i = Node("i", parent=g)
         >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f))
+        >>> print(RenderTree(f, style=AsciiStyle()))
         Node('/f')
-        ├── Node('/f/b')
-        │   ├── Node('/f/b/a')
-        │   └── Node('/f/b/d')
-        │       ├── Node('/f/b/d/c')
-        │       └── Node('/f/b/d/e')
-        └── Node('/f/g')
-            └── Node('/f/g/i')
-                └── Node('/f/g/i/h')
+        |-- Node('/f/b')
+        |   |-- Node('/f/b/a')
+        |   +-- Node('/f/b/d')
+        |       |-- Node('/f/b/d/c')
+        |       +-- Node('/f/b/d/e')
+        +-- Node('/f/g')
+            +-- Node('/f/g/i')
+                +-- Node('/f/g/i/h')
 
         Create a walker:
 
