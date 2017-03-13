@@ -41,5 +41,10 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     config['long_description'] = f.read()
 
+# python 2.6 does not implement OrderedDict, so we have to install it
+try:
+    from collections import OrderedDict  # noqa
+except ImportError:
+    config['install_requires'].append("ordereddict")
 
 setup(**config)

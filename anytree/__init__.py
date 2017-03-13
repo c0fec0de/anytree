@@ -33,7 +33,7 @@ from __future__ import print_function
 try:
     from collections import OrderedDict
 except ImportError:
-    from future.moves.collections import OrderedDict
+    from ordereddict import OrderedDict
 
 import re
 import six
