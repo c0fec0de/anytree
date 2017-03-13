@@ -12,8 +12,9 @@ install:
   - sudo apt-get install graphviz
   - "python setup.py install"
   - "pip install nose==1.3.7"
-  - "pip install coverage==4.3"
+  - "pip install coverage==4.3.4"
   - "pip install coveralls"
+  - "pip list"
 
 script:
   - nosetests
