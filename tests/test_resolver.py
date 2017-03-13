@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
-from nose.tools import assert_raises
+from contextlib import contextmanager
 from nose.tools import eq_
 
 import anytree as at
+
+
+# hack own assert_raises, because py26 has a diffrent impelmentation
+@contextmanager
+def assert_raises(exccls, msg):
+    try:
+        yield
+        assert False, "%r not raised" % exccls
+    except Exception as exc:
+        assert isinstance(exc, exccls), "%r is not a %r" % (exc, exccls)
+        eq_(str(exc), msg)
 
 
 def test_get():
@@ -18,17 +29,15 @@ def test_get():
     eq_(r.get(sub1, "../sub0/sub0sub1"), sub0sub1)
     eq_(r.get(sub1, "."), sub1)
     eq_(r.get(sub1, ""), sub1)
-    with assert_raises(at.ChildResolverError) as raised:
+    with assert_raises(at.ChildResolverError,
+                       "Node('/top') has no child sub2. Children are: 'sub0', 'sub1'."):
         r.get(top, "sub2")
-    eq_(str(raised.exception), "Node('/top') has no child sub2. Children are: 'sub0', 'sub1'.")
     eq_(r.get(sub0sub0, "/top"), top)
     eq_(r.get(sub0sub0, "/top/sub0"), sub0)
-    with assert_raises(at.ResolverError) as raised:
+    with assert_raises(at.ResolverError, "root node missing. root is '/top'."):
         r.get(sub0sub0, "/")
-    eq_(str(raised.exception), "root node missing. root is '/top'.")
-    with assert_raises(at.ResolverError) as raised:
+    with assert_raises(at.ResolverError, "unknown root node '/bar'. root is '/top'."):
         r.get(sub0sub0, "/bar")
-    eq_(str(raised.exception), "unknown root node '/bar'. root is '/top'.")
 
 
 def test_glob():
@@ -48,9 +57,9 @@ def test_glob():
     eq_(r.glob(sub1, ".././*"), [sub0, sub1])
     eq_(r.glob(top, "*/*"), [sub0sub0, sub0sub1, sub1sub0])
     eq_(r.glob(top, "*/sub0"), [sub0sub0, sub1sub0])
-    with assert_raises(at.ChildResolverError) as raised:
+    with assert_raises(at.ChildResolverError,
+                       "Node('/top/sub1') has no child sub1. Children are: 'sub0'."):
         r.glob(top, "sub1/sub1")
-    eq_(str(raised.exception),  "Node('/top/sub1') has no child sub1. Children are: 'sub0'.")
 
 
 def test_glob_cache():
