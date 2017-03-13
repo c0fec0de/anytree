@@ -25,7 +25,7 @@ def test_glob_cache():
     sub1 = at.Node("sub1", parent=root)
     r = at.Resolver()
     # strip down cache size
-    at._MAXCACHE = 2
+    at.resolver._MAXCACHE = 2
     at.Resolver._match_cache.clear()
     eq_(len(at.Resolver._match_cache), 0)
     eq_(r.glob(root, "sub0"), [sub0])
