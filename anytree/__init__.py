@@ -557,16 +557,16 @@ class Resolver(object):
         else:
             matches = []
             nodemap = self.__get_nodemap(node)
-            try:
-                for name, child in nodemap.items():
+            for name, child in nodemap.items():
+                try:
                     if Resolver.__match(name, part):
                         if remainparts:
                             matches += self.__glob(child, remainparts)
                         else:
                             matches.append(child)
-            except ResolverError as exc:
-                if not Resolver.__is_wildcard(part):
-                    raise exc
+                except ResolverError as exc:
+                    if not Resolver.__is_wildcard(part):
+                        raise exc
             if not matches and not Resolver.__is_wildcard(part):
                 raise ChildResolverError(node, part, nodemap.keys())
             nodes += matches
