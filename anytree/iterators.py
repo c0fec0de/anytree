@@ -1,18 +1,14 @@
 
-import six
-
-
-@six.python_2_unicode_compatible
 class PreOrderIter(object):
 
     def __init__(self, node):
-        u"""
+        """
         Iterate over tree applying pre-order strategy starting at `node`.
 
         Start at root and go-down until reaching a leaf node.
         Step upwards then, and search for the next leafs.
 
-        >>> from anytree import Node, RenderTree
+        >>> from anytree import Node, RenderTree, AsciiStyle
         >>> f = Node("f")
         >>> b = Node("b", parent=f)
         >>> a = Node("a", parent=b)
@@ -22,16 +18,16 @@ class PreOrderIter(object):
         >>> g = Node("g", parent=f)
         >>> i = Node("i", parent=g)
         >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f))
+        >>> print(RenderTree(f, style=AsciiStyle()))
         Node('/f')
-        ├── Node('/f/b')
-        │   ├── Node('/f/b/a')
-        │   └── Node('/f/b/d')
-        │       ├── Node('/f/b/d/c')
-        │       └── Node('/f/b/d/e')
-        └── Node('/f/g')
-            └── Node('/f/g/i')
-                └── Node('/f/g/i/h')
+        |-- Node('/f/b')
+        |   |-- Node('/f/b/a')
+        |   +-- Node('/f/b/d')
+        |       |-- Node('/f/b/d/c')
+        |       +-- Node('/f/b/d/e')
+        +-- Node('/f/g')
+            +-- Node('/f/g/i')
+                +-- Node('/f/g/i/h')
 
         >>> [node.name for node in PreOrderIter(f)]
         ['f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h']
@@ -47,14 +43,13 @@ class PreOrderIter(object):
             stack = node.children + stack[1:]
 
 
-@six.python_2_unicode_compatible
 class PostOrderIter(object):
 
     def __init__(self, node):
-        u"""
+        """
         Iterate over tree applying post-order strategy starting at `node`.
 
-        >>> from anytree import Node, RenderTree
+        >>> from anytree import Node, RenderTree, AsciiStyle
         >>> f = Node("f")
         >>> b = Node("b", parent=f)
         >>> a = Node("a", parent=b)
@@ -64,16 +59,16 @@ class PostOrderIter(object):
         >>> g = Node("g", parent=f)
         >>> i = Node("i", parent=g)
         >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f))
+        >>> print(RenderTree(f, style=AsciiStyle()))
         Node('/f')
-        ├── Node('/f/b')
-        │   ├── Node('/f/b/a')
-        │   └── Node('/f/b/d')
-        │       ├── Node('/f/b/d/c')
-        │       └── Node('/f/b/d/e')
-        └── Node('/f/g')
-            └── Node('/f/g/i')
-                └── Node('/f/g/i/h')
+        |-- Node('/f/b')
+        |   |-- Node('/f/b/a')
+        |   +-- Node('/f/b/d')
+        |       |-- Node('/f/b/d/c')
+        |       +-- Node('/f/b/d/e')
+        +-- Node('/f/g')
+            +-- Node('/f/g/i')
+                +-- Node('/f/g/i/h')
 
         >>> [node.name for node in PostOrderIter(f)]
         ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
