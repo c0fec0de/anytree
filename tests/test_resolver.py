@@ -1,21 +1,56 @@
 # -*- coding: utf-8 -*-
+from nose.tools import assert_raises
 from nose.tools import eq_
 
 import anytree as at
+
+
+def test_get():
+    """Get."""
+    top = at.Node("top", parent=None)
+    sub0 = at.Node("sub0", parent=top)
+    sub0sub0 = at.Node("sub0sub0", parent=sub0)
+    sub0sub1 = at.Node("sub0sub1", parent=sub0)
+    sub1 = at.Node("sub1", parent=top)
+    r = at.Resolver('name')
+    eq_(r.get(top, "sub0/sub0sub0"), sub0sub0)
+    eq_(r.get(sub1, ".."), top)
+    eq_(r.get(sub1, "../sub0/sub0sub1"), sub0sub1)
+    eq_(r.get(sub1, "."), sub1)
+    eq_(r.get(sub1, ""), sub1)
+    with assert_raises(at.ChildResolverError) as raised:
+        r.get(top, "sub2")
+    eq_(str(raised.exception), "Node('/top') has no child sub2. Children are: 'sub0', 'sub1'.")
+    eq_(r.get(sub0sub0, "/top"), top)
+    eq_(r.get(sub0sub0, "/top/sub0"), sub0)
+    with assert_raises(at.ResolverError) as raised:
+        r.get(sub0sub0, "/")
+    eq_(str(raised.exception), "root node missing. root is '/top'.")
+    with assert_raises(at.ResolverError) as raised:
+        r.get(sub0sub0, "/bar")
+    eq_(str(raised.exception), "unknown root node '/bar'. root is '/top'.")
 
 
 def test_glob():
     """Wildcard."""
     top = at.Node("top", parent=None)
     sub0 = at.Node("sub0", parent=top)
-    at.Node("sub0", parent=sub0)
+    sub0sub0 = at.Node("sub0", parent=sub0)
     sub0sub1 = at.Node("sub1", parent=sub0)
     sub0sub1sub0 = at.Node("sub0", parent=sub0sub1)
     at.Node("sub1", parent=sub0sub1)
     sub1 = at.Node("sub1", parent=top)
-    at.Node("sub0", parent=sub1)
+    sub1sub0 = at.Node("sub0", parent=sub1)
     r = at.Resolver()
     eq_(r.glob(top, "*/*/sub0"), [sub0sub1sub0])
+
+    eq_(r.glob(top, "sub0/sub?"), [sub0sub0, sub0sub1])
+    eq_(r.glob(sub1, ".././*"), [sub0, sub1])
+    eq_(r.glob(top, "*/*"), [sub0sub0, sub0sub1, sub1sub0])
+    eq_(r.glob(top, "*/sub0"), [sub0sub0, sub1sub0])
+    with assert_raises(at.ChildResolverError) as raised:
+        r.glob(top, "sub1/sub1")
+    eq_(str(raised.exception),  "Node('/top/sub1') has no child sub1. Children are: 'sub0'.")
 
 
 def test_glob_cache():
