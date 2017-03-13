@@ -184,7 +184,7 @@ def test_root():
     s1c = Node("sub1C", parent=s1)
     s1ca = Node("sub1Ca", parent=s1c)
 
-    eq_(root.root, None)
+    eq_(root.root, root)
     eq_(s0.root, root)
     eq_(s0b.root, root)
     eq_(s0a.root, root)

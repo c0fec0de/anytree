@@ -232,8 +232,8 @@ class NodeMixin(object):
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
-        >>> udo.root is None
-        True
+        >>> udo.root
+        Node('/Udo')
         >>> marc.root
         Node('/Udo')
         >>> lian.root
@@ -242,7 +242,7 @@ class NodeMixin(object):
         if self.parent:
             return self._path[0]
         else:
-            return None
+            return self
 
     @property
     def siblings(self):
