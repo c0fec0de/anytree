@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import six
 
+
+@six.python_2_unicode_compatible
 class Walker(object):
 
     def __init__(self):

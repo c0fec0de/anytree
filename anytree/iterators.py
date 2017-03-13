@@ -1,4 +1,8 @@
 
+import six
+
+
+@six.python_2_unicode_compatible
 class PreOrderIter(object):
 
     def __init__(self, node):
@@ -43,6 +47,7 @@ class PreOrderIter(object):
             stack = node.children + stack[1:]
 
 
+@six.python_2_unicode_compatible
 class PostOrderIter(object):
 
     def __init__(self, node):
