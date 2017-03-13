@@ -397,7 +397,7 @@ class Resolver(object):
 
     def __init__(self, pathattr='name'):
         """Resolve :any:`NodeMixin` paths using attribute `pathattr`."""
-        super().__init__()
+        super(Resolver, self).__init__()
         self.pathattr = pathattr
 
     def get(self, node, path):
