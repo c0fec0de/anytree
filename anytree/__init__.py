@@ -30,8 +30,11 @@ Classes
 """
 
 from __future__ import print_function
+try:
+    from collections import OrderedDict
+except ImportError:
+    from future.moves.collections import OrderedDict
 
-import collections
 import re
 import six
 
@@ -543,7 +546,7 @@ class Resolver(object):
     def __get_nodemap(self, node):
         subnodes = [(self.__get_part(child), child)
                     for child in node.children]
-        return collections.OrderedDict(subnodes)
+        return OrderedDict(subnodes)
 
     def __glob(self, node, parts):
         nodes = []
