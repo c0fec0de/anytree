@@ -16,7 +16,7 @@ install:
   - "pip install coveralls"
 
 script:
-  - nosetests --cover-package=anytree
+  - nosetests
 
 after_success:
   coveralls
