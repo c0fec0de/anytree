@@ -8,7 +8,7 @@ class Walker(object):
         super(Walker, self).__init__()
 
     def walk(self, start, end):
-        """
+        u"""
         Walk from `start` node to `end` node.
 
         Returns:

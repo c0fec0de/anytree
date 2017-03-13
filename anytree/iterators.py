@@ -2,7 +2,7 @@
 class PreOrderIter(object):
 
     def __init__(self, node):
-        """
+        u"""
         Iterate over tree applying pre-order strategy starting at `node`.
 
         Start at root and go-down until reaching a leaf node.
@@ -46,7 +46,7 @@ class PreOrderIter(object):
 class PostOrderIter(object):
 
     def __init__(self, node):
-        """
+        u"""
         Iterate over tree applying post-order strategy starting at `node`.
 
         >>> from anytree import Node, RenderTree
