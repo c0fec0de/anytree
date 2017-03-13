@@ -686,6 +686,13 @@ class Walker(object):
         ([Node('/f')], [])
         >>> w.walk(h, e)
         ([Node('/f/g/i'), Node('/f/g'), Node('/f')], [Node('/f/b'), Node('/f/b/d'), Node('/f/b/d/e')])
+
+        For a proper walking the nodes need to be part of the same tree:
+
+        >>> w.walk(Node("a"), Node("b"))
+        Traceback (most recent call last):
+          ...
+        anytree.WalkError: Node('/a') and Node('/b') are not part of the same tree.
         """
         s = start.path
         e = end.path
