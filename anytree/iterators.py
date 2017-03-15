@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
 
+import six
+
+
+@six.python_2_unicode_compatible
 class PreOrderIter(object):
 
     def __init__(self, node):
@@ -18,16 +23,16 @@ class PreOrderIter(object):
         >>> g = Node("g", parent=f)
         >>> i = Node("i", parent=g)
         >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f, style=AsciiStyle()))
+        >>> print(RenderTree(f))
         Node('/f')
-        |-- Node('/f/b')
-        |   |-- Node('/f/b/a')
-        |   +-- Node('/f/b/d')
-        |       |-- Node('/f/b/d/c')
-        |       +-- Node('/f/b/d/e')
-        +-- Node('/f/g')
-            +-- Node('/f/g/i')
-                +-- Node('/f/g/i/h')
+        ├── Node('/f/b')
+        │   ├── Node('/f/b/a')
+        │   └── Node('/f/b/d')
+        │       ├── Node('/f/b/d/c')
+        │       └── Node('/f/b/d/e')
+        └── Node('/f/g')
+            └── Node('/f/g/i')
+                └── Node('/f/g/i/h')
 
         >>> [node.name for node in PreOrderIter(f)]
         ['f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h']
@@ -43,6 +48,7 @@ class PreOrderIter(object):
             stack = node.children + stack[1:]
 
 
+@six.python_2_unicode_compatible
 class PostOrderIter(object):
 
     def __init__(self, node):
@@ -59,16 +65,16 @@ class PostOrderIter(object):
         >>> g = Node("g", parent=f)
         >>> i = Node("i", parent=g)
         >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f, style=AsciiStyle()))
+        >>> print(RenderTree(f))
         Node('/f')
-        |-- Node('/f/b')
-        |   |-- Node('/f/b/a')
-        |   +-- Node('/f/b/d')
-        |       |-- Node('/f/b/d/c')
-        |       +-- Node('/f/b/d/e')
-        +-- Node('/f/g')
-            +-- Node('/f/g/i')
-                +-- Node('/f/g/i/h')
+        ├── Node('/f/b')
+        │   ├── Node('/f/b/a')
+        │   └── Node('/f/b/d')
+        │       ├── Node('/f/b/d/c')
+        │       └── Node('/f/b/d/e')
+        └── Node('/f/g')
+            └── Node('/f/g/i')
+                └── Node('/f/g/i/h')
 
         >>> [node.name for node in PostOrderIter(f)]
         ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
