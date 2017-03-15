@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 
+
 from __future__ import print_function
 try:  # pragma: no cover
     from collections import OrderedDict
 except ImportError:  # pragma: no cover
     from ordereddict import OrderedDict
 
-import six
 import re
 
 _MAXCACHE = 20
 
 
-@six.python_2_unicode_compatible
 class Resolver(object):
 
     _match_cache = {}
