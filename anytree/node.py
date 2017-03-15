@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Node Classes.
+
+* :any:`Node`: a simple tree node
+* :any:`NodeMixin`: extends any python class to a tree node.
+"""
 
 from __future__ import print_function
 from .iterators import PreOrderIter

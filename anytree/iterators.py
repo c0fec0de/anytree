@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Tree Iteration Strategies.
+
+* :any:`PreOrderIter`: iterate over tree using pre-order strategy
+* :any:`PostOrderIter`: iterate over tree using post-order strategy
+"""
+
 
 class PreOrderIter(object):
 

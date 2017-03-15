@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+"""
+Tree Rendering.
+
+* :any:`RenderTree` using the following styles:
+    * :any:`AsciiStyle`
+    * :any:`ContStyle`
+    * :any:`ContRoundStyle`
+    * :any:`DoubleStyle`
+"""
 
 import six
 
