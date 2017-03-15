@@ -47,9 +47,6 @@ Node('/Marc')
 
 Every node has an :any:`children` attribute with a tuple of all children:
 
-
-Every node has an :any:`children` attribute with a tuple of all children:
-
 >>> udo.children
 ()
 >>> marc.children
@@ -118,3 +115,26 @@ Notification on detach:
 >>> c.parent = None
 _pre_detach NotifiedNode('/b')
 _post_detach NotifiedNode('/b')
+
+Custom Separator
+----------------
+
+By default a slash character (`/`) separates nodes.
+This separator can be overwritten:
+
+>>> class MyNode(Node):
+...     separator = "|"
+
+>>> udo = MyNode("Udo")
+>>> dan = MyNode("Dan", parent=udo)
+>>> marc = MyNode("Marc", parent=udo)
+>>> print(RenderTree(udo))
+MyNode('|Udo')
+├── MyNode('|Udo|Dan')
+└── MyNode('|Udo|Marc')
+
+The resolver takes the custom separator also into account:
+
+>>> r = Resolver()
+>>> r.glob(udo, "|Udo|*")
+[MyNode('|Udo|Dan'), MyNode('|Udo|Marc')]

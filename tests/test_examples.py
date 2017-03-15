@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from nose.tools import eq_
 
-from anytree import Node, RenderTree
+from anytree import Node
+from anytree import RenderTree
 
 
 def test_stackoverflow():

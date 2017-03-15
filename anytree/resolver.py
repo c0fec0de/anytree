@@ -150,17 +150,18 @@ class Resolver(object):
         return self.__glob(node, parts)
 
     def __start(self, node, path):
-        parts = path.split("/")
-        if path.startswith("/"):
+        sep = node.separator
+        parts = path.split(sep)
+        if path.startswith(sep):
             node = node.root
             rootpart = self.__get_part(node)
             parts.pop(0)
             if not parts[0]:
-                msg = "root node missing. root is '/%s'."
-                raise ResolverError(node, "", msg % str(rootpart))
+                msg = "root node missing. root is '%s%s'."
+                raise ResolverError(node, "", msg % (sep, str(rootpart)))
             elif parts[0] != rootpart:
-                msg = "unknown root node '/%s'. root is '/%s'."
-                raise ResolverError(node, "", msg % (parts[0], str(rootpart)))
+                msg = "unknown root node '%s%s'. root is '%s%s'."
+                raise ResolverError(node, "", msg % (sep, parts[0], sep, str(rootpart)))
             parts.pop(0)
         return node, parts
 
