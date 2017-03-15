@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from nose.tools import eq_
 
 from anytree import Node

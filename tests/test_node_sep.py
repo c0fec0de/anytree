@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Test custom node sepator."""
 
 import six
