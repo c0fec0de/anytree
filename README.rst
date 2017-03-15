@@ -7,16 +7,16 @@
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.0.0
-    :target: http://anytree.readthedocs.io/en/2.0.0/?badge=2.0.0
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.1.0
+    :target: http://anytree.readthedocs.io/en/2.1.0/?badge=2.1.0
 
 
 Documentation
 =============
 
-The Documentation_ is hosted on http://anytree.readthedocs.io/en/2.0.0/
+The Documentation_ is hosted on http://anytree.readthedocs.io/en/2.1.0/
 
-.. _Documentation: http://anytree.readthedocs.io/en/2.0.0/
+.. _Documentation: http://anytree.readthedocs.io/en/2.1.0/
 
 Getting started
 ===============
