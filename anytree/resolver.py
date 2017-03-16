@@ -189,9 +189,9 @@ class Resolver(object):
                         else:
                             matches.append(child)
                 except ResolverError as exc:
-                    if not Resolver.__is_wildcard(part):
+                    if not Resolver.is_wildcard(part):
                         raise exc
-            if not matches and not Resolver.__is_wildcard(part):
+            if not matches and not Resolver.is_wildcard(part):
                 raise ChildResolverError(node, part, nodemap.keys())
             nodes += matches
         return nodes
@@ -200,8 +200,9 @@ class Resolver(object):
         return getattr(node, self.pathattr)
 
     @staticmethod
-    def __is_wildcard(pat):
-        return "?" in pat or "*" in pat
+    def is_wildcard(path):
+        """Return `True` is a wildcard."""
+        return "?" in path or "*" in path
 
     @staticmethod
     def __match(name, pat):
