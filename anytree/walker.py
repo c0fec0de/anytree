@@ -46,17 +46,15 @@ class Walker(object):
         This class is made for walking:
 
         >>> w.walk(f, f)
-        ([], [])
+        ((), Node('/f'), ())
         >>> w.walk(f, b)
-        ([], [Node('/f/b')])
+        ((), Node('/f'), (Node('/f/b'),))
         >>> w.walk(b, f)
-        ([Node('/f')], [])
-        >>> w.walk(a, f)
-        ([Node('/f/b'), Node('/f')], [])
-        >>> w.walk(b, f)
-        ([Node('/f')], [])
+        ((Node('/f/b'),), Node('/f'), ())
         >>> w.walk(h, e)
-        ([Node('/f/g/i'), Node('/f/g'), Node('/f')], [Node('/f/b'), Node('/f/b/d'), Node('/f/b/d/e')])
+        ((Node('/f/g/i/h'), Node('/f/g/i'), Node('/f/g')), Node('/f'), (Node('/f/b'), Node('/f/b/d'), Node('/f/b/d/e')))
+        >>> w.walk(d, e)
+        ((), Node('/f/b/d'), (Node('/f/b/d/e'),))
 
         For a proper walking the nodes need to be part of the same tree:
 
@@ -73,18 +71,18 @@ class Walker(object):
         # common
         c = tuple([si for si, ei in zip(s, e) if si is ei])
         assert c[0] is start.root
-        cs = len(c) - 1
+        len_c = len(c)
         # up
         if start is c[-1]:
-            up = []
+            up = tuple()
         else:
-            up = list(reversed(s[cs:-1]))
+            up = tuple(reversed(s[len_c:]))
         # down
         if end is c[-1]:
-            down = []
+            down = tuple()
         else:
-            down = list(e[cs + 1:])
-        return up, down
+            down = e[len_c:]
+        return up, c[-1], down
 
 
 class WalkError(RuntimeError):
