@@ -6,6 +6,8 @@ Tree Iteration Strategies.
 * :any:`PostOrderIter`: iterate over tree using post-order strategy
 """
 
+from itertools import chain as _chain
+
 
 class PreOrderIter(object):
 
@@ -137,4 +139,51 @@ class LevelOrderIter(object):
             for child in children:
                 yield child
                 next_children += child.children
+            children = next_children
+
+
+class LevelGroupOrderIter(object):
+
+    def __init__(self, node):
+        """
+        Iterate over tree applying level-order strategy with grouping starting at `node`.
+
+        Return a tuple of nodes for each level. The first tuple contains the
+        nodes at level 0 (always `node`). The second tuple contains the nodes at level 1
+        (children of `node`). The next level contains the children of the children, and so on.
+
+        >>> from anytree import Node, RenderTree, AsciiStyle
+        >>> f = Node("f")
+        >>> b = Node("b", parent=f)
+        >>> a = Node("a", parent=b)
+        >>> d = Node("d", parent=b)
+        >>> c = Node("c", parent=d)
+        >>> e = Node("e", parent=d)
+        >>> g = Node("g", parent=f)
+        >>> i = Node("i", parent=g)
+        >>> h = Node("h", parent=i)
+        >>> print(RenderTree(f, style=AsciiStyle()))
+        Node('/f')
+        |-- Node('/f/b')
+        |   |-- Node('/f/b/a')
+        |   +-- Node('/f/b/d')
+        |       |-- Node('/f/b/d/c')
+        |       +-- Node('/f/b/d/e')
+        +-- Node('/f/g')
+            +-- Node('/f/g/i')
+                +-- Node('/f/g/i/h')
+
+        >>> [[node.name for node in children] for children in LevelGroupOrderIter(f)]
+        [['f'], ['b', 'g'], ['a', 'd', 'i'], ['c', 'e', 'h']]
+        """
+        super(LevelGroupOrderIter, self).__init__()
+        self.node = node
+
+    def __iter__(self):
+        children = tuple([self.node])
+        while children:
+            yield children
+            next_children = tuple()
+            for child in children:
+                next_children = next_children + child.children
             children = next_children
