@@ -1,5 +1,5 @@
-Tree Iteration Strategies
-=========================
+Tree Iteration
+==============
 
 .. automodule:: anytree.iterators
     :members:
