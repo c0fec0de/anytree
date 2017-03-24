@@ -306,4 +306,3 @@ class LevelGroupOrderIter(object):
                 for child in children:
                     next_children = next_children + [c for c in child.children if not stop(c)]
                 children = next_children
-
