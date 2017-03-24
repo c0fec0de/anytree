@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Tree Iteration Strategies.
+Tree Iteration.
 
 * :any:`PreOrderIter`: iterate over tree using pre-order strategy
 * :any:`PostOrderIter`: iterate over tree using post-order strategy
+* :any:`LevelOrderIter`: iterate over tree using level-order strategy
+* :any:`LevelGroupOrderIter`: iterate over tree using level-order strategy returning group for every level
 """
-
-from itertools import chain as _chain
 
 
 class PreOrderIter(object):
