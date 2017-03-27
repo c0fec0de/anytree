@@ -9,7 +9,44 @@ Tree Iteration.
 """
 
 
-class PreOrderIter(object):
+class AbstractIter(object):
+
+    def __init__(self, node, filter_=None, stop=None, maxlevel=None):
+        """
+        Base class for all iterators.
+
+        Iterate over tree starting at `node`.
+
+        Keyword Args:
+            filter_: function called with every `node` as argument, `node` is returned if `True`.
+            stop: stop iteration at `node` if `stop` function returns `True` for `node`.
+            maxlevel (int): maximum decending in the node hierarchy.
+        """
+        self.node = node
+        self.filter_ = filter_
+        self.stop = stop
+        self.maxlevel = maxlevel
+
+    def __iter__(self):
+        node = self.node
+        filter_ = self.filter_
+        stop = self.stop
+        maxlevel = self.maxlevel
+        if filter_ is None:
+            def filter_(node):
+                return True
+        if stop is None:
+            def stop(node):
+                return False
+        children = [node] if (maxlevel is None) or (maxlevel > 0) and not stop(node) else []
+        return self._iter(children, filter_, stop, maxlevel)
+
+    @staticmethod
+    def _iter(children, filter_, stop, maxlevel):
+        raise NotImplementedError()
+
+
+class PreOrderIter(AbstractIter):
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
@@ -54,23 +91,11 @@ class PreOrderIter(object):
         >>> [node.name for node in PreOrderIter(f, stop=lambda n: n.name == 'd')]
         ['f', 'b', 'a', 'g', 'i', 'h']
         """
-        super(PreOrderIter, self).__init__()
-        self.node = node
-        self.filter_ = filter_
-        self.stop = stop
-        self.maxlevel = maxlevel
+        super(PreOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
-    def __iter__(self):
-        filter_ = self.filter_
-        stop = self.stop
-        maxlevel = self.maxlevel
-        if filter_ is None:
-            def filter_(node):
-                return True
-        if stop is None:
-            def stop(node):
-                return False
-        stack = [[self.node]] if (maxlevel is None) or (maxlevel > 0) else []
+    @staticmethod
+    def _iter(children, filter_, stop, maxlevel):
+        stack = [children]
         while stack:
             children = stack[-1]
             if children:
@@ -85,7 +110,7 @@ class PreOrderIter(object):
                 stack.pop()
 
 
-class PostOrderIter(object):
+class PostOrderIter(AbstractIter):
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
@@ -127,36 +152,24 @@ class PostOrderIter(object):
         >>> [node.name for node in PostOrderIter(f, stop=lambda n: n.name == 'd')]
         ['a', 'b', 'h', 'i', 'g', 'f']
         """
-        super(PostOrderIter, self).__init__()
-        self.node = node
-        self.filter_ = filter_
-        self.stop = stop
-        self.maxlevel = maxlevel
+        super(PostOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
-    def __iter__(self):
-        filter_ = self.filter_
-        stop = self.stop
-        maxlevel = self.maxlevel
-        if filter_ is None:
-            def filter_(node):
-                return True
-        if stop is None:
-            def stop(node):
-                return False
-        return self.__next([self.node], 1, filter_, stop, maxlevel)
+    @staticmethod
+    def _iter(children, filter_, stop, maxlevel):
+        return PostOrderIter.__next(children, 1, filter_, stop, maxlevel)
 
-    @classmethod
-    def __next(cls, children, level, filter_, stop, maxlevel):
+    @staticmethod
+    def __next(children, level, filter_, stop, maxlevel):
         if maxlevel is None or level <= maxlevel:
             for child in children:
                 if not stop(child):
-                    for grandchild in cls.__next(child.children, level + 1, filter_, stop, maxlevel):
+                    for grandchild in PostOrderIter.__next(child.children, level + 1, filter_, stop, maxlevel):
                         yield grandchild
                     if filter_(child):
                         yield child
 
 
-class LevelOrderIter(object):
+class LevelOrderIter(AbstractIter):
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
@@ -198,24 +211,10 @@ class LevelOrderIter(object):
         >>> [node.name for node in LevelOrderIter(f, stop=lambda n: n.name == 'd')]
         ['f', 'b', 'g', 'a', 'i', 'h']
         """
-        super(LevelOrderIter, self).__init__()
-        self.node = node
-        self.filter_ = filter_
-        self.stop = stop
-        self.maxlevel = maxlevel
+        super(LevelOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
-    def __iter__(self):
-        node = self.node
-        filter_ = self.filter_
-        stop = self.stop
-        maxlevel = self.maxlevel
-        if filter_ is None:
-            def filter_(node):
-                return True
-        if stop is None:
-            def stop(node):
-                return False
-        children = [node] if (maxlevel is None) or (maxlevel > 0) else []
+    @staticmethod
+    def _iter(children, filter_, stop, maxlevel):
         level = 1
         while children:
             next_children = []
@@ -230,7 +229,7 @@ class LevelOrderIter(object):
                 break
 
 
-class LevelGroupOrderIter(object):
+class LevelGroupOrderIter(AbstractIter):
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
@@ -278,31 +277,17 @@ class LevelGroupOrderIter(object):
         ...  for children in LevelGroupOrderIter(f, stop=lambda n: n.name == 'd')]
         [['f'], ['b', 'g'], ['a', 'i'], ['h']]
         """
-        super(LevelGroupOrderIter, self).__init__()
-        self.node = node
-        self.filter_ = filter_
-        self.stop = stop
-        self.maxlevel = maxlevel
+        super(LevelGroupOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
-    def __iter__(self):
-        filter_ = self.filter_
-        stop = self.stop
-        maxlevel = self.maxlevel
-        if filter_ is None:
-            def filter_(node):
-                return True
-        if stop is None:
-            def stop(node):
-                return False
-        if (maxlevel is None or maxlevel > 0) and not stop(self.node):
-            level = 1
-            children = [self.node]
-            while children:
-                yield tuple([child for child in children if filter_(child)])
-                level += 1
-                if maxlevel is not None and level > maxlevel:
-                    break
-                next_children = []
-                for child in children:
-                    next_children = next_children + [c for c in child.children if not stop(c)]
-                children = next_children
+    @staticmethod
+    def _iter(children, filter_, stop, maxlevel):
+        level = 1
+        while children:
+            yield tuple([child for child in children if filter_(child)])
+            level += 1
+            if maxlevel is not None and level > maxlevel:
+                break
+            next_children = []
+            for child in children:
+                next_children = next_children + [c for c in child.children if not stop(c)]
+            children = next_children
