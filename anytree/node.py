@@ -92,42 +92,41 @@ class NodeMixin(object):
         except AttributeError:
             parent = None
         if value is None:
-            # make this Node to root node
-            if parent:
-                self._pre_detach(parent)
-                # unregister at parent
-                parentchildren = parent._children
-                assert self in parentchildren, "Tree internal data is corrupt."
-                parentchildren.remove(self)
-                self._post_detach(parent)
+            # make this node to root node
+            self.__detach(parent)
         elif parent is not value:
             # change parent node
-            if parent:
-                self._pre_detach(parent)
-                # unregister at old parent
-                parentchildren = parent._children
-                assert self in parentchildren, "Tree internal data is corrupt."
-                parentchildren.remove(self)
-                self._post_detach(parent)
-            # check for loop
-            if value is self:
-                msg = "Cannot set parent. %r cannot be parent of itself."
-                raise LoopError(msg % self)
-            if self in value.path:
-                msg = "Cannot set parent. %r is parent of %r."
-                raise LoopError(msg % (self, value))
-
-            self._pre_attach(value)
-            # register at new parent
-            parentchildren = value._children
-            assert self not in parentchildren, "Tree internal data is corrupt."
-            parentchildren.append(self)
-            self._post_attach(value)
+            self.__detach(parent)
+            self.__check_loop(value)
+            self.__attach(value)
         else:
             # keep parent
             pass
         # apply
         self._parent = value
+
+    def __check_loop(self, node):
+        if node is self:
+            msg = "Cannot set parent. %r cannot be parent of itself."
+            raise LoopError(msg % self)
+        if self in node.path:
+            msg = "Cannot set parent. %r is parent of %r."
+            raise LoopError(msg % (self, node))
+
+    def __detach(self, parent):
+        if parent:
+            self._pre_detach(parent)
+            parentchildren = parent._children
+            assert self in parentchildren, "Tree internal data is corrupt."
+            parentchildren.remove(self)
+            self._post_detach(parent)
+
+    def __attach(self, parent):
+        self._pre_attach(parent)
+        parentchildren = parent._children
+        assert self not in parentchildren, "Tree internal data is corrupt."
+        parentchildren.append(self)
+        self._post_attach(parent)
 
     @property
     def _children(self):
