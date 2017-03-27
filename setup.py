@@ -10,7 +10,7 @@ from os import path
 
 config = {
     'name': "anytree",
-    'version': "2.1.0",
+    'version': "2.1.1",
     'author': 'c0fec0de',
     'author_email': 'c0fec0de@gmail.com',
     'description': "Powerful and Lightweight Python Tree Data Structure with various plugins.",
