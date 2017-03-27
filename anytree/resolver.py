@@ -67,21 +67,20 @@ class Resolver(object):
         anytree.resolver.ResolverError: unknown root node '/bar'. root is '/top'.
         """
         node, parts = self.__start(node, path)
-        get_part = self.__get_part
         for part in parts:
             if part == "..":
                 node = node.parent
             elif part in ("", "."):
                 pass
             else:
-                for child in node.children:
-                    name = get_part(child)
-                    if name == part:
-                        node = child
-                        break
-                else:
-                    raise ChildResolverError(node, part, [get_part(node) for node in node.children])
+                node = self.__get(node, part)
         return node
+
+    def __get(self, node, name):
+        for child in node.children:
+            if self.__get_part(child) == name:
+                return child
+        raise ChildResolverError(node, name, [self.__get_part(node) for node in node.children])
 
     def glob(self, node, path):
         """
