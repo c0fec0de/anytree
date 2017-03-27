@@ -171,19 +171,32 @@ class RenderTreeGraph(_Render):
         if not edgeattrfunc:
             def edgeattrfunc(node, child):
                 return None
-        # intro
+        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc)
+
+    def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc):
         yield "{self.graph} {self.name} {{".format(self=self)
+        for option in self.__iter_options(indent):
+            yield option
+        for node in self.__iter_nodes(indent, nodenamefunc, nodeattrfunc):
+            yield node
+        for edge in self.__iter_edges(indent, nodenamefunc, edgeattrfunc):
+            yield edge
+        yield "}"
+
+    def __iter_options(self, indent):
         options = self.options
         if options:
             for option in options:
                 yield "%s%s" % (indent, option)
-        # nodes
+
+    def __iter_nodes(self, indent, nodenamefunc, nodeattrfunc):
         for node in PreOrderIter(self.node):
             nodename = nodenamefunc(node)
             nodeattr = nodeattrfunc(node)
             nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
             yield '%s"%s"%s;' % (indent, nodename, nodeattr)
-        # edges
+
+    def __iter_edges(self, indent, nodenamefunc, edgeattrfunc):
         for node in PreOrderIter(self.node):
             nodename = nodenamefunc(node)
             for child in node.children:
@@ -192,5 +205,3 @@ class RenderTreeGraph(_Render):
                 edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
                 yield '%s"%s" -> "%s"%s;' % (indent, nodename, childname,
                                              edgeattr)
-        # outro
-        yield "}"
