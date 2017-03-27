@@ -43,7 +43,7 @@ class AbstractIter(object):
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
-        raise NotImplementedError()
+        raise NotImplementedError()  # pragma: no cover
 
 
 class PreOrderIter(AbstractIter):
