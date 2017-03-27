@@ -1,5 +1,0 @@
-engines:
-  radon:
-    enabled: true
-    config:
-      threshold: "A"
