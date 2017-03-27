@@ -163,32 +163,35 @@ class Resolver(object):
         return node, parts
 
     def __glob(self, node, parts):
-        get_part = self.__get_part
         nodes = []
-        part = parts[0]
-        remainparts = parts[1:]
+        name = parts[0]
+        remainder = parts[1:]
         # handle relative
-        if part == "..":
-            nodes += self.__glob(node.parent, remainparts)
-        elif part in ("", "."):
-            nodes += self.__glob(node, remainparts)
+        if name == "..":
+            nodes += self.__glob(node.parent, remainder)
+        elif name in ("", "."):
+            nodes += self.__glob(node, remainder)
         else:
-            matches = []
-            for child in node.children:
-                name = get_part(child)
-                try:
-                    if Resolver.__match(name, part):
-                        if remainparts:
-                            matches += self.__glob(child, remainparts)
-                        else:
-                            matches.append(child)
-                except ResolverError as exc:
-                    if not Resolver.is_wildcard(part):
-                        raise exc
-            if not matches and not Resolver.is_wildcard(part):
-                raise ChildResolverError(node, part, [get_part(node) for node in node.children])
+            matches = self.__find(node, name, remainder)
+            if not matches and not Resolver.is_wildcard(name):
+                raise ChildResolverError(node, name, [self.__get_part(child) for child in node.children])
             nodes += matches
         return nodes
+
+    def __find(self, node, pat, remainder):
+        matches = []
+        for child in node.children:
+            name = self.__get_part(child)
+            try:
+                if Resolver.__match(name, pat):
+                    if remainder:
+                        matches += self.__glob(child, remainder)
+                    else:
+                        matches.append(child)
+            except ResolverError as exc:
+                if not Resolver.is_wildcard(pat):
+                    raise exc
+        return matches
 
     def __get_part(self, node):
         return getattr(node, self.pathattr)
