@@ -71,17 +71,20 @@ class Resolver(object):
         anytree.resolver.ResolverError: unknown root node '/bar'. root is '/top'.
         """
         node, parts = self.__start(node, path)
+        get_part = self.__get_part
         for part in parts:
             if part == "..":
                 node = node.parent
             elif part in ("", "."):
                 pass
             else:
-                nodemap = self.__get_nodemap(node)
-                try:
-                    node = nodemap[part]
-                except KeyError:
-                    raise ChildResolverError(node, part, nodemap.keys())
+                for child in node.children:
+                    name = get_part(child)
+                    if name == part:
+                        node = child
+                        break
+                else:
+                    raise ChildResolverError(node, part, [get_part(node) for node in node.children])
         return node
 
     def glob(self, node, path):
@@ -164,12 +167,8 @@ class Resolver(object):
             parts.pop(0)
         return node, parts
 
-    def __get_nodemap(self, node):
-        subnodes = [(self.__get_part(child), child)
-                    for child in node.children]
-        return OrderedDict(subnodes)
-
     def __glob(self, node, parts):
+        get_part = self.__get_part
         nodes = []
         part = parts[0]
         remainparts = parts[1:]
@@ -180,8 +179,8 @@ class Resolver(object):
             nodes += self.__glob(node, remainparts)
         else:
             matches = []
-            nodemap = self.__get_nodemap(node)
-            for name, child in nodemap.items():
+            for child in node.children:
+                name = get_part(child)
                 try:
                     if Resolver.__match(name, part):
                         if remainparts:
@@ -192,7 +191,7 @@ class Resolver(object):
                     if not Resolver.is_wildcard(part):
                         raise exc
             if not matches and not Resolver.is_wildcard(part):
-                raise ChildResolverError(node, part, nodemap.keys())
+                raise ChildResolverError(node, part, [get_part(node) for node in node.children])
             nodes += matches
         return nodes
 

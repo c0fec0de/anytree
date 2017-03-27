@@ -68,3 +68,13 @@ def test_glob_cache():
     eq_(len(at.Resolver._match_cache), 2)
     eq_(r.glob(root, "sub*"), [sub0, sub1])
     eq_(len(at.Resolver._match_cache), 1)
+
+
+def test_same_name():
+    """Same Name."""
+    root = at.Node("root")
+    sub0 = at.Node("sub", parent=root)
+    sub1 = at.Node("sub", parent=root)
+    r = at.Resolver()
+    eq_(r.get(root, "sub"), sub0)
+    eq_(r.glob(root, "sub"), [sub0, sub1])
