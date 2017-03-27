@@ -2,10 +2,6 @@
 
 
 from __future__ import print_function
-try:  # pragma: no cover
-    from collections import OrderedDict
-except ImportError:  # pragma: no cover
-    from ordereddict import OrderedDict
 
 import re
 
