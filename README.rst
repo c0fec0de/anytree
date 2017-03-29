@@ -11,7 +11,7 @@
     :target: http://anytree.readthedocs.io/en/2.1.1/?badge=2.1.1
 
 .. image:: https://codeclimate.com/github/c0fec0de/anytree.png
-    :target: https://codeclimate.com/github/c0fec0de/anytree.png
+    :target: https://codeclimate.com/github/c0fec0de/anytree
 
 Documentation
 =============
