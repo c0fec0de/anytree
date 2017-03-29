@@ -235,26 +235,26 @@ class RenderTree(object):
         return self.__next(self.node, tuple())
 
     def __next(self, node, continues):
-        # item
+        yield RenderTree.__item(node, continues, self.style)
+        children = node.children
+        if children:
+            lastidx = len(children) - 1
+            for idx, child in enumerate(self.childiter(children)):
+                for grandchild in self.__next(child, continues + (idx != lastidx, )):
+                    yield grandchild
+
+    def __item(node, continues, style):
         if not continues:
-            yield u'', u'', node
+            return u'', u'', node
         else:
-            style = self.style
             indent = ''.join([style.vertical if cont else style.empty
                               for cont in continues[:-1]])
             branch = style.cont if continues[-1] else style.end
             pre = indent + branch
             fill = ''.join([style.vertical if cont else style.empty
                             for cont in continues])
-            yield pre, fill, node
-        # children
-        children = node.children
-        if children:
-            lastidx = len(children) - 1
-            for idx, child in enumerate(self.childiter(children)):
-                for grandchild in self.__next(child,
-                                              continues + (idx != lastidx, )):
-                    yield grandchild
+            return pre, fill, node
+
 
     def __str__(self):
         lines = ["%s%r" % (pre, node) for pre, _, node in self]
