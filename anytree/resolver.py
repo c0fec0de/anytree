@@ -78,9 +78,9 @@ class Resolver(object):
 
     def __get(self, node, name):
         for child in node.children:
-            if self.__get_part(child) == name:
+            if _getattr(child, self.pathattr) == name:
                 return child
-        raise ChildResolverError(node, name, [self.__get_part(node) for node in node.children])
+        raise ChildResolverError(node, name, self.pathattr)
 
     def glob(self, node, path):
         """
@@ -151,7 +151,7 @@ class Resolver(object):
         parts = path.split(sep)
         if path.startswith(sep):
             node = node.root
-            rootpart = self.__get_part(node)
+            rootpart = _getattr(node, self.pathattr)
             parts.pop(0)
             if not parts[0]:
                 msg = "root node missing. root is '%s%s'."
@@ -174,14 +174,14 @@ class Resolver(object):
         else:
             matches = self.__find(node, name, remainder)
             if not matches and not Resolver.is_wildcard(name):
-                raise ChildResolverError(node, name, [self.__get_part(child) for child in node.children])
+                raise ChildResolverError(node, name, self.pathattr)
             nodes += matches
         return nodes
 
     def __find(self, node, pat, remainder):
         matches = []
         for child in node.children:
-            name = self.__get_part(child)
+            name = _getattr(child, self.pathattr)
             try:
                 if Resolver.__match(name, pat):
                     if remainder:
@@ -192,9 +192,6 @@ class Resolver(object):
                 if not Resolver.is_wildcard(pat):
                     raise exc
         return matches
-
-    def __get_part(self, node):
-        return getattr(node, self.pathattr)
 
     @staticmethod
     def is_wildcard(path):
@@ -236,9 +233,14 @@ class ResolverError(RuntimeError):
 
 class ChildResolverError(ResolverError):
 
-    def __init__(self, node, child, children):
-        """Child Resolve Error at `node` handling `child` with known `children`."""
+    def __init__(self, node, child, pathattr):
+        """Child Resolve Error at `node` handling `child`."""
+        children = [_getattr(child, pathattr) for child in node.children]
         names = ", ".join([repr(c) for c in children])
         msg = "%r has no child %s. Children are: %s."
         msg = msg % (node, child, names)
         super(ChildResolverError, self).__init__(node, child, msg)
+
+
+def _getattr(node, name):
+    return getattr(node, name, None)
