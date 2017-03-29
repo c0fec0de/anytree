@@ -247,14 +247,12 @@ class RenderTree(object):
         if not continues:
             return u'', u'', node
         else:
-            indent = ''.join([style.vertical if cont else style.empty
-                              for cont in continues[:-1]])
+            items = [style.vertical if cont else style.empty for cont in continues]
+            indent = ''.join(items[:-1])
             branch = style.cont if continues[-1] else style.end
             pre = indent + branch
-            fill = ''.join([style.vertical if cont else style.empty
-                            for cont in continues])
+            fill = ''.join(items)
             return pre, fill, node
-
 
     def __str__(self):
         lines = ["%s%r" % (pre, node) for pre, _, node in self]
