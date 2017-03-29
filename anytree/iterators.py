@@ -287,7 +287,11 @@ class LevelGroupOrderIter(AbstractIter):
             level += 1
             if maxlevel is not None and level > maxlevel:
                 break
+            children = LevelGroupOrderIter._get_children(children, stop)
+
+    @staticmethod
+    def _get_children(children, stop):
             next_children = []
             for child in children:
                 next_children = next_children + [c for c in child.children if not stop(c)]
-            children = next_children
+            return next_children
