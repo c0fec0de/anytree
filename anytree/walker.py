@@ -69,7 +69,7 @@ class Walker(object):
             msg = "%r and %r are not part of the same tree." % (start, end)
             raise WalkError(msg)
         # common
-        c = tuple([si for si, ei in zip(s, e) if si is ei])
+        c = Walker.__calc_common(s, e)
         assert c[0] is start.root
         len_c = len(c)
         # up
@@ -83,6 +83,10 @@ class Walker(object):
         else:
             down = e[len_c:]
         return up, c[-1], down
+
+    @staticmethod
+    def __calc_common(s, e):
+        return tuple([si for si, ei in zip(s, e) if si is ei])
 
 
 class WalkError(RuntimeError):
