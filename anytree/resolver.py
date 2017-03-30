@@ -235,10 +235,9 @@ class ChildResolverError(ResolverError):
 
     def __init__(self, node, child, pathattr):
         """Child Resolve Error at `node` handling `child`."""
-        children = [_getattr(child, pathattr) for child in node.children]
-        names = ", ".join([repr(c) for c in children])
+        names = [repr(_getattr(c, pathattr)) for c in node.children]
         msg = "%r has no child %s. Children are: %s."
-        msg = msg % (node, child, names)
+        msg = msg % (node, child, ", ".join(names))
         super(ChildResolverError, self).__init__(node, child, msg)
 
 
