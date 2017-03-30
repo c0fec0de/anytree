@@ -243,6 +243,7 @@ class RenderTree(object):
                 for grandchild in self.__next(child, continues + (idx != lastidx, )):
                     yield grandchild
 
+    @staticmethod
     def __item(node, continues, style):
         if not continues:
             return u'', u'', node
