@@ -108,3 +108,16 @@ def test_doublestyle():
     eq_(style.vertical, u'\u2551   ')
     eq_(style.cont, u'\u2560\u2550\u2550 ')
     eq_(style.end, u'\u255a\u2550\u2550 ')
+
+
+def test_by_attr():
+    """by attr."""
+    root = anytree.Node("root", lines=["root"])
+    s0 = anytree.Node("sub0", parent=root, lines=["su", "b0"])
+    anytree.Node("sub0B", parent=s0, lines=["sub", "0B"])
+    anytree.Node("sub0A", parent=s0)
+    anytree.Node("sub1", parent=root, lines=["sub1"])
+    eq_(anytree.RenderTree(root).by_attr(),
+        "root\n├── sub0\n│   ├── sub0B\n│   └── sub0A\n└── sub1")
+    eq_(anytree.RenderTree(root).by_attr("lines"),
+        "root\n├── su\n│   b0\n│   ├── sub\n│   │   0B\n│   └── \n└── sub1")
