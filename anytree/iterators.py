@@ -38,12 +38,16 @@ class AbstractIter(object):
         if stop is None:
             def stop(node):
                 return False
-        children = [node] if (maxlevel is None) or (maxlevel > 0) and not stop(node) else []
+        children = [] if AbstractIter._abort_at_level(1, maxlevel) else [node]
         return self._iter(children, filter_, stop, maxlevel)
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
         raise NotImplementedError()  # pragma: no cover
+
+    @staticmethod
+    def _abort_at_level(level, maxlevel):
+        return maxlevel is not None and level > maxlevel
 
 
 class PreOrderIter(AbstractIter):
@@ -104,7 +108,7 @@ class PreOrderIter(AbstractIter):
                     if filter_(child):
                         yield child
                     grandchildren = list(child.children)
-                    if grandchildren and (maxlevel is None or len(stack) < maxlevel):
+                    if grandchildren and not AbstractIter._abort_at_level(len(stack) + 1, maxlevel):
                         stack.append(grandchildren)
             else:
                 stack.pop()
@@ -160,7 +164,7 @@ class PostOrderIter(AbstractIter):
 
     @staticmethod
     def __next(children, level, filter_, stop, maxlevel):
-        if maxlevel is None or level <= maxlevel:
+        if not AbstractIter._abort_at_level(level, maxlevel):
             for child in children:
                 if not stop(child):
                     for grandchild in PostOrderIter.__next(child.children, level + 1, filter_, stop, maxlevel):
@@ -225,7 +229,7 @@ class LevelOrderIter(AbstractIter):
                     next_children += child.children
             children = next_children
             level += 1
-            if maxlevel is not None and level > maxlevel:
+            if AbstractIter._abort_at_level(level, maxlevel):
                 break
 
 
@@ -285,13 +289,13 @@ class LevelGroupOrderIter(AbstractIter):
         while children:
             yield tuple([child for child in children if filter_(child)])
             level += 1
-            if maxlevel is not None and level > maxlevel:
+            if AbstractIter._abort_at_level(level, maxlevel):
                 break
             children = LevelGroupOrderIter._get_children(children, stop)
 
     @staticmethod
     def _get_children(children, stop):
-            next_children = []
-            for child in children:
-                next_children = next_children + [c for c in child.children if not stop(c)]
-            return next_children
+        next_children = []
+        for child in children:
+            next_children = next_children + [c for c in child.children if not stop(c)]
+        return next_children
