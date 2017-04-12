@@ -18,7 +18,7 @@ import os
 
 
 name = "anytree"
-version = "2.1.2"
+version = "2.1.3"
 author = 'c0fec0de'
 description = "Python Tree Data"
 
