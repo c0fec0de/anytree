@@ -12,8 +12,8 @@ class Walker(object):
         Walk from `start` node to `end` node.
 
         Returns:
-            (upwards, downwards): `upwards` is a list of edges to parent nodes to go upward to.
-            `downwards` is a list of edges to child nodes to go downward to.
+            (upwards, common, downwards): `upwards` is a list of nodes to go upward to.
+            `common` top node. `downwards` is a list of nodes to go downward to.
 
         Raises:
             WalkError: on no common root node.
