@@ -353,7 +353,6 @@ class ZigZagGroupIter(AbstractIter):
         """
         super(ZigZagGroupIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
-
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
         _iter = LevelOrderGroupIter._iter(children, filter_, stop, maxlevel)

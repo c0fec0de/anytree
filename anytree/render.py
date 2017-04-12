@@ -224,6 +224,26 @@ class RenderTree(object):
         │   ├── sub0A
         │   └── sub0B
         └── sub1
+
+        :any:`by_attr` simplifies attribute rendering and supports multiline:
+
+        >>> print(RenderTree(root).by_attr())
+        root
+        ├── sub0
+        │   ├── sub0B
+        │   └── sub0A
+        └── sub1
+        >>> print(RenderTree(root).by_attr("lines"))
+        c0fe
+        c0de
+        ├── ha
+        │   ba
+        │   ├── 1
+        │   │   2
+        │   │   3
+        │   └── a
+        │       b
+        └── Z
         """
         if not isinstance(style, AbstractStyle):
             style = style()
@@ -265,3 +285,17 @@ class RenderTree(object):
                 "style=%s" % repr(self.style),
                 "childiter=%s" % repr(self.childiter)]
         return "%s(%s)" % (classname, ", ".join(args))
+
+    def by_attr(self, attrname="name"):
+        """Return rendered tree with node attribute `attrname`."""
+        def get():
+            for pre, fill, node in self:
+                attr = getattr(node, attrname, "")
+                if isinstance(attr, (list, tuple)):
+                    lines = attr
+                else:
+                    lines = str(attr).split("\n")
+                yield u"%s%s" % (pre, lines[0])
+                for line in lines[1:]:
+                    yield u"%s%s" % (fill, line)
+        return "\n".join(get())
