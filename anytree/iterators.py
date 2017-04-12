@@ -6,6 +6,7 @@ Tree Iteration.
 * :any:`PostOrderIter`: iterate over tree using post-order strategy
 * :any:`LevelOrderIter`: iterate over tree using level-order strategy
 * :any:`LevelOrderGroupIter`: iterate over tree using level-order strategy returning group for every level
+* :any:`ZigZagGroupIter`: iterate over tree using level-order strategy returning group for every level
 """
 
 
@@ -299,3 +300,63 @@ class LevelOrderGroupIter(AbstractIter):
         for child in children:
             next_children = next_children + [c for c in child.children if not stop(c)]
         return next_children
+
+
+class ZigZagGroupIter(AbstractIter):
+
+    def __init__(self, node, filter_=None, stop=None, maxlevel=None):
+        """
+        Iterate over tree applying Zig-Zag strategy with grouping starting at `node`.
+
+        Return a tuple of nodes for each level. The first tuple contains the
+        nodes at level 0 (always `node`). The second tuple contains the nodes at level 1
+        (children of `node`) in reversed order.
+        The next level contains the children of the children in forward order, and so on.
+
+        Keyword Args:
+            filter_: function called with every `node` as argument, `node` is returned if `True`.
+            stop: stop iteration at `node` if `stop` function returns `True` for `node`.
+            maxlevel (int): maximum decending in the node hierarchy.
+
+        >>> from anytree import Node, RenderTree, AsciiStyle
+        >>> f = Node("f")
+        >>> b = Node("b", parent=f)
+        >>> a = Node("a", parent=b)
+        >>> d = Node("d", parent=b)
+        >>> c = Node("c", parent=d)
+        >>> e = Node("e", parent=d)
+        >>> g = Node("g", parent=f)
+        >>> i = Node("i", parent=g)
+        >>> h = Node("h", parent=i)
+        >>> print(RenderTree(f, style=AsciiStyle()))
+        Node('/f')
+        |-- Node('/f/b')
+        |   |-- Node('/f/b/a')
+        |   +-- Node('/f/b/d')
+        |       |-- Node('/f/b/d/c')
+        |       +-- Node('/f/b/d/e')
+        +-- Node('/f/g')
+            +-- Node('/f/g/i')
+                +-- Node('/f/g/i/h')
+        >>> [[node.name for node in children] for children in ZigZagGroupIter(f)]
+        [['f'], ['g', 'b'], ['a', 'd', 'i'], ['h', 'e', 'c']]
+        >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=0)]
+        []
+        >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=3)]
+        [['f'], ['g', 'b'], ['a', 'd', 'i']]
+        >>> [[node.name for node in children]
+        ...  for children in ZigZagGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
+        [['f'], ['b'], ['a', 'd', 'i'], ['h', 'c']]
+        >>> [[node.name for node in children]
+        ...  for children in ZigZagGroupIter(f, stop=lambda n: n.name == 'd')]
+        [['f'], ['g', 'b'], ['a', 'i'], ['h']]
+        """
+        super(ZigZagGroupIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
+
+
+    @staticmethod
+    def _iter(children, filter_, stop, maxlevel):
+        _iter = LevelOrderGroupIter._iter(children, filter_, stop, maxlevel)
+        while True:
+            yield next(_iter)
+            yield reversed(next(_iter))
