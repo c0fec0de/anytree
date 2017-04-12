@@ -53,50 +53,43 @@ class AbstractIter(object):
 
 class PreOrderIter(AbstractIter):
 
-    def __init__(self, node, filter_=None, stop=None, maxlevel=None):
-        """
-        Iterate over tree applying pre-order strategy starting at `node`.
+    """
+    Iterate over tree applying pre-order strategy starting at `node`.
 
-        Start at root and go-down until reaching a leaf node.
-        Step upwards then, and search for the next leafs.
+    Start at root and go-down until reaching a leaf node.
+    Step upwards then, and search for the next leafs.
 
-        Keyword Args:
-            filter_: function called with every `node` as argument, `node` is returned if `True`.
-            stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-            maxlevel (int): maximum decending in the node hierarchy.
-
-        >>> from anytree import Node, RenderTree, AsciiStyle
-        >>> f = Node("f")
-        >>> b = Node("b", parent=f)
-        >>> a = Node("a", parent=b)
-        >>> d = Node("d", parent=b)
-        >>> c = Node("c", parent=d)
-        >>> e = Node("e", parent=d)
-        >>> g = Node("g", parent=f)
-        >>> i = Node("i", parent=g)
-        >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f, style=AsciiStyle()))
-        Node('/f')
-        |-- Node('/f/b')
-        |   |-- Node('/f/b/a')
-        |   +-- Node('/f/b/d')
-        |       |-- Node('/f/b/d/c')
-        |       +-- Node('/f/b/d/e')
-        +-- Node('/f/g')
-            +-- Node('/f/g/i')
-                +-- Node('/f/g/i/h')
-        >>> [node.name for node in PreOrderIter(f)]
-        ['f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h']
-        >>> [node.name for node in PreOrderIter(f, maxlevel=0)]
-        []
-        >>> [node.name for node in PreOrderIter(f, maxlevel=3)]
-        ['f', 'b', 'a', 'd', 'g', 'i']
-        >>> [node.name for node in PreOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
-        ['f', 'b', 'a', 'd', 'c', 'i', 'h']
-        >>> [node.name for node in PreOrderIter(f, stop=lambda n: n.name == 'd')]
-        ['f', 'b', 'a', 'g', 'i', 'h']
-        """
-        super(PreOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
+    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> f = Node("f")
+    >>> b = Node("b", parent=f)
+    >>> a = Node("a", parent=b)
+    >>> d = Node("d", parent=b)
+    >>> c = Node("c", parent=d)
+    >>> e = Node("e", parent=d)
+    >>> g = Node("g", parent=f)
+    >>> i = Node("i", parent=g)
+    >>> h = Node("h", parent=i)
+    >>> print(RenderTree(f, style=AsciiStyle()))
+    Node('/f')
+    |-- Node('/f/b')
+    |   |-- Node('/f/b/a')
+    |   +-- Node('/f/b/d')
+    |       |-- Node('/f/b/d/c')
+    |       +-- Node('/f/b/d/e')
+    +-- Node('/f/g')
+        +-- Node('/f/g/i')
+            +-- Node('/f/g/i/h')
+    >>> [node.name for node in PreOrderIter(f)]
+    ['f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h']
+    >>> [node.name for node in PreOrderIter(f, maxlevel=0)]
+    []
+    >>> [node.name for node in PreOrderIter(f, maxlevel=3)]
+    ['f', 'b', 'a', 'd', 'g', 'i']
+    >>> [node.name for node in PreOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
+    ['f', 'b', 'a', 'd', 'c', 'i', 'h']
+    >>> [node.name for node in PreOrderIter(f, stop=lambda n: n.name == 'd')]
+    ['f', 'b', 'a', 'g', 'i', 'h']
+    """
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
@@ -117,47 +110,40 @@ class PreOrderIter(AbstractIter):
 
 class PostOrderIter(AbstractIter):
 
-    def __init__(self, node, filter_=None, stop=None, maxlevel=None):
-        """
-        Iterate over tree applying post-order strategy starting at `node`.
+    """
+    Iterate over tree applying post-order strategy starting at `node`.
 
-        Keyword Args:
-            filter_: function called with every `node` as argument, `node` is returned if `True`.
-            stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-            maxlevel (int): maximum decending in the node hierarchy.
-
-        >>> from anytree import Node, RenderTree, AsciiStyle
-        >>> f = Node("f")
-        >>> b = Node("b", parent=f)
-        >>> a = Node("a", parent=b)
-        >>> d = Node("d", parent=b)
-        >>> c = Node("c", parent=d)
-        >>> e = Node("e", parent=d)
-        >>> g = Node("g", parent=f)
-        >>> i = Node("i", parent=g)
-        >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f, style=AsciiStyle()))
-        Node('/f')
-        |-- Node('/f/b')
-        |   |-- Node('/f/b/a')
-        |   +-- Node('/f/b/d')
-        |       |-- Node('/f/b/d/c')
-        |       +-- Node('/f/b/d/e')
-        +-- Node('/f/g')
-            +-- Node('/f/g/i')
-                +-- Node('/f/g/i/h')
-        >>> [node.name for node in PostOrderIter(f)]
-        ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
-        >>> [node.name for node in PostOrderIter(f, maxlevel=0)]
-        []
-        >>> [node.name for node in PostOrderIter(f, maxlevel=3)]
-        ['a', 'd', 'b', 'i', 'g', 'f']
-        >>> [node.name for node in PostOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
-        ['a', 'c', 'd', 'b', 'h', 'i', 'f']
-        >>> [node.name for node in PostOrderIter(f, stop=lambda n: n.name == 'd')]
-        ['a', 'b', 'h', 'i', 'g', 'f']
-        """
-        super(PostOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
+    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> f = Node("f")
+    >>> b = Node("b", parent=f)
+    >>> a = Node("a", parent=b)
+    >>> d = Node("d", parent=b)
+    >>> c = Node("c", parent=d)
+    >>> e = Node("e", parent=d)
+    >>> g = Node("g", parent=f)
+    >>> i = Node("i", parent=g)
+    >>> h = Node("h", parent=i)
+    >>> print(RenderTree(f, style=AsciiStyle()))
+    Node('/f')
+    |-- Node('/f/b')
+    |   |-- Node('/f/b/a')
+    |   +-- Node('/f/b/d')
+    |       |-- Node('/f/b/d/c')
+    |       +-- Node('/f/b/d/e')
+    +-- Node('/f/g')
+        +-- Node('/f/g/i')
+            +-- Node('/f/g/i/h')
+    >>> [node.name for node in PostOrderIter(f)]
+    ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
+    >>> [node.name for node in PostOrderIter(f, maxlevel=0)]
+    []
+    >>> [node.name for node in PostOrderIter(f, maxlevel=3)]
+    ['a', 'd', 'b', 'i', 'g', 'f']
+    >>> [node.name for node in PostOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
+    ['a', 'c', 'd', 'b', 'h', 'i', 'f']
+    >>> [node.name for node in PostOrderIter(f, stop=lambda n: n.name == 'd')]
+    ['a', 'b', 'h', 'i', 'g', 'f']
+    """
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
@@ -176,47 +162,40 @@ class PostOrderIter(AbstractIter):
 
 class LevelOrderIter(AbstractIter):
 
-    def __init__(self, node, filter_=None, stop=None, maxlevel=None):
-        """
-        Iterate over tree applying level-order strategy starting at `node`.
+    """
+    Iterate over tree applying level-order strategy starting at `node`.
 
-        Keyword Args:
-            filter_: function called with every `node` as argument, `node` is returned if `True`.
-            stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-            maxlevel (int): maximum decending in the node hierarchy.
-
-        >>> from anytree import Node, RenderTree, AsciiStyle
-        >>> f = Node("f")
-        >>> b = Node("b", parent=f)
-        >>> a = Node("a", parent=b)
-        >>> d = Node("d", parent=b)
-        >>> c = Node("c", parent=d)
-        >>> e = Node("e", parent=d)
-        >>> g = Node("g", parent=f)
-        >>> i = Node("i", parent=g)
-        >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f, style=AsciiStyle()))
-        Node('/f')
-        |-- Node('/f/b')
-        |   |-- Node('/f/b/a')
-        |   +-- Node('/f/b/d')
-        |       |-- Node('/f/b/d/c')
-        |       +-- Node('/f/b/d/e')
-        +-- Node('/f/g')
-            +-- Node('/f/g/i')
-                +-- Node('/f/g/i/h')
-        >>> [node.name for node in LevelOrderIter(f)]
-        ['f', 'b', 'g', 'a', 'd', 'i', 'c', 'e', 'h']
-        >>> [node.name for node in LevelOrderIter(f, maxlevel=0)]
-        []
-        >>> [node.name for node in LevelOrderIter(f, maxlevel=3)]
-        ['f', 'b', 'g', 'a', 'd', 'i']
-        >>> [node.name for node in LevelOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
-        ['f', 'b', 'a', 'd', 'i', 'c', 'h']
-        >>> [node.name for node in LevelOrderIter(f, stop=lambda n: n.name == 'd')]
-        ['f', 'b', 'g', 'a', 'i', 'h']
-        """
-        super(LevelOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
+    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> f = Node("f")
+    >>> b = Node("b", parent=f)
+    >>> a = Node("a", parent=b)
+    >>> d = Node("d", parent=b)
+    >>> c = Node("c", parent=d)
+    >>> e = Node("e", parent=d)
+    >>> g = Node("g", parent=f)
+    >>> i = Node("i", parent=g)
+    >>> h = Node("h", parent=i)
+    >>> print(RenderTree(f, style=AsciiStyle()))
+    Node('/f')
+    |-- Node('/f/b')
+    |   |-- Node('/f/b/a')
+    |   +-- Node('/f/b/d')
+    |       |-- Node('/f/b/d/c')
+    |       +-- Node('/f/b/d/e')
+    +-- Node('/f/g')
+        +-- Node('/f/g/i')
+            +-- Node('/f/g/i/h')
+    >>> [node.name for node in LevelOrderIter(f)]
+    ['f', 'b', 'g', 'a', 'd', 'i', 'c', 'e', 'h']
+    >>> [node.name for node in LevelOrderIter(f, maxlevel=0)]
+    []
+    >>> [node.name for node in LevelOrderIter(f, maxlevel=3)]
+    ['f', 'b', 'g', 'a', 'd', 'i']
+    >>> [node.name for node in LevelOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
+    ['f', 'b', 'a', 'd', 'i', 'c', 'h']
+    >>> [node.name for node in LevelOrderIter(f, stop=lambda n: n.name == 'd')]
+    ['f', 'b', 'g', 'a', 'i', 'h']
+    """
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
@@ -236,53 +215,46 @@ class LevelOrderIter(AbstractIter):
 
 class LevelOrderGroupIter(AbstractIter):
 
-    def __init__(self, node, filter_=None, stop=None, maxlevel=None):
-        """
-        Iterate over tree applying level-order strategy with grouping starting at `node`.
+    """
+    Iterate over tree applying level-order strategy with grouping starting at `node`.
 
-        Return a tuple of nodes for each level. The first tuple contains the
-        nodes at level 0 (always `node`). The second tuple contains the nodes at level 1
-        (children of `node`). The next level contains the children of the children, and so on.
+    Return a tuple of nodes for each level. The first tuple contains the
+    nodes at level 0 (always `node`). The second tuple contains the nodes at level 1
+    (children of `node`). The next level contains the children of the children, and so on.
 
-        Keyword Args:
-            filter_: function called with every `node` as argument, `node` is returned if `True`.
-            stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-            maxlevel (int): maximum decending in the node hierarchy.
-
-        >>> from anytree import Node, RenderTree, AsciiStyle
-        >>> f = Node("f")
-        >>> b = Node("b", parent=f)
-        >>> a = Node("a", parent=b)
-        >>> d = Node("d", parent=b)
-        >>> c = Node("c", parent=d)
-        >>> e = Node("e", parent=d)
-        >>> g = Node("g", parent=f)
-        >>> i = Node("i", parent=g)
-        >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f, style=AsciiStyle()))
-        Node('/f')
-        |-- Node('/f/b')
-        |   |-- Node('/f/b/a')
-        |   +-- Node('/f/b/d')
-        |       |-- Node('/f/b/d/c')
-        |       +-- Node('/f/b/d/e')
-        +-- Node('/f/g')
-            +-- Node('/f/g/i')
-                +-- Node('/f/g/i/h')
-        >>> [[node.name for node in children] for children in LevelOrderGroupIter(f)]
-        [['f'], ['b', 'g'], ['a', 'd', 'i'], ['c', 'e', 'h']]
-        >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=0)]
-        []
-        >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=3)]
-        [['f'], ['b', 'g'], ['a', 'd', 'i']]
-        >>> [[node.name for node in children]
-        ...  for children in LevelOrderGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
-        [['f'], ['b'], ['a', 'd', 'i'], ['c', 'h']]
-        >>> [[node.name for node in children]
-        ...  for children in LevelOrderGroupIter(f, stop=lambda n: n.name == 'd')]
-        [['f'], ['b', 'g'], ['a', 'i'], ['h']]
-        """
-        super(LevelOrderGroupIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
+    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> f = Node("f")
+    >>> b = Node("b", parent=f)
+    >>> a = Node("a", parent=b)
+    >>> d = Node("d", parent=b)
+    >>> c = Node("c", parent=d)
+    >>> e = Node("e", parent=d)
+    >>> g = Node("g", parent=f)
+    >>> i = Node("i", parent=g)
+    >>> h = Node("h", parent=i)
+    >>> print(RenderTree(f, style=AsciiStyle()))
+    Node('/f')
+    |-- Node('/f/b')
+    |   |-- Node('/f/b/a')
+    |   +-- Node('/f/b/d')
+    |       |-- Node('/f/b/d/c')
+    |       +-- Node('/f/b/d/e')
+    +-- Node('/f/g')
+        +-- Node('/f/g/i')
+            +-- Node('/f/g/i/h')
+    >>> [[node.name for node in children] for children in LevelOrderGroupIter(f)]
+    [['f'], ['b', 'g'], ['a', 'd', 'i'], ['c', 'e', 'h']]
+    >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=0)]
+    []
+    >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=3)]
+    [['f'], ['b', 'g'], ['a', 'd', 'i']]
+    >>> [[node.name for node in children]
+    ...  for children in LevelOrderGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
+    [['f'], ['b'], ['a', 'd', 'i'], ['c', 'h']]
+    >>> [[node.name for node in children]
+    ...  for children in LevelOrderGroupIter(f, stop=lambda n: n.name == 'd')]
+    [['f'], ['b', 'g'], ['a', 'i'], ['h']]
+    """
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
@@ -304,54 +276,47 @@ class LevelOrderGroupIter(AbstractIter):
 
 class ZigZagGroupIter(AbstractIter):
 
-    def __init__(self, node, filter_=None, stop=None, maxlevel=None):
-        """
-        Iterate over tree applying Zig-Zag strategy with grouping starting at `node`.
+    """
+    Iterate over tree applying Zig-Zag strategy with grouping starting at `node`.
 
-        Return a tuple of nodes for each level. The first tuple contains the
-        nodes at level 0 (always `node`). The second tuple contains the nodes at level 1
-        (children of `node`) in reversed order.
-        The next level contains the children of the children in forward order, and so on.
+    Return a tuple of nodes for each level. The first tuple contains the
+    nodes at level 0 (always `node`). The second tuple contains the nodes at level 1
+    (children of `node`) in reversed order.
+    The next level contains the children of the children in forward order, and so on.
 
-        Keyword Args:
-            filter_: function called with every `node` as argument, `node` is returned if `True`.
-            stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-            maxlevel (int): maximum decending in the node hierarchy.
-
-        >>> from anytree import Node, RenderTree, AsciiStyle
-        >>> f = Node("f")
-        >>> b = Node("b", parent=f)
-        >>> a = Node("a", parent=b)
-        >>> d = Node("d", parent=b)
-        >>> c = Node("c", parent=d)
-        >>> e = Node("e", parent=d)
-        >>> g = Node("g", parent=f)
-        >>> i = Node("i", parent=g)
-        >>> h = Node("h", parent=i)
-        >>> print(RenderTree(f, style=AsciiStyle()))
-        Node('/f')
-        |-- Node('/f/b')
-        |   |-- Node('/f/b/a')
-        |   +-- Node('/f/b/d')
-        |       |-- Node('/f/b/d/c')
-        |       +-- Node('/f/b/d/e')
-        +-- Node('/f/g')
-            +-- Node('/f/g/i')
-                +-- Node('/f/g/i/h')
-        >>> [[node.name for node in children] for children in ZigZagGroupIter(f)]
-        [['f'], ['g', 'b'], ['a', 'd', 'i'], ['h', 'e', 'c']]
-        >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=0)]
-        []
-        >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=3)]
-        [['f'], ['g', 'b'], ['a', 'd', 'i']]
-        >>> [[node.name for node in children]
-        ...  for children in ZigZagGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
-        [['f'], ['b'], ['a', 'd', 'i'], ['h', 'c']]
-        >>> [[node.name for node in children]
-        ...  for children in ZigZagGroupIter(f, stop=lambda n: n.name == 'd')]
-        [['f'], ['g', 'b'], ['a', 'i'], ['h']]
-        """
-        super(ZigZagGroupIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
+    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> f = Node("f")
+    >>> b = Node("b", parent=f)
+    >>> a = Node("a", parent=b)
+    >>> d = Node("d", parent=b)
+    >>> c = Node("c", parent=d)
+    >>> e = Node("e", parent=d)
+    >>> g = Node("g", parent=f)
+    >>> i = Node("i", parent=g)
+    >>> h = Node("h", parent=i)
+    >>> print(RenderTree(f, style=AsciiStyle()))
+    Node('/f')
+    |-- Node('/f/b')
+    |   |-- Node('/f/b/a')
+    |   +-- Node('/f/b/d')
+    |       |-- Node('/f/b/d/c')
+    |       +-- Node('/f/b/d/e')
+    +-- Node('/f/g')
+        +-- Node('/f/g/i')
+            +-- Node('/f/g/i/h')
+    >>> [[node.name for node in children] for children in ZigZagGroupIter(f)]
+    [['f'], ['g', 'b'], ['a', 'd', 'i'], ['h', 'e', 'c']]
+    >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=0)]
+    []
+    >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=3)]
+    [['f'], ['g', 'b'], ['a', 'd', 'i']]
+    >>> [[node.name for node in children]
+    ...  for children in ZigZagGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
+    [['f'], ['b'], ['a', 'd', 'i'], ['h', 'c']]
+    >>> [[node.name for node in children]
+    ...  for children in ZigZagGroupIter(f, stop=lambda n: n.name == 'd')]
+    [['f'], ['g', 'b'], ['a', 'i'], ['h']]
+    """
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
