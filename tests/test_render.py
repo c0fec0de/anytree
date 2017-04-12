@@ -118,6 +118,6 @@ def test_by_attr():
     anytree.Node("sub0A", parent=s0)
     anytree.Node("sub1", parent=root, lines=["sub1"])
     eq_(anytree.RenderTree(root).by_attr(),
-        "root\n├── sub0\n│   ├── sub0B\n│   └── sub0A\n└── sub1")
+        u"root\n├── sub0\n│   ├── sub0B\n│   └── sub0A\n└── sub1")
     eq_(anytree.RenderTree(root).by_attr("lines"),
-        "root\n├── su\n│   b0\n│   ├── sub\n│   │   0B\n│   └── \n└── sub1")
+        u"root\n├── su\n│   b0\n│   ├── sub\n│   │   0B\n│   └── \n└── sub1")
