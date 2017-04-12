@@ -358,4 +358,4 @@ class ZigZagGroupIter(AbstractIter):
         _iter = LevelOrderGroupIter._iter(children, filter_, stop, maxlevel)
         while True:
             yield next(_iter)
-            yield reversed(next(_iter))
+            yield tuple(reversed(next(_iter)))

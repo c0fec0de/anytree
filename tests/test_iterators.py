@@ -1,8 +1,10 @@
 from anytree import LevelGroupOrderIter
+from anytree import LevelOrderGroupIter
 from anytree import LevelOrderIter
 from anytree import Node
 from anytree import PostOrderIter
 from anytree import PreOrderIter
+from anytree import ZigZagGroupIter
 from nose.tools import eq_
 
 
@@ -85,3 +87,51 @@ def test_levelgrouporder():
         [(f,), (b,), (a, d, i), (c, h)])
     eq_(list(LevelGroupOrderIter(f, stop=lambda n: n.name == 'd')),
         [(f,), (b, g), (a, i), (h, )])
+
+
+def test_levelordergroup():
+    """LevelOrderGroupIter."""
+    f = Node("f")
+    b = Node("b", parent=f)
+    a = Node("a", parent=b)
+    d = Node("d", parent=b)
+    c = Node("c", parent=d)
+    e = Node("e", parent=d)
+    g = Node("g", parent=f)
+    i = Node("i", parent=g)
+    h = Node("h", parent=i)
+
+    eq_(list(LevelOrderGroupIter(f)),
+        [(f,), (b, g), (a, d, i), (c, e, h)])
+    eq_(list(LevelOrderGroupIter(f, maxlevel=0)),
+        [])
+    eq_(list(LevelOrderGroupIter(f, maxlevel=3)),
+        [(f,), (b, g), (a, d, i)])
+    eq_(list(LevelOrderGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))),
+        [(f,), (b,), (a, d, i), (c, h)])
+    eq_(list(LevelOrderGroupIter(f, stop=lambda n: n.name == 'd')),
+        [(f,), (b, g), (a, i), (h, )])
+
+
+def test_zigzaggroup():
+    """ZigZagGroupIter."""
+    f = Node("f")
+    b = Node("b", parent=f)
+    a = Node("a", parent=b)
+    d = Node("d", parent=b)
+    c = Node("c", parent=d)
+    e = Node("e", parent=d)
+    g = Node("g", parent=f)
+    i = Node("i", parent=g)
+    h = Node("h", parent=i)
+
+    eq_(list(ZigZagGroupIter(f)),
+        [(f,), (g, b), (a, d, i), (h, e, c)])
+    eq_(list(ZigZagGroupIter(f, maxlevel=0)),
+        [])
+    eq_(list(ZigZagGroupIter(f, maxlevel=3)),
+        [(f,), (g, b), (a, d, i)])
+    eq_(list(ZigZagGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))),
+        [(f,), (b,), (a, d, i), (h, c)])
+    eq_(list(ZigZagGroupIter(f, stop=lambda n: n.name == 'd')),
+        [(f,), (g, b), (a, i), (h, )])
