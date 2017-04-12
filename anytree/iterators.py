@@ -5,7 +5,7 @@ Tree Iteration.
 * :any:`PreOrderIter`: iterate over tree using pre-order strategy
 * :any:`PostOrderIter`: iterate over tree using post-order strategy
 * :any:`LevelOrderIter`: iterate over tree using level-order strategy
-* :any:`LevelGroupOrderIter`: iterate over tree using level-order strategy returning group for every level
+* :any:`LevelOrderGroupIter`: iterate over tree using level-order strategy returning group for every level
 """
 
 
@@ -233,7 +233,7 @@ class LevelOrderIter(AbstractIter):
                 break
 
 
-class LevelGroupOrderIter(AbstractIter):
+class LevelOrderGroupIter(AbstractIter):
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
@@ -268,20 +268,20 @@ class LevelGroupOrderIter(AbstractIter):
         +-- Node('/f/g')
             +-- Node('/f/g/i')
                 +-- Node('/f/g/i/h')
-        >>> [[node.name for node in children] for children in LevelGroupOrderIter(f)]
+        >>> [[node.name for node in children] for children in LevelOrderGroupIter(f)]
         [['f'], ['b', 'g'], ['a', 'd', 'i'], ['c', 'e', 'h']]
-        >>> [[node.name for node in children] for children in LevelGroupOrderIter(f, maxlevel=0)]
+        >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=0)]
         []
-        >>> [[node.name for node in children] for children in LevelGroupOrderIter(f, maxlevel=3)]
+        >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=3)]
         [['f'], ['b', 'g'], ['a', 'd', 'i']]
         >>> [[node.name for node in children]
-        ...  for children in LevelGroupOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
+        ...  for children in LevelOrderGroupIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
         [['f'], ['b'], ['a', 'd', 'i'], ['c', 'h']]
         >>> [[node.name for node in children]
-        ...  for children in LevelGroupOrderIter(f, stop=lambda n: n.name == 'd')]
+        ...  for children in LevelOrderGroupIter(f, stop=lambda n: n.name == 'd')]
         [['f'], ['b', 'g'], ['a', 'i'], ['h']]
         """
-        super(LevelGroupOrderIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
+        super(LevelOrderGroupIter, self).__init__(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
@@ -291,7 +291,7 @@ class LevelGroupOrderIter(AbstractIter):
             level += 1
             if AbstractIter._abort_at_level(level, maxlevel):
                 break
-            children = LevelGroupOrderIter._get_children(children, stop)
+            children = LevelOrderGroupIter._get_children(children, stop)
 
     @staticmethod
     def _get_children(children, stop):

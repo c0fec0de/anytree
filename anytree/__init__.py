@@ -2,7 +2,7 @@
 
 """Powerful and Lightweight Python Tree Data Structure."""
 
-from .iterators import LevelGroupOrderIter  # noqa
+from .iterators import LevelOrderGroupIter  # noqa
 from .iterators import LevelOrderIter  # noqa
 from .iterators import PostOrderIter  # noqa
 from .iterators import PreOrderIter  # noqa
@@ -20,3 +20,6 @@ from .resolver import Resolver  # noqa
 from .resolver import ResolverError  # noqa
 from .walker import WalkError  # noqa
 from .walker import Walker  # noqa
+
+# legacy
+LevelGroupOrderIter = LevelOrderGroupIter
