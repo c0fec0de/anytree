@@ -2,8 +2,8 @@
 """
 Tree Iteration.
 
-* :any:`PreOrderIter`: iterate over tree using pre-order strategy
-* :any:`PostOrderIter`: iterate over tree using post-order strategy
+* :any:`PreOrderIter`: iterate over tree using pre-order strategy (self, left, right)
+* :any:`PostOrderIter`: iterate over tree using post-order strategy (left, right, self)
 * :any:`LevelOrderIter`: iterate over tree using level-order strategy
 * :any:`LevelOrderGroupIter`: iterate over tree using level-order strategy returning group for every level
 * :any:`ZigZagGroupIter`: iterate over tree using level-order strategy returning group for every level
@@ -73,16 +73,16 @@ class PreOrderIter(AbstractIter):
     >>> g = Node("g", parent=f)
     >>> i = Node("i", parent=g)
     >>> h = Node("h", parent=i)
-    >>> print(RenderTree(f, style=AsciiStyle()))
-    Node('/f')
-    |-- Node('/f/b')
-    |   |-- Node('/f/b/a')
-    |   +-- Node('/f/b/d')
-    |       |-- Node('/f/b/d/c')
-    |       +-- Node('/f/b/d/e')
-    +-- Node('/f/g')
-        +-- Node('/f/g/i')
-            +-- Node('/f/g/i/h')
+    >>> print(RenderTree(f, style=AsciiStyle()).by_attr())
+    f
+    |-- b
+    |   |-- a
+    |   +-- d
+    |       |-- c
+    |       +-- e
+    +-- g
+        +-- i
+            +-- h
     >>> [node.name for node in PreOrderIter(f)]
     ['f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h']
     >>> [node.name for node in PreOrderIter(f, maxlevel=0)]
@@ -104,9 +104,10 @@ class PreOrderIter(AbstractIter):
                 child = children.pop(0)
                 if filter_(child):
                     yield child
-                grandchildren = AbstractIter._get_children(child.children, stop)
-                if grandchildren and not AbstractIter._abort_at_level(len(stack) + 1, maxlevel):
-                    stack.append(grandchildren)
+                if not AbstractIter._abort_at_level(len(stack) + 1, maxlevel):
+                    grandchildren = AbstractIter._get_children(child.children, stop)
+                    if grandchildren:
+                        stack.append(grandchildren)
             else:
                 stack.pop()
 
@@ -126,16 +127,16 @@ class PostOrderIter(AbstractIter):
     >>> g = Node("g", parent=f)
     >>> i = Node("i", parent=g)
     >>> h = Node("h", parent=i)
-    >>> print(RenderTree(f, style=AsciiStyle()))
-    Node('/f')
-    |-- Node('/f/b')
-    |   |-- Node('/f/b/a')
-    |   +-- Node('/f/b/d')
-    |       |-- Node('/f/b/d/c')
-    |       +-- Node('/f/b/d/e')
-    +-- Node('/f/g')
-        +-- Node('/f/g/i')
-            +-- Node('/f/g/i/h')
+    >>> print(RenderTree(f, style=AsciiStyle()).by_attr())
+    f
+    |-- b
+    |   |-- a
+    |   +-- d
+    |       |-- c
+    |       +-- e
+    +-- g
+        +-- i
+            +-- h
     >>> [node.name for node in PostOrderIter(f)]
     ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
     >>> [node.name for node in PostOrderIter(f, maxlevel=0)]
@@ -178,16 +179,16 @@ class LevelOrderIter(AbstractIter):
     >>> g = Node("g", parent=f)
     >>> i = Node("i", parent=g)
     >>> h = Node("h", parent=i)
-    >>> print(RenderTree(f, style=AsciiStyle()))
-    Node('/f')
-    |-- Node('/f/b')
-    |   |-- Node('/f/b/a')
-    |   +-- Node('/f/b/d')
-    |       |-- Node('/f/b/d/c')
-    |       +-- Node('/f/b/d/e')
-    +-- Node('/f/g')
-        +-- Node('/f/g/i')
-            +-- Node('/f/g/i/h')
+    >>> print(RenderTree(f, style=AsciiStyle()).by_attr())
+    f
+    |-- b
+    |   |-- a
+    |   +-- d
+    |       |-- c
+    |       +-- e
+    +-- g
+        +-- i
+            +-- h
     >>> [node.name for node in LevelOrderIter(f)]
     ['f', 'b', 'g', 'a', 'd', 'i', 'c', 'e', 'h']
     >>> [node.name for node in LevelOrderIter(f, maxlevel=0)]
@@ -234,16 +235,16 @@ class LevelOrderGroupIter(AbstractIter):
     >>> g = Node("g", parent=f)
     >>> i = Node("i", parent=g)
     >>> h = Node("h", parent=i)
-    >>> print(RenderTree(f, style=AsciiStyle()))
-    Node('/f')
-    |-- Node('/f/b')
-    |   |-- Node('/f/b/a')
-    |   +-- Node('/f/b/d')
-    |       |-- Node('/f/b/d/c')
-    |       +-- Node('/f/b/d/e')
-    +-- Node('/f/g')
-        +-- Node('/f/g/i')
-            +-- Node('/f/g/i/h')
+    >>> print(RenderTree(f, style=AsciiStyle()).by_attr())
+    f
+    |-- b
+    |   |-- a
+    |   +-- d
+    |       |-- c
+    |       +-- e
+    +-- g
+        +-- i
+            +-- h
     >>> [[node.name for node in children] for children in LevelOrderGroupIter(f)]
     [['f'], ['b', 'g'], ['a', 'd', 'i'], ['c', 'e', 'h']]
     >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=0)]
@@ -296,16 +297,16 @@ class ZigZagGroupIter(AbstractIter):
     >>> g = Node("g", parent=f)
     >>> i = Node("i", parent=g)
     >>> h = Node("h", parent=i)
-    >>> print(RenderTree(f, style=AsciiStyle()))
-    Node('/f')
-    |-- Node('/f/b')
-    |   |-- Node('/f/b/a')
-    |   +-- Node('/f/b/d')
-    |       |-- Node('/f/b/d/c')
-    |       +-- Node('/f/b/d/e')
-    +-- Node('/f/g')
-        +-- Node('/f/g/i')
-            +-- Node('/f/g/i/h')
+    >>> print(RenderTree(f, style=AsciiStyle()).by_attr())
+    f
+    |-- b
+    |   |-- a
+    |   +-- d
+    |       |-- c
+    |       +-- e
+    +-- g
+        +-- i
+            +-- h
     >>> [[node.name for node in children] for children in ZigZagGroupIter(f)]
     [['f'], ['g', 'b'], ['a', 'd', 'i'], ['h', 'e', 'c']]
     >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=0)]
