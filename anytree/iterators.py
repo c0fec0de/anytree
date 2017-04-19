@@ -2,8 +2,8 @@
 """
 Tree Iteration.
 
-* :any:`PreOrderIter`: iterate over tree using pre-order strategy (self, left, right)
-* :any:`PostOrderIter`: iterate over tree using post-order strategy (left, right, self)
+* :any:`PreOrderIter`: iterate over tree using pre-order strategy (self, children)
+* :any:`PostOrderIter`: iterate over tree using post-order strategy (children, self)
 * :any:`LevelOrderIter`: iterate over tree using level-order strategy
 * :any:`LevelOrderGroupIter`: iterate over tree using level-order strategy returning group for every level
 * :any:`ZigZagGroupIter`: iterate over tree using level-order strategy returning group for every level
@@ -85,8 +85,6 @@ class PreOrderIter(AbstractIter):
             +-- h
     >>> [node.name for node in PreOrderIter(f)]
     ['f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h']
-    >>> [node.name for node in PreOrderIter(f, maxlevel=0)]
-    []
     >>> [node.name for node in PreOrderIter(f, maxlevel=3)]
     ['f', 'b', 'a', 'd', 'g', 'i']
     >>> [node.name for node in PreOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
@@ -139,8 +137,6 @@ class PostOrderIter(AbstractIter):
             +-- h
     >>> [node.name for node in PostOrderIter(f)]
     ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
-    >>> [node.name for node in PostOrderIter(f, maxlevel=0)]
-    []
     >>> [node.name for node in PostOrderIter(f, maxlevel=3)]
     ['a', 'd', 'b', 'i', 'g', 'f']
     >>> [node.name for node in PostOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
@@ -191,8 +187,6 @@ class LevelOrderIter(AbstractIter):
             +-- h
     >>> [node.name for node in LevelOrderIter(f)]
     ['f', 'b', 'g', 'a', 'd', 'i', 'c', 'e', 'h']
-    >>> [node.name for node in LevelOrderIter(f, maxlevel=0)]
-    []
     >>> [node.name for node in LevelOrderIter(f, maxlevel=3)]
     ['f', 'b', 'g', 'a', 'd', 'i']
     >>> [node.name for node in LevelOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))]
@@ -247,8 +241,6 @@ class LevelOrderGroupIter(AbstractIter):
             +-- h
     >>> [[node.name for node in children] for children in LevelOrderGroupIter(f)]
     [['f'], ['b', 'g'], ['a', 'd', 'i'], ['c', 'e', 'h']]
-    >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=0)]
-    []
     >>> [[node.name for node in children] for children in LevelOrderGroupIter(f, maxlevel=3)]
     [['f'], ['b', 'g'], ['a', 'd', 'i']]
     >>> [[node.name for node in children]
@@ -309,8 +301,6 @@ class ZigZagGroupIter(AbstractIter):
             +-- h
     >>> [[node.name for node in children] for children in ZigZagGroupIter(f)]
     [['f'], ['g', 'b'], ['a', 'd', 'i'], ['h', 'e', 'c']]
-    >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=0)]
-    []
     >>> [[node.name for node in children] for children in ZigZagGroupIter(f, maxlevel=3)]
     [['f'], ['g', 'b'], ['a', 'd', 'i']]
     >>> [[node.name for node in children]
