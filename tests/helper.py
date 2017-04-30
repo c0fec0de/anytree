@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from nose.tools import eq_
 
 
-# hack own assert_raises, because py26 has a diffrent impelmentation
+# hack own assert_raises, because py26 has a different impelmentation
 @contextmanager
 def assert_raises(exccls, msg):
     try:
