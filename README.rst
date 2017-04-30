@@ -13,6 +13,12 @@
 .. image:: https://codeclimate.com/github/c0fec0de/anytree.png
     :target: https://codeclimate.com/github/c0fec0de/anytree
 
+.. image:: https://img.shields.io/pypi/pyversions/anytree.svg
+   :target: https://pypi.python.org/pypi/anytree
+
+.. image:: https://landscape.io/github/c0fec0de/anytree/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/c0fec0de/anytree/master
+
 Documentation
 =============
 

@@ -2,6 +2,27 @@
 Any Python Tree Data
 ********************
 
+.. image:: https://badge.fury.io/py/anytree.svg
+    :target: https://badge.fury.io/py/anytree
+
+.. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
+    :target: https://travis-ci.org/c0fec0de/anytree
+
+.. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
+    :target: https://coveralls.io/github/c0fec0de/anytree
+
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.1.3
+    :target: http://anytree.readthedocs.io/en/2.1.3/?badge=2.1.3
+
+.. image:: https://codeclimate.com/github/c0fec0de/anytree.png
+    :target: https://codeclimate.com/github/c0fec0de/anytree
+
+.. image:: https://img.shields.io/pypi/pyversions/anytree.svg
+   :target: https://pypi.python.org/pypi/anytree
+
+.. image:: https://landscape.io/github/c0fec0de/anytree/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/c0fec0de/anytree/master
+
 Simple, lightweight and extensible Tree_ data structure.
 
 .. toctree::
