@@ -7,8 +7,8 @@
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.1.3
-    :target: http://anytree.readthedocs.io/en/2.1.3/?badge=2.1.3
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.1.4
+    :target: http://anytree.readthedocs.io/en/2.1.4/?badge=2.1.4
 
 .. image:: https://codeclimate.com/github/c0fec0de/anytree.png
     :target: https://codeclimate.com/github/c0fec0de/anytree
@@ -22,9 +22,9 @@
 Documentation
 =============
 
-The Documentation_ is hosted on http://anytree.readthedocs.io/en/2.1.3/
+The Documentation_ is hosted on http://anytree.readthedocs.io/en/2.1.4/
 
-.. _Documentation: http://anytree.readthedocs.io/en/2.1.3/
+.. _Documentation: http://anytree.readthedocs.io/en/2.1.4/
 
 Getting started
 ===============
