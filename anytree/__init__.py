@@ -2,6 +2,13 @@
 
 """Powerful and Lightweight Python Tree Data Structure."""
 
+__name__ = "anytree"
+__version__ = "2.1.3"
+__author__ = "c0fec0de"
+__author_email__ = "c0fec0de@gmail.com"
+__description__ = """Powerful and Lightweight Python Tree Data Structure.."""
+__url__ = "https://github.com/c0fec0de/anytree"
+
 from .iterators import LevelOrderGroupIter  # noqa
 from .iterators import LevelOrderIter  # noqa
 from .iterators import PostOrderIter  # noqa
