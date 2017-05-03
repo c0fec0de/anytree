@@ -34,7 +34,7 @@ config['classifiers'] = [
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
 ]
-config['keywords'] = 'tree, tree data, treelib, tree walk, tree structure',
+config['keywords'] = 'tree, tree data, treelib, tree walk, tree structure'
 config['packages'] = ['anytree']
 config['install_requires'] = ['six']
 config['extras_require'] = {
