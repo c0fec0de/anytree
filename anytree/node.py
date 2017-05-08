@@ -96,8 +96,8 @@ class NodeMixin(object):
             self.__detach(parent)
         elif parent is not value:
             # change parent node
-            self.__detach(parent)
             self.__check_loop(value)
+            self.__detach(parent)
             self.__attach(value)
         else:
             # keep parent

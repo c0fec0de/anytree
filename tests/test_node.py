@@ -114,18 +114,30 @@ def test_recursion_detection():
     s0a = Node("sub0A", parent=s0)
 
     # try recursion
+    assert root.parent is None
     try:
         root.parent = root
     except LoopError as exc:
         eq_(str(exc), "Cannot set parent. Node('/root') cannot be parent of itself.")
+        assert root.parent is None
     else:
         assert False
+
+    assert root.parent is None
     try:
         root.parent = s0a
     except LoopError as exc:
-        eq_(str(exc), (
-            "Cannot set parent. "
-            "Node('/root') is parent of Node('/root/sub0/sub0A')."))
+        eq_(str(exc), ("Cannot set parent. Node('/root') is parent of Node('/root/sub0/sub0A')."))
+        assert root.parent is None
+    else:
+        assert False
+
+    assert s0.parent is root
+    try:
+        s0.parent = s0a
+    except LoopError as exc:
+        eq_(str(exc), ("Cannot set parent. Node('/root/sub0') is parent of Node('/root/sub0/sub0A')."))
+        assert s0.parent is root
     else:
         assert False
 
