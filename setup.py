@@ -40,6 +40,7 @@ config['extras_require'] = {
     'dev': ['check-manifest'],
     'test': ['coverage'],
 }
+config['tests_require'] = ['nose']
 config['test_suite'] = 'nose.collector'
 
 # Get the long description from the README file
