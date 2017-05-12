@@ -7,4 +7,3 @@ API
     apidoc/anytree.render
     apidoc/anytree.resolver
     apidoc/anytree.walker
-    apidoc/anytree.dotexport
