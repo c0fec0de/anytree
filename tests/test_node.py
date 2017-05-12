@@ -153,8 +153,8 @@ def test_repr():
     eq_(repr(s1), "Node('/root/sub1', bar='c0fe', foo=42)")
 
 
-def test_anchestors():
-    """Node.anchestors."""
+def test_ancestors():
+    """Node.ancestors."""
     root = Node("root")
     s0 = Node("sub0", parent=root)
     s0b = Node("sub0B", parent=s0)
@@ -163,16 +163,13 @@ def test_anchestors():
     s1c = Node("sub1C", parent=s1)
     s1ca = Node("sub1Ca", parent=s1c)
 
-    eq_(root.anchestors, tuple())
-    eq_(s0.anchestors, tuple([root]))
-    eq_(s0b.anchestors, tuple([root, s0]))
-    eq_(s0a.anchestors, tuple([root, s0]))
+    eq_(root.ancestors, tuple())
+    eq_(s0.ancestors, tuple([root]))
+    eq_(s0b.ancestors, tuple([root, s0]))
+    eq_(s0a.ancestors, tuple([root, s0]))
+    eq_(s1ca.ancestors, tuple([root, s1, s1c]))
+    # deprecated typo
     eq_(s1ca.anchestors, tuple([root, s1, s1c]))
-
-
-def test_ancestors():
-    """Node.ancestors."""
-    test_anchestors()
 
 
 def test_descendants():
