@@ -8,6 +8,7 @@ Node Classes.
 
 from __future__ import print_function
 from .iterators import PreOrderIter
+import warnings
 
 
 class NodeMixin(object):
@@ -177,7 +178,7 @@ class NodeMixin(object):
         return tuple(path)
 
     @property
-    def anchestors(self):
+    def ancestors(self):
         """
         All parent nodes and their parent nodes.
 
@@ -194,13 +195,15 @@ class NodeMixin(object):
         return self._path[:-1]
 
     @property
-    def ancestors(self):
+    def anchestors(self):
         """
-        All parent nodes and their parent nodes.
+        All parent nodes and their parent nodes - see :any:`anchestors`.
 
-        This is simply a fix for the `anchestors` typo.
+        The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
+        This attribute will be removed in the 2.0.0 release.
         """
-        return self.anchestors
+        warnings.warn(".anchestors was a typo and will be removed in version 2.0.0", DeprecationWarning)
+        return self.ancestors
 
     @property
     def descendants(self):
