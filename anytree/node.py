@@ -150,6 +150,63 @@ class NodeMixin(object):
         """
         return tuple(self._children)
 
+    @children.setter
+    def children(self, children):
+        """Function to simultaneously set all children of a node."""
+
+        try:
+            for child in children:
+                break
+        except TypeError:
+            children = [children]
+
+        self._pre_attach_children(children)
+
+        old_children = self.children
+        del self.children
+
+        try:
+            for child in children:
+                assert isinstance(child, NodeMixin), "Failed to add non-node object."
+                child.parent = self
+            assert len(self.children) == len(children)
+            self._post_attach_children(children)
+        except LoopError:
+            self.children = old_children
+            raise LoopError
+
+    @children.deleter
+    def children(self):
+        """Function to detach all children of a node."""
+        children = self.children
+        self._pre_detach_children(children)
+        for child in self.children:
+            child.parent = None
+        assert len(self.children) == 0
+        self._post_detach_children(children)
+
+    def _post_detach(self, parent):
+        # Make sure tree is left in a consistent state after detach with LoopError is thrown
+        # (if parent is not set to None, it will not be possible to re-attach it to its old position)
+        # this line should be inserted between lines 99 and 100 of node.py
+        self._parent = None
+
+    def _pre_detach_children(self, children):
+        """Method call before detaching from `parent`."""
+        pass
+
+    def _post_detach_children(self, children):
+        """Method call after detaching from `parent`."""
+        pass
+
+    def _pre_attach_children(self, children):
+        """Method call before attaching to `parent`."""
+        pass
+
+    def _post_attach_children(self, children):
+        """Method call after attaching to `parent`."""
+        pass
+
     @property
     def path(self):
         """
