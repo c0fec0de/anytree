@@ -170,6 +170,11 @@ def test_anchestors():
     eq_(s1ca.anchestors, tuple([root, s1, s1c]))
 
 
+def test_ancestors():
+    """Node.ancestors."""
+    test_anchestors()
+
+
 def test_descendants():
     """Node.descendants."""
     root = Node("root")

@@ -194,6 +194,15 @@ class NodeMixin(object):
         return self._path[:-1]
 
     @property
+    def ancestors(self):
+        """
+        All parent nodes and their parent nodes.
+
+        This is simply a fix for the `anchestors` typo.
+        """
+        return self.anchestors
+
+    @property
     def descendants(self):
         """
         All child nodes and all their child nodes.
