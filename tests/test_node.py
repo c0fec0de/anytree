@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from nose.tools import eq_
-from nose.tools import assert_raises
+from helper import assert_raises
 
 from anytree import LoopError
 from anytree import Node
@@ -139,13 +139,13 @@ def test_children_setter():
     s0.children = s0a
     eq_(root.descendants, (s0, s0a, s1))
 
-    with assert_raises(LoopError):
+    with assert_raises(LoopError, "Cannot set parent. Node('/root/sub0') cannot be parent of itself."):
         s0.children = s0
 
     # test whether tree is unchanged after LoopError
     eq_(root.descendants, (s0, s0a, s1))
 
-    with assert_raises(LoopError):
+    with assert_raises(LoopError, "Cannot set parent. Node('/root/sub0') is parent of Node('/root/sub0/sub0B')."):
         s0a.children = s0
 
     # test whether tree is unchanged after LoopError
@@ -182,7 +182,7 @@ def test_children_setter_large():
 def test_type_assertion():
 
     root = Node("root")
-    with assert_raises(AssertionError):
+    with assert_raises(AssertionError, "Failed to add non-node object."):
         root.children = "string"
 
 

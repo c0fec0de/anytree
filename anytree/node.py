@@ -171,9 +171,9 @@ class NodeMixin(object):
                 child.parent = self
             assert len(self.children) == len(children)
             self._post_attach_children(children)
-        except LoopError:
+        except LoopError as le:
             self.children = old_children
-            raise LoopError
+            raise LoopError(str(le))
 
     @children.deleter
     def children(self):
