@@ -185,12 +185,6 @@ class NodeMixin(object):
         assert len(self.children) == 0
         self._post_detach_children(children)
 
-    def _post_detach(self, parent):
-        # Make sure tree is left in a consistent state after detach with LoopError is thrown
-        # (if parent is not set to None, it will not be possible to re-attach it to its old position)
-        # this line should be inserted between lines 99 and 100 of node.py
-        self._parent = None
-
     def _pre_detach_children(self, children):
         """Method call before detaching from `parent`."""
         pass
