@@ -186,19 +186,19 @@ class NodeMixin(object):
         self._post_detach_children(children)
 
     def _pre_detach_children(self, children):
-        """Method call before detaching from `parent`."""
+        """Method call before detaching `children`."""
         pass
 
     def _post_detach_children(self, children):
-        """Method call after detaching from `parent`."""
+        """Method call after detaching `children`."""
         pass
 
     def _pre_attach_children(self, children):
-        """Method call before attaching to `parent`."""
+        """Method call before attaching `children`."""
         pass
 
     def _post_attach_children(self, children):
-        """Method call after attaching to `parent`."""
+        """Method call after attaching `children`."""
         pass
 
     @property
