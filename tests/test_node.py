@@ -110,13 +110,13 @@ def test_parent_child():
 def test_detach_children():
 
     root = Node("root")
-    s0   = Node("sub0", parent=root)
-    s0b  = Node("sub0B", parent=s0)
-    s0a  = Node("sub0A", parent=s0)
-    s1   = Node("sub1", parent=root)
-    s1a  = Node("sub1A", parent=s1)
-    s1b  = Node("sub1B", parent=s1)
-    s1c  = Node("sub1C", parent=s1)
+    s0 = Node("sub0", parent=root)
+    s0b = Node("sub0B", parent=s0)
+    s0a = Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root)
+    s1a = Node("sub1A", parent=s1)
+    s1b = Node("sub1B", parent=s1)
+    s1c = Node("sub1C", parent=s1)
     s1ca = Node("sub1Ca", parent=s1c)
 
     eq_(root.descendants, (s0, s0b, s0a, s1, s1a, s1b, s1c, s1ca))
@@ -129,44 +129,42 @@ def test_detach_children():
 def test_children_setter():
 
     root = Node("root")
-    s0   = Node("sub0")
-    s1   = Node("sub0A")
-    s0a  = Node("sub0B")
+    s0 = Node("sub0")
+    s1 = Node("sub0A")
+    s0a = Node("sub0B")
 
     root.children = [s0, s1]
-    root.children = [s0, s1]
-    s0.children = s0a
-    s0.children = s0a
+    s0.children = [s0a]
     eq_(root.descendants, (s0, s0a, s1))
 
     with assert_raises(LoopError, "Cannot set parent. Node('/root/sub0') cannot be parent of itself."):
-        s0.children = s0
+        s0.children = [s0]
 
     # test whether tree is unchanged after LoopError
     eq_(root.descendants, (s0, s0a, s1))
 
     with assert_raises(LoopError, "Cannot set parent. Node('/root/sub0') is parent of Node('/root/sub0/sub0B')."):
-        s0a.children = s0
+        s0a.children = [s0]
 
     # test whether tree is unchanged after LoopError
     eq_(root.descendants, (s0, s0a, s1))
 
     root.children = [s0, s1]
-    s0.children = s0a
-    s0a.children = s1
+    s0.children = [s0a]
+    s0a.children = [s1]
     eq_(root.descendants, (s0, s0a, s1))
 
 
 def test_children_setter_large():
 
     root = Node("root")
-    s0   = Node("sub0")
-    s0b  = Node("sub0B")
-    s0a  = Node("sub0A")
-    s1   = Node("sub1")
-    s1a  = Node("sub1A")
-    s1b  = Node("sub1B")
-    s1c  = Node("sub1C")
+    s0 = Node("sub0")
+    s0b = Node("sub0B")
+    s0a = Node("sub0A")
+    s1 = Node("sub1")
+    s1a = Node("sub1A")
+    s1b = Node("sub1B")
+    s1c = Node("sub1C")
     s1ca = Node("sub1Ca")
 
     root.children = [s0, s1]
@@ -175,15 +173,16 @@ def test_children_setter_large():
     eq_(root.descendants, (s0, s0a, s0b, s1))
     s1.children = [s1a, s1b, s1c]
     eq_(root.descendants, (s0, s0a, s0b, s1, s1a, s1b, s1c))
-    s1c.children = s1ca
-    eq_(root.descendants, (s0, s0a, s0b, s1, s1a, s1b, s1c, s1ca))
+    with assert_raises(TypeError, "'Node' object is not iterable"):
+        s1.children = s1ca
+    eq_(root.descendants, (s0, s0a, s0b, s1, s1a, s1b, s1c))
 
 
 def test_type_assertion():
 
     root = Node("root")
-    with assert_raises(AssertionError, "Failed to add non-node object."):
-        root.children = "string"
+    with assert_raises(AssertionError, "Cannot add non-node object 'string'."):
+        root.children = ["string"]
 
 
 def test_recursion_detection():
@@ -427,4 +426,3 @@ def test_anyname():
     myroot = Node([1, 2, 3])
     Node('/foo', parent=myroot)
     eq_(str(myroot), "Node('/[1, 2, 3]')")
-

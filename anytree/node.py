@@ -153,14 +153,6 @@ class NodeMixin(object):
 
     @children.setter
     def children(self, children):
-        """Function to simultaneously set all children of a node."""
-
-        try:
-            for child in children:
-                break
-        except TypeError:
-            children = [children]
-
         self._pre_attach_children(children)
 
         old_children = self.children
@@ -168,17 +160,16 @@ class NodeMixin(object):
 
         try:
             for child in children:
-                assert isinstance(child, NodeMixin), "Failed to add non-node object."
+                assert isinstance(child, NodeMixin), ("Cannot add non-node object %r." % child)
                 child.parent = self
             assert len(self.children) == len(children)
             self._post_attach_children(children)
-        except LoopError as le:
+        except:
             self.children = old_children
-            raise LoopError(str(le))
+            raise
 
     @children.deleter
     def children(self):
-        """Function to detach all children of a node."""
         children = self.children
         self._pre_detach_children(children)
         for child in self.children:
