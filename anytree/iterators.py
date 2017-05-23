@@ -8,9 +8,10 @@ Tree Iteration.
 * :any:`LevelOrderGroupIter`: iterate over tree using level-order strategy returning group for every level
 * :any:`ZigZagGroupIter`: iterate over tree using level-order strategy returning group for every level
 """
+import six
 
 
-class AbstractIter(object):
+class AbstractIter(six.Iterator):
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
@@ -27,8 +28,9 @@ class AbstractIter(object):
         self.filter_ = filter_
         self.stop = stop
         self.maxlevel = maxlevel
+        self.__iter = None
 
-    def __iter__(self):
+    def __init(self):
         node = self.node
         filter_ = self.filter_
         stop = self.stop
@@ -41,6 +43,14 @@ class AbstractIter(object):
                 return False
         children = [] if AbstractIter._abort_at_level(1, maxlevel) else AbstractIter._get_children([node], stop)
         return self._iter(children, filter_, stop, maxlevel)
+
+    def __iter__(self):
+        return self.__init()
+
+    def __next__(self):
+        if self.__iter is None:
+            self.__iter = self.__init()
+        return next(self.__iter)
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):

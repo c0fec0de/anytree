@@ -26,6 +26,10 @@ def test_preorder():
     eq_(list(PreOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))), [f, b, a, d, c, i, h])
     eq_(list(PreOrderIter(f, stop=lambda n: n.name == 'd')), [f, b, a, g, i, h])
 
+    it = PreOrderIter(f)
+    eq_(next(it), f)
+    eq_(next(it), b)
+
 
 def test_postorder():
     """PostOrderIter."""
@@ -45,6 +49,10 @@ def test_postorder():
     eq_(list(PostOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))), [a, c, d, b, h, i, f])
     eq_(list(PostOrderIter(f, stop=lambda n: n.name == 'd')), [a, b, h, i, g, f])
 
+    it = PostOrderIter(f)
+    eq_(next(it), a)
+    eq_(next(it), c)
+
 
 def test_levelorder():
     """LevelOrderIter."""
@@ -63,6 +71,10 @@ def test_levelorder():
     eq_(list(LevelOrderIter(f, maxlevel=3)), [f, b, g, a, d, i])
     eq_(list(LevelOrderIter(f, filter_=lambda n: n.name not in ('e', 'g'))), [f, b, a, d, i, c, h])
     eq_(list(LevelOrderIter(f, stop=lambda n: n.name == 'd')), [f, b, g, a, i, h])
+
+    it = LevelOrderIter(f)
+    eq_(next(it), f)
+    eq_(next(it), b)
 
 
 def test_levelgrouporder():
@@ -88,6 +100,10 @@ def test_levelgrouporder():
     eq_(list(LevelGroupOrderIter(f, stop=lambda n: n.name == 'd')),
         [(f,), (b, g), (a, i), (h, )])
 
+    it = LevelGroupOrderIter(f)
+    eq_(next(it), (f, ))
+    eq_(next(it), (b, g))
+
 
 def test_levelordergroup():
     """LevelOrderGroupIter."""
@@ -112,6 +128,10 @@ def test_levelordergroup():
     eq_(list(LevelOrderGroupIter(f, stop=lambda n: n.name == 'd')),
         [(f,), (b, g), (a, i), (h, )])
 
+    it = LevelOrderGroupIter(f)
+    eq_(next(it), (f, ))
+    eq_(next(it), (b, g))
+
 
 def test_zigzaggroup():
     """ZigZagGroupIter."""
@@ -135,3 +155,7 @@ def test_zigzaggroup():
         [(f,), (b,), (a, d, i), (h, c)])
     eq_(list(ZigZagGroupIter(f, stop=lambda n: n.name == 'd')),
         [(f,), (g, b), (a, i), (h, )])
+
+    it = ZigZagGroupIter(f)
+    eq_(next(it), (f, ))
+    eq_(next(it), (g, b))
