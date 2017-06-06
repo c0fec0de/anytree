@@ -244,7 +244,7 @@ class NodeMixin(object):
         The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
         This attribute will be removed in the 2.0.0 release.
         """
-        warnings.warn(".anchestors was a typo and will be removed in version 2.0.0", DeprecationWarning)
+        warnings.warn(".anchestors was a typo and will be removed in version 3.0.0", DeprecationWarning)
         return self.ancestors
 
     @property
