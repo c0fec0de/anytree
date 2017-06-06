@@ -15,7 +15,7 @@ def _read_metainfo(filepath):
     metainfo = {}
     with open(filepath) as fh:
         for line in fh:
-            match = pat.match(line)
+            match = pat.match(line.decode("utf-8"))
             if match:
                 metainfo[match.group("name")] = eval(match.group("expr"))
     return metainfo
