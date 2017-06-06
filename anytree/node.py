@@ -227,11 +227,11 @@ class NodeMixin(object):
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
-        >>> udo.anchestors
+        >>> udo.ancestors
         ()
-        >>> marc.anchestors
+        >>> marc.ancestors
         (Node('/Udo'),)
-        >>> lian.anchestors
+        >>> lian.ancestors
         (Node('/Udo'), Node('/Udo/Marc'))
         """
         return self._path[:-1]
