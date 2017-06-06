@@ -239,7 +239,7 @@ class NodeMixin(object):
     @property
     def anchestors(self):
         """
-        All parent nodes and their parent nodes - see :any:`anchestors`.
+        All parent nodes and their parent nodes - see :any:`ancestors`.
 
         The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
         This attribute will be removed in the 2.0.0 release.
