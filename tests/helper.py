@@ -1,4 +1,6 @@
 from contextlib import contextmanager
+
+import six
 from nose.tools import eq_
 
 
@@ -11,3 +13,10 @@ def assert_raises(exccls, msg):
     except Exception as exc:
         assert isinstance(exc, exccls), "%r is not a %r" % (exc, exccls)
         eq_(str(exc), msg)
+
+
+def eq_str(value, expected):
+    if six.PY2:
+        eq_(value.decode('utf-8'), expected)
+    else:
+        eq_(value, expected)

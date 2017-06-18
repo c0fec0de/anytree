@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-from nose.tools import eq_
 import six
 
+from nose.tools import eq_
+
 import anytree
+
+from helper import eq_str
 
 
 def test_render_str():
@@ -21,10 +24,7 @@ def test_render_str():
         u"│   └── Node('/root/sub0/sub0A')",
         u"└── Node('/root/sub1')",
     ])
-    if six.PY2:
-        eq_(str(r).decode('utf-8'), expected)
-    else:
-        eq_(str(r), expected)
+    eq_str(str(r), expected)
 
 
 def test_render_repr():
