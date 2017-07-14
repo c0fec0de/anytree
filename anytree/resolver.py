@@ -79,7 +79,7 @@ class Resolver(object):
     def __get(self, node, name):
         for child in node.children:
             child_name = _getattr(child, self.pathattr)
-            if isinstance(name, str) and isinstance(child_name, bytes) and type(bytes) != type(str):
+            if isinstance(name, str) and isinstance(child_name, bytes) and bytes != str:
                 name = name.encode('utf-8')
             if child_name == name:
                 return child
