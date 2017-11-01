@@ -427,9 +427,9 @@ class Node(NodeMixin, object):
             └── Node('/root/sub1/sub1C')
                 └── Node('/root/sub1/sub1C/sub1Ca')
         """
+        self.__dict__.update(kwargs)
         self.name = name
         self.parent = parent
-        self.__dict__.update(kwargs)
 
     @property
     def name(self):
