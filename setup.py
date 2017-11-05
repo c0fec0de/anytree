@@ -27,7 +27,7 @@ config = _read_metainfo("anytree/__init__.py")
 config['name'] = 'anytree'
 config['license'] = 'Apache 2.0'
 config['classifiers'] = [
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 5 - Production/Stable',
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
