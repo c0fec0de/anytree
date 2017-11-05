@@ -55,7 +55,7 @@ class RenderTreeGraph(_Render):
 
     def __init__(self, node, graph="digraph", name="tree", options=None,
                  indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None):
+                 edgeattrfunc=None, edgetypefunc=None):
         """
         Dot Language Exporter.
 
@@ -84,6 +84,11 @@ class RenderTreeGraph(_Render):
                           argument. The first the node and the second the child
                           and return the attributes.
 
+            edgetypefunc: Function to which gives the edge type.
+                          The function shall accept two `node` objects as
+                          argument. The first the node and the second the child
+                          and return the edge (i.e. '->').
+
         >>> from anytree import Node
         >>> root = Node("root")
         >>> s0 = Node("sub0", parent=root, edge=2)
@@ -94,6 +99,8 @@ class RenderTreeGraph(_Render):
         >>> s1b = Node("sub1B", parent=s1, edge=8)
         >>> s1c = Node("sub1C", parent=s1, edge=22)
         >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
+
+        A directed graph:
 
         >>> for line in RenderTreeGraph(root):
         ...     print(line)
@@ -117,17 +124,21 @@ class RenderTreeGraph(_Render):
             "sub1C" -> "sub1Ca";
         }
 
+        An undirected graph:
+
         >>> def nodenamefunc(node):
         ...     return '%s:%s' % (node.name, node.depth)
         >>> def edgeattrfunc(node, child):
         ...     return 'label="%s:%s"' % (node.name, child.name)
-        >>> for line in RenderTreeGraph(root, options=["rankdir=LR;"],
+        >>> def edgetypefunc(node, child):
+        ...     return '--'
+        >>> for line in RenderTreeGraph(root, graph="graph",
         ...                             nodenamefunc=nodenamefunc,
         ...                             nodeattrfunc=lambda node: "shape=box",
-        ...                             edgeattrfunc=edgeattrfunc):
+        ...                             edgeattrfunc=edgeattrfunc,
+        ...                             edgetypefunc=edgetypefunc):
         ...     print(line)
-        digraph tree {
-            rankdir=LR;
+        graph tree {
             "root:0" [shape=box];
             "sub0:1" [shape=box];
             "sub0B:2" [shape=box];
@@ -137,14 +148,14 @@ class RenderTreeGraph(_Render):
             "sub1B:2" [shape=box];
             "sub1C:2" [shape=box];
             "sub1Ca:3" [shape=box];
-            "root:0" -> "sub0:1" [label="root:sub0"];
-            "root:0" -> "sub1:1" [label="root:sub1"];
-            "sub0:1" -> "sub0B:2" [label="sub0:sub0B"];
-            "sub0:1" -> "sub0A:2" [label="sub0:sub0A"];
-            "sub1:1" -> "sub1A:2" [label="sub1:sub1A"];
-            "sub1:1" -> "sub1B:2" [label="sub1:sub1B"];
-            "sub1:1" -> "sub1C:2" [label="sub1:sub1C"];
-            "sub1C:2" -> "sub1Ca:3" [label="sub1C:sub1Ca"];
+            "root:0" -- "sub0:1" [label="root:sub0"];
+            "root:0" -- "sub1:1" [label="root:sub1"];
+            "sub0:1" -- "sub0B:2" [label="sub0:sub0B"];
+            "sub0:1" -- "sub0A:2" [label="sub0:sub0A"];
+            "sub1:1" -- "sub1A:2" [label="sub1:sub1A"];
+            "sub1:1" -- "sub1B:2" [label="sub1:sub1B"];
+            "sub1:1" -- "sub1C:2" [label="sub1:sub1C"];
+            "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
         }
         """
         self.node = node
@@ -155,6 +166,7 @@ class RenderTreeGraph(_Render):
         self.nodenamefunc = nodenamefunc
         self.nodeattrfunc = nodeattrfunc
         self.edgeattrfunc = edgeattrfunc
+        self.edgetypefunc = edgetypefunc
 
     def __iter__(self):
         # prepare
@@ -171,15 +183,20 @@ class RenderTreeGraph(_Render):
         if not edgeattrfunc:
             def edgeattrfunc(node, child):
                 return None
-        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc)
+        edgetypefunc = self.edgetypefunc
+        if not edgetypefunc:
+            def edgetypefunc(node, child):
+                return "->"
+        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc,
+                           edgetypefunc)
 
-    def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc):
+    def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc):
         yield "{self.graph} {self.name} {{".format(self=self)
         for option in self.__iter_options(indent):
             yield option
         for node in self.__iter_nodes(indent, nodenamefunc, nodeattrfunc):
             yield node
-        for edge in self.__iter_edges(indent, nodenamefunc, edgeattrfunc):
+        for edge in self.__iter_edges(indent, nodenamefunc, edgeattrfunc, edgetypefunc):
             yield edge
         yield "}"
 
@@ -196,12 +213,13 @@ class RenderTreeGraph(_Render):
             nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
             yield '%s"%s"%s;' % (indent, nodename, nodeattr)
 
-    def __iter_edges(self, indent, nodenamefunc, edgeattrfunc):
+    def __iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc):
         for node in PreOrderIter(self.node):
             nodename = nodenamefunc(node)
             for child in node.children:
                 childname = nodenamefunc(child)
                 edgeattr = edgeattrfunc(node, child)
+                edgetype = edgetypefunc(node, child)
                 edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
-                yield '%s"%s" -> "%s"%s;' % (indent, nodename, childname,
-                                             edgeattr)
+                yield '%s"%s" %s "%s"%s;' % (indent, nodename, edgetype,
+                                             childname, edgeattr)
