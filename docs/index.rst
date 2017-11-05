@@ -11,8 +11,8 @@ Any Python Tree Data
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.2.1
-    :target: http://anytree.readthedocs.io/en/2.2.1/?badge=2.2.1
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.2.2
+    :target: http://anytree.readthedocs.io/en/2.2.2/?badge=2.2.2
 
 .. image:: https://codeclimate.com/github/c0fec0de/anytree.png
     :target: https://codeclimate.com/github/c0fec0de/anytree
@@ -22,6 +22,12 @@ Any Python Tree Data
 
 .. image:: https://landscape.io/github/c0fec0de/anytree/master/landscape.svg?style=flat
    :target: https://landscape.io/github/c0fec0de/anytree/master
+
+.. image:: https://img.shields.io/badge/code%20style-pep8-brightgreen.svg
+   :target: https://www.python.org/dev/peps/pep-0008/
+
+.. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
+   :target: https://www.python.org/dev/peps/pep-0257/
 
 Simple, lightweight and extensible Tree_ data structure.
 
