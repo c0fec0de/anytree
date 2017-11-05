@@ -22,7 +22,7 @@ class NodeMixin(object):
     If `None` the :any:`NodeMixin` is root node.
     If set to another node, the :any:`NodeMixin` becomes the child of it.
 
-    >>> from anytree import Node, RenderTree
+    >>> from anytree import NodeMixin, RenderTree
     >>> class MyBaseClass(object):
     ...     foo = 4
     >>> class MyClass(MyBaseClass, NodeMixin):  # Add Node feature
