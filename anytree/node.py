@@ -164,7 +164,7 @@ class NodeMixin(object):
                 child.parent = self
             assert len(self.children) == len(children)
             self._post_attach_children(children)
-        except:
+        except Exception:
             self.children = old_children
             raise
 
