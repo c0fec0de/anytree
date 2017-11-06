@@ -82,6 +82,12 @@ A node class implementation might implement the notification slots
 :any:`_pre_detach(parent)`, :any:`_post_detach(parent)`,
 :any:`_pre_attach(parent)`, :any:`_post_attach(parent)`.
 
+These methods are *protected* functions,
+intended to be overwritten by child classes of :any:`NodeMixin`/:any:`Node`.
+They are called on modifications of a nodes `parent` attribute.
+Never call them directly from API.
+This will corrupt the logic behind these methods.
+
 >>> class NotifiedNode(Node):
 ...     def _pre_detach(self, parent):
 ...         print("_pre_detach", parent)
