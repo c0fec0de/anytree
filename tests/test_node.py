@@ -441,3 +441,32 @@ def test_node_kwargs():
     node_a = MyNode('A')
     node_b = MyNode('B', node_a, my_attribute=True)
     eq_(repr(node_b), "MyNode('/A/B', my_attribute=True)")
+
+def test_hookups():
+    """Hookup attributes #29."""
+
+    class MyNode(Node):
+
+        def _pre_attach(self, parent):
+            eq_(str(self.parent), "None")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/B'),)")
+
+        def _post_attach(self, parent):
+            eq_(str(self.parent), "MyNode('/A')")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/A'), MyNode('/A/B'))")
+
+        def _pre_detach(self, parent):
+            eq_(str(self.parent), "MyNode('/A')")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/A'), MyNode('/A/B'))")
+
+        def _post_detach(self, parent):
+            eq_(str(self.parent), "None")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/B'),)")
+
+    node_a = MyNode('A')
+    node_b = MyNode('B', node_a)  # attach B on A
+    node_b.parent = None  # detach B from A
