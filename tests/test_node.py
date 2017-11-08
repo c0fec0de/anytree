@@ -179,11 +179,18 @@ def test_children_setter_large():
     eq_(root.descendants, (s0, s0a, s0b, s1, s1a, s1b, s1c))
 
 
-def test_type_assertion():
+def test_node_children_type():
 
     root = Node("root")
     with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
         root.children = ["string"]
+
+def test_node_children_multiple():
+
+    root = Node("root")
+    sub = Node("sub")
+    with assert_raises(TreeError, "Cannot add node Node('/sub') multiple times as child."):
+        root.children = [sub, sub]
 
 
 def test_recursion_detection():
