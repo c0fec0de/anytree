@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-from nose.tools import eq_
 from helper import assert_raises
+from nose.tools import eq_
 
 from anytree import LoopError
 from anytree import Node
 from anytree import NodeMixin
 from anytree import PostOrderIter
 from anytree import PreOrderIter
+from anytree import TreeError
 
 
 def test_parent_child():
@@ -181,7 +182,7 @@ def test_children_setter_large():
 def test_type_assertion():
 
     root = Node("root")
-    with assert_raises(AssertionError, "Cannot add non-node object 'string'."):
+    with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
         root.children = ["string"]
 
 

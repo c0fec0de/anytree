@@ -14,6 +14,7 @@ from .iterators import PostOrderIter  # noqa
 from .iterators import PreOrderIter  # noqa
 from .iterators import ZigZagGroupIter  # noqa
 from .node import LoopError  # noqa
+from .node import TreeError  # noqa
 from .node import Node  # noqa
 from .node import NodeMixin  # noqa
 from .render import AbstractStyle  # noqa

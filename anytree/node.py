@@ -141,31 +141,83 @@ class NodeMixin(object):
         """
         All child nodes.
 
-        >>> dan = Node("Dan")
-        >>> jet = Node("Jet", parent=dan)
-        >>> jan = Node("Jan", parent=dan)
-        >>> joe = Node("Joe", parent=dan)
-        >>> dan.children
-        (Node('/Dan/Jet'), Node('/Dan/Jan'), Node('/Dan/Joe'))
+        >>> n = Node("n")
+        >>> a = Node("a", parent=n)
+        >>> b = Node("b", parent=n)
+        >>> c = Node("c", parent=n)
+        >>> n.children
+        (Node('/n/a'), Node('/n/b'), Node('/n/c'))
+
+        Modifying the children attribute modifies the tree.
+
+        **Detach**
+
+        The children attribute can be updated by setting to an iterable.
+
+        >>> n.children = [a, b]
+        >>> n.children
+        (Node('/n/a'), Node('/n/b'))
+
+        Node `c` is removed from the tree.
+        In case of an existing reference, the node `c` does not vanish and is the root of its own tree.
+
+        >>> c
+        Node('/c')
+
+        **Attach**
+
+        >>> d = Node("d")
+        >>> d
+        Node('/d')
+        >>> n.children = [a, b, d]
+        >>> n.children
+        (Node('/n/a'), Node('/n/b'), Node('/n/d'))
+        >>> d
+        Node('/n/d')
+
+        **Duplicate**
+
+        A node can just be the children once. Duplicates cause a :any:`TreeError`:
+
+        >>> n.children = [a, b, d, a]
+        Traceback (most recent call last):
+            ...
+        anytree.node.TreeError: Cannot add node Node('/n/a') multiple times as child.
         """
         return tuple(self._children)
 
+    @staticmethod
+    def __check_children(children):
+        seen = set()
+        for child in children:
+            if not isinstance(child, NodeMixin):
+                msg = ("Cannot add non-node object %r. "
+                       "It is not a subclass of 'NodeMixin'.") % child
+                raise TreeError(msg)
+            if child not in seen:
+                seen.add(child)
+            else:
+                msg = "Cannot add node %r multiple times as child." % child
+                raise TreeError(msg)
+
     @children.setter
     def children(self, children):
-        self._pre_attach_children(children)
-
+        # convert iterable to tuple
+        children = tuple(children)
+        NodeMixin.__check_children(children)
+        # ATOMIC start
         old_children = self.children
         del self.children
-
         try:
+            self._pre_attach_children(children)
             for child in children:
-                assert isinstance(child, NodeMixin), ("Cannot add non-node object %r." % child)
                 child.parent = self
-            assert len(self.children) == len(children)
             self._post_attach_children(children)
+            assert len(self.children) == len(children)
         except Exception:
             self.children = old_children
             raise
+        # ATOMIC end
 
     @children.deleter
     def children(self):
@@ -313,7 +365,7 @@ class NodeMixin(object):
     @property
     def is_leaf(self):
         """
-        `Node` has no childrean (External Node).
+        `Node` has no children (External Node).
 
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
@@ -449,7 +501,14 @@ class Node(NodeMixin, object):
         return "%s(%s)" % (classname, ", ".join(args))
 
 
-class LoopError(RuntimeError):
+class TreeError(RuntimeError):
+
+    """Tree Error."""
+
+    pass
+
+
+class LoopError(TreeError):
 
     """Tree contains infinite loop."""
 
