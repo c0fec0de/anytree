@@ -2,6 +2,7 @@
 from helper import assert_raises
 from nose.tools import eq_
 
+from anytree import AnyNode
 from anytree import LoopError
 from anytree import Node
 from anytree import NodeMixin
@@ -9,6 +10,11 @@ from anytree import PostOrderIter
 from anytree import PreOrderIter
 from anytree import TreeError
 
+
+def test_node_parent_error():
+    """Node Parent Error."""
+    with assert_raises(TreeError, "Parent node 'parent' is not of type 'NodeMixin'."):
+        Node("root", "parent")
 
 def test_parent_child():
     """A tree parent and child attributes."""
@@ -478,3 +484,25 @@ def test_hookups():
     node_a = MyNode('A')
     node_b = MyNode('B', node_a)  # attach B on A
     node_b.parent = None  # detach B from A
+
+def test_any_node_parent_error():
+    """Any Node Parent Error."""
+
+    with assert_raises(TreeError, "Parent node 'r' is not of type 'NodeMixin'."):
+        AnyNode("r")
+
+def test_any_node():
+    """Any Node."""
+    r = AnyNode()
+    a = AnyNode()
+    b = AnyNode(foo=4)
+    eq_(r.parent, None)
+    eq_(a.parent, None)
+    eq_(b.parent, None)
+    a.parent = r
+    b.parent = r
+    eq_(r.children, (a, b))
+    eq_(repr(r), "AnyNode()")
+    eq_(repr(a), "AnyNode()")
+    eq_(repr(b), "AnyNode(foo=4)")
+

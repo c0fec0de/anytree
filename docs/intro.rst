@@ -8,7 +8,8 @@ Overview
 
 **Node Classes**
 
-* :any:`Node`: a simple tree node
+* :any:`Node`: a simple tree node with at least a name attribute and any number of additional attributes.
+* :any:`AnyNode`: a generic tree node and any number of additional attributes.
 * :any:`NodeMixin`: extends any python class to a tree node.
 
 **Node Resolution**
