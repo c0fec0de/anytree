@@ -10,5 +10,6 @@ Exporter missing? File a request here: _Issues.
 
 .. toctree::
     exporter/dictexporter
+    exporter/jsonexporter
 
 .. _Issues: https://github.com/c0fec0de/anytree/issues

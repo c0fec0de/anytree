@@ -2,7 +2,6 @@ from nose.tools import eq_
 
 from anytree import AnyNode
 from anytree.exporter import DictExporter
-from anytree import RenderTree
 
 
 def test_dict_exporter():
