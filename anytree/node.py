@@ -83,14 +83,17 @@ class NodeMixin(object):
         True
         """
         try:
-            return self._parent
+            return self.__parent
         except AttributeError:
             return None
 
     @parent.setter
     def parent(self, value):
+        if value is not None and not isinstance(value, NodeMixin):
+            msg = "Parent node %r is not of type 'NodeMixin'." % (value)
+            raise TreeError(msg)
         try:
-            parent = self._parent
+            parent = self.__parent
         except AttributeError:
             parent = None
         if parent is not value:
@@ -110,27 +113,27 @@ class NodeMixin(object):
     def __detach(self, parent):
         if parent is not None:
             self._pre_detach(parent)
-            parentchildren = parent._children
+            parentchildren = parent.__children_
             assert self in parentchildren, "Tree internal data is corrupt."
             # ATOMIC START
             parentchildren.remove(self)
-            self._parent = None
+            self.__parent = None
             # ATOMIC END
             self._post_detach(parent)
 
     def __attach(self, parent):
         if parent is not None:
             self._pre_attach(parent)
-            parentchildren = parent._children
+            parentchildren = parent.__children_
             assert self not in parentchildren, "Tree internal data is corrupt."
             # ATOMIC START
             parentchildren.append(self)
-            self._parent = parent
+            self.__parent = parent
             # ATOMIC END
             self._post_attach(parent)
 
     @property
-    def _children(self):
+    def __children_(self):
         try:
             return self.__children
         except AttributeError:
@@ -185,7 +188,7 @@ class NodeMixin(object):
             ...
         anytree.node.TreeError: Cannot add node Node('/n/a') multiple times as child.
         """
-        return tuple(self._children)
+        return tuple(self.__children_)
 
     @staticmethod
     def __check_children(children):
@@ -361,7 +364,7 @@ class NodeMixin(object):
         if parent is None:
             return tuple()
         else:
-            return tuple([node for node in parent._children if node != self])
+            return tuple([node for node in parent.__children_ if node != self])
 
     @property
     def is_leaf(self):
@@ -378,7 +381,7 @@ class NodeMixin(object):
         >>> lian.is_leaf
         True
         """
-        return len(self._children) == 0
+        return len(self.__children_) == 0
 
     @property
     def is_root(self):
@@ -412,8 +415,8 @@ class NodeMixin(object):
         >>> lian.height
         0
         """
-        if self._children:
-            return max([child.height for child in self._children]) + 1
+        if self.__children_:
+            return max([child.height for child in self.__children_]) + 1
         else:
             return 0
 
