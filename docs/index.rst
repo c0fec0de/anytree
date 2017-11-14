@@ -37,7 +37,8 @@ Simple, lightweight and extensible Tree_ data structure.
    installation
    intro
    api
-   dotexport
+   importer
+   exporter
 
 .. _Tree: https://en.wikipedia.org/wiki/Tree_(data_structure)
 
