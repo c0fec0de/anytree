@@ -152,7 +152,6 @@ class RenderTree(object):
 
         Keyword Args:
             style (AbstractStyle): Render Style.
-
             childiter: Child iterator.
 
         :any:`RenderTree` is an iterator, returning a tuple with 3 items:
