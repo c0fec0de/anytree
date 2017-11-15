@@ -1,7 +1,7 @@
 import filecmp
 import os
 
-from tempfile import TemporaryDirectory
+from tempfile import NamedTemporaryFile
 
 from nose.tools import eq_
 
@@ -61,11 +61,8 @@ def test_json_exporter():
 
     exporter = JsonExporter(indent=2, sort_keys=True)
     eq_(exporter.export(root), "\n".join(lines))
-    with TemporaryDirectory() as tmpdirname:
-        genfile = tmpdirname + os.sep + "gen.txt"
-        reffile = tmpdirname + os.sep + "ref.txt"
-        with open(genfile, "w") as gen:
+    with NamedTemporaryFile(mode="w+") as ref:
+        with NamedTemporaryFile(mode="w+") as gen:
+            ref.write("\n".join(lines))
             exporter.write(root, gen)
-            with open(reffile, "w") as ref:
-                ref.write("\n".join(lines))
-        assert filecmp.cmp(reffile, genfile)
+            assert filecmp.cmp(ref.name, gen.name)
