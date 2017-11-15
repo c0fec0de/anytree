@@ -1,5 +1,3 @@
-import warnings
-
 from codecs import open
 from os import path
 from subprocess import check_call
@@ -25,7 +23,8 @@ class _Render(object):
         >>> s1c = Node("sub1C", parent=s1)
         >>> s1ca = Node("sub1Ca", parent=s1c)
 
-        >>> RenderTreeGraph(root).to_dotfile("tree.dot")
+        >>> from anytree.exporter import DotExporter
+        >>> DotExporter(root).to_dotfile("tree.dot")
 
         The generated file should be handed over to the `dot` tool from the
         http://www.graphviz.org/ package::
@@ -53,7 +52,7 @@ class _Render(object):
             check_call(cmd)
 
 
-class RenderTreeGraph(_Render):
+class DotExporter(_Render):
 
     def __init__(self, node, graph="digraph", name="tree", options=None,
                  indent=4, nodenamefunc=None, nodeattrfunc=None,
@@ -104,7 +103,8 @@ class RenderTreeGraph(_Render):
 
         A directed graph:
 
-        >>> for line in RenderTreeGraph(root):
+        >>> from anytree.exporter import DotExporter
+        >>> for line in DotExporter(root):
         ...     print(line)
         digraph tree {
             "root";
@@ -134,7 +134,8 @@ class RenderTreeGraph(_Render):
         ...     return 'label="%s:%s"' % (node.name, child.name)
         >>> def edgetypefunc(node, child):
         ...     return '--'
-        >>> for line in RenderTreeGraph(root, graph="graph",
+                >>> from anytree.exporter import DotExporter
+        >>> for line in DotExporter(root, graph="graph",
         ...                             nodenamefunc=nodenamefunc,
         ...                             nodeattrfunc=lambda node: "shape=box",
         ...                             edgeattrfunc=edgeattrfunc,
@@ -160,11 +161,6 @@ class RenderTreeGraph(_Render):
             "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
         }
         """
-        warnings.warn(
-            ("anytree.RenderTreeGraph has moved. "
-             "Use anytree.exporter.DotExporter instead"),
-            DeprecationWarning
-        )
         self.node = node
         self.graph = graph
         self.name = name
