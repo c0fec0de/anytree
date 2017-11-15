@@ -60,7 +60,9 @@ def test_json_exporter():
     ]
 
     exporter = JsonExporter(indent=2, sort_keys=True)
-    eq_(exporter.export(root), "\n".join(lines))
+    exported = exporter.export(root).split("\n")
+    exported = [e.rstrip() for e in exported]  # just a fix for a strange py2x behavior.
+    eq_(exported, lines)
     with NamedTemporaryFile(mode="w+") as ref:
         with NamedTemporaryFile(mode="w+") as gen:
             ref.write("\n".join(lines))
