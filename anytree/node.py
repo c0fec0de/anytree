@@ -2,8 +2,7 @@
 """
 Node Classes.
 
-* :any:`Node`: a simple tree node with at least a name attribute and any number of additional attributes.
-* :any:`AnyNode`: a generic tree node with any number of attributes.
+* :any:`Node`: a simple tree node
 * :any:`NodeMixin`: extends any python class to a tree node.
 """
 
@@ -83,57 +82,55 @@ class NodeMixin(object):
         True
         """
         try:
-            return self.__parent
+            return self._parent
         except AttributeError:
             return None
 
     @parent.setter
     def parent(self, value):
-        if value is not None and not isinstance(value, NodeMixin):
-            msg = "Parent node %r is not of type 'NodeMixin'." % (value)
-            raise TreeError(msg)
         try:
-            parent = self.__parent
+            parent = self._parent
         except AttributeError:
             parent = None
-        if parent is not value:
+        if value is None:
+            # make this node to root node
+            self.__detach(parent)
+        elif parent is not value:
+            # change parent node
             self.__check_loop(value)
             self.__detach(parent)
             self.__attach(value)
+        else:
+            # keep parent
+            pass
+        # apply
+        self._parent = value
 
     def __check_loop(self, node):
-        if node is not None:
-            if node is self:
-                msg = "Cannot set parent. %r cannot be parent of itself."
-                raise LoopError(msg % self)
-            if self in node.path:
-                msg = "Cannot set parent. %r is parent of %r."
-                raise LoopError(msg % (self, node))
+        if node is self:
+            msg = "Cannot set parent. %r cannot be parent of itself."
+            raise LoopError(msg % self)
+        if self in node.path:
+            msg = "Cannot set parent. %r is parent of %r."
+            raise LoopError(msg % (self, node))
 
     def __detach(self, parent):
-        if parent is not None:
+        if parent:
             self._pre_detach(parent)
-            parentchildren = parent.__children_
+            parentchildren = parent._children
             assert self in parentchildren, "Tree internal data is corrupt."
-            # ATOMIC START
             parentchildren.remove(self)
-            self.__parent = None
-            # ATOMIC END
             self._post_detach(parent)
 
     def __attach(self, parent):
-        if parent is not None:
-            self._pre_attach(parent)
-            parentchildren = parent.__children_
-            assert self not in parentchildren, "Tree internal data is corrupt."
-            # ATOMIC START
-            parentchildren.append(self)
-            self.__parent = parent
-            # ATOMIC END
-            self._post_attach(parent)
+        self._pre_attach(parent)
+        parentchildren = parent._children
+        assert self not in parentchildren, "Tree internal data is corrupt."
+        parentchildren.append(self)
+        self._post_attach(parent)
 
     @property
-    def __children_(self):
+    def _children(self):
         try:
             return self.__children
         except AttributeError:
@@ -145,83 +142,31 @@ class NodeMixin(object):
         """
         All child nodes.
 
-        >>> n = Node("n")
-        >>> a = Node("a", parent=n)
-        >>> b = Node("b", parent=n)
-        >>> c = Node("c", parent=n)
-        >>> n.children
-        (Node('/n/a'), Node('/n/b'), Node('/n/c'))
-
-        Modifying the children attribute modifies the tree.
-
-        **Detach**
-
-        The children attribute can be updated by setting to an iterable.
-
-        >>> n.children = [a, b]
-        >>> n.children
-        (Node('/n/a'), Node('/n/b'))
-
-        Node `c` is removed from the tree.
-        In case of an existing reference, the node `c` does not vanish and is the root of its own tree.
-
-        >>> c
-        Node('/c')
-
-        **Attach**
-
-        >>> d = Node("d")
-        >>> d
-        Node('/d')
-        >>> n.children = [a, b, d]
-        >>> n.children
-        (Node('/n/a'), Node('/n/b'), Node('/n/d'))
-        >>> d
-        Node('/n/d')
-
-        **Duplicate**
-
-        A node can just be the children once. Duplicates cause a :any:`TreeError`:
-
-        >>> n.children = [a, b, d, a]
-        Traceback (most recent call last):
-            ...
-        anytree.node.TreeError: Cannot add node Node('/n/a') multiple times as child.
+        >>> dan = Node("Dan")
+        >>> jet = Node("Jet", parent=dan)
+        >>> jan = Node("Jan", parent=dan)
+        >>> joe = Node("Joe", parent=dan)
+        >>> dan.children
+        (Node('/Dan/Jet'), Node('/Dan/Jan'), Node('/Dan/Joe'))
         """
-        return tuple(self.__children_)
-
-    @staticmethod
-    def __check_children(children):
-        seen = set()
-        for child in children:
-            if not isinstance(child, NodeMixin):
-                msg = ("Cannot add non-node object %r. "
-                       "It is not a subclass of 'NodeMixin'.") % child
-                raise TreeError(msg)
-            if child not in seen:
-                seen.add(child)
-            else:
-                msg = "Cannot add node %r multiple times as child." % child
-                raise TreeError(msg)
+        return tuple(self._children)
 
     @children.setter
     def children(self, children):
-        # convert iterable to tuple
-        children = tuple(children)
-        NodeMixin.__check_children(children)
-        # ATOMIC start
+        self._pre_attach_children(children)
+
         old_children = self.children
         del self.children
+
         try:
-            self._pre_attach_children(children)
             for child in children:
+                assert isinstance(child, NodeMixin), ("Cannot add non-node object %r." % child)
                 child.parent = self
-            self._post_attach_children(children)
             assert len(self.children) == len(children)
+            self._post_attach_children(children)
         except Exception:
             self.children = old_children
             raise
-        # ATOMIC end
 
     @children.deleter
     def children(self):
@@ -364,12 +309,12 @@ class NodeMixin(object):
         if parent is None:
             return tuple()
         else:
-            return tuple([node for node in parent.__children_ if node != self])
+            return tuple([node for node in parent._children if node != self])
 
     @property
     def is_leaf(self):
         """
-        `Node` has no children (External Node).
+        `Node` has no childrean (External Node).
 
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
@@ -381,7 +326,7 @@ class NodeMixin(object):
         >>> lian.is_leaf
         True
         """
-        return len(self.__children_) == 0
+        return len(self._children) == 0
 
     @property
     def is_root(self):
@@ -415,8 +360,8 @@ class NodeMixin(object):
         >>> lian.height
         0
         """
-        if self.__children_:
-            return max([child.height for child in self.__children_]) + 1
+        if self._children:
+            return max([child.height for child in self._children]) + 1
         else:
             return 0
 
@@ -452,50 +397,6 @@ class NodeMixin(object):
     def _post_attach(self, parent):
         """Method call after attaching to `parent`."""
         pass
-
-
-class AnyNode(NodeMixin, object):
-
-    def __init__(self, parent=None, **kwargs):
-        u"""
-        A generic tree node with any `kwargs`.
-
-        >>> from anytree import AnyNode, RenderTree
-        >>> root = AnyNode(id="root")
-        >>> s0 = AnyNode(id="sub0", parent=root)
-        >>> s0b = AnyNode(id="sub0B", parent=s0, foo=4, bar=109)
-        >>> s0a = AnyNode(id="sub0A", parent=s0)
-        >>> s1 = AnyNode(id="sub1", parent=root)
-        >>> s1a = AnyNode(id="sub1A", parent=s1)
-        >>> s1b = AnyNode(id="sub1B", parent=s1, bar=8)
-        >>> s1c = AnyNode(id="sub1C", parent=s1)
-        >>> s1ca = AnyNode(id="sub1Ca", parent=s1c)
-
-        >>> root
-        AnyNode(id='root')
-        >>> s0
-        AnyNode(id='sub0')
-        >>> print(RenderTree(root))
-        AnyNode(id='root')
-        ├── AnyNode(id='sub0')
-        │   ├── AnyNode(bar=109, foo=4, id='sub0B')
-        │   └── AnyNode(id='sub0A')
-        └── AnyNode(id='sub1')
-            ├── AnyNode(id='sub1A')
-            ├── AnyNode(bar=8, id='sub1B')
-            └── AnyNode(id='sub1C')
-                └── AnyNode(id='sub1Ca')
-        """
-        self.__dict__.update(kwargs)
-        self.parent = parent
-
-    def __repr__(self):
-        classname = self.__class__.__name__
-        args = ["%s=%r" % (key, value)
-                for key, value in filter(lambda item: not item[0].startswith("_"),
-                                         sorted(self.__dict__.items(),
-                                                key=lambda item: item[0]))]
-        return "%s(%s)" % (classname, ", ".join(args))
 
 
 class Node(NodeMixin, object):
@@ -549,14 +450,7 @@ class Node(NodeMixin, object):
         return "%s(%s)" % (classname, ", ".join(args))
 
 
-class TreeError(RuntimeError):
-
-    """Tree Error."""
-
-    pass
-
-
-class LoopError(TreeError):
+class LoopError(RuntimeError):
 
     """Tree contains infinite loop."""
 

@@ -2,8 +2,8 @@ API
 ===
 
 .. toctree::
-    api/anytree.node
-    api/anytree.iterators
-    api/anytree.render
-    api/anytree.resolver
-    api/anytree.walker
+    apidoc/anytree.node
+    apidoc/anytree.iterators
+    apidoc/anytree.render
+    apidoc/anytree.resolver
+    apidoc/anytree.walker

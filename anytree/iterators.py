@@ -32,17 +32,15 @@ class AbstractIter(six.Iterator):
 
     def __init(self):
         node = self.node
+        filter_ = self.filter_
+        stop = self.stop
         maxlevel = self.maxlevel
-        if self.filter_ is None:
+        if filter_ is None:
             def filter_(node):
                 return True
-        else:
-            filter_ = self.filter_
-        if self.stop is None:
+        if stop is None:
             def stop(node):
                 return False
-        else:
-            stop = self.stop
         children = [] if AbstractIter._abort_at_level(1, maxlevel) else AbstractIter._get_children([node], stop)
         return self._iter(children, filter_, stop, maxlevel)
 

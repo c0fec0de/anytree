@@ -1,5 +1,3 @@
-import warnings
-
 from codecs import open
 from os import path
 from subprocess import check_call
@@ -160,11 +158,6 @@ class RenderTreeGraph(_Render):
             "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
         }
         """
-        warnings.warn(
-            ("anytree.RenderTreeGraph has moved. "
-             "Use anytree.exporter.DotExporter instead"),
-            DeprecationWarning
-        )
         self.node = node
         self.graph = graph
         self.name = name

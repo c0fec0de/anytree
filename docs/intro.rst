@@ -8,8 +8,7 @@ Overview
 
 **Node Classes**
 
-* :any:`Node`: a simple tree node with at least a name attribute and any number of additional attributes.
-* :any:`AnyNode`: a generic tree node and any number of additional attributes.
+* :any:`Node`: a simple tree node
 * :any:`NodeMixin`: extends any python class to a tree node.
 
 **Node Resolution**
@@ -58,7 +57,7 @@ Every node has an :any:`children` attribute with a tuple of all children:
 >>> lian.children
 ()
 
-**Single Node Attach**
+**Attach**
 
 >>> marc.parent = udo
 >>> print(RenderTree(udo))
@@ -66,7 +65,7 @@ Node('/Udo')
 └── Node('/Udo/Marc')
     └── Node('/Udo/Marc/Lian')
 
-**Single Node Detach**
+**Detach**
 
 To make a node to a root node, just set this attribute to `None`.
 
@@ -76,52 +75,12 @@ False
 >>> marc.is_root
 True
 
-**Modify Multiple Child Nodes**
-
->>> n = Node("n")
->>> a = Node("a", parent=n)
->>> b = Node("b", parent=n)
->>> c = Node("c", parent=n)
->>> d = Node("d")
->>> n.children
-(Node('/n/a'), Node('/n/b'), Node('/n/c'))
-
-Modifying the children attribute modifies multiple child nodes.
-It can be set to any iterable.
-
->>> n.children = [a, b]
->>> n.children
-(Node('/n/a'), Node('/n/b'))
-
-Node `c` is removed from the tree.
-In case of an existing reference, the node `c` does not vanish and is the root of its own tree.
-
->>> c
-Node('/c')
-
-Adding works likewise.
-
->>> d
-Node('/d')
->>> n.children = [a, b, d]
->>> n.children
-(Node('/n/a'), Node('/n/b'), Node('/n/d'))
->>> d
-Node('/n/d')
-
-
 Detach/Attach Protocol
 ----------------------
 
 A node class implementation might implement the notification slots
 :any:`_pre_detach(parent)`, :any:`_post_detach(parent)`,
 :any:`_pre_attach(parent)`, :any:`_post_attach(parent)`.
-
-These methods are *protected* methods,
-intended to be overwritten by child classes of :any:`NodeMixin`/:any:`Node`.
-They are called on modifications of a nodes `parent` attribute.
-Never call them directly from API.
-This will corrupt the logic behind these methods.
 
 >>> class NotifiedNode(Node):
 ...     def _pre_detach(self, parent):
@@ -159,13 +118,6 @@ Notification on detach:
 >>> c.parent = None
 _pre_detach NotifiedNode('/b')
 _post_detach NotifiedNode('/b')
-
-
-.. important::
-    An exeception raised by :any:`_pre_detach(parent)` and :any:`_pre_attach(parent)` will **prevent** the tree structure to be updated.
-    The node keeps the old state.
-    An exeception raised by :any:`_post_detach(parent)` and :any:`_post_attach(parent)` does **not rollback** the tree structure modification.
-
 
 Custom Separator
 ----------------
