@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
-from nose.tools import eq_
 from helper import assert_raises
+from nose.tools import eq_
 
+from anytree import AnyNode
 from anytree import LoopError
 from anytree import Node
 from anytree import NodeMixin
 from anytree import PostOrderIter
 from anytree import PreOrderIter
+from anytree import TreeError
 
+
+def test_node_parent_error():
+    """Node Parent Error."""
+    with assert_raises(TreeError, "Parent node 'parent' is not of type 'NodeMixin'."):
+        Node("root", "parent")
 
 def test_parent_child():
     """A tree parent and child attributes."""
@@ -178,11 +185,18 @@ def test_children_setter_large():
     eq_(root.descendants, (s0, s0a, s0b, s1, s1a, s1b, s1c))
 
 
-def test_type_assertion():
+def test_node_children_type():
 
     root = Node("root")
-    with assert_raises(AssertionError, "Cannot add non-node object 'string'."):
+    with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
         root.children = ["string"]
+
+def test_node_children_multiple():
+
+    root = Node("root")
+    sub = Node("sub")
+    with assert_raises(TreeError, "Cannot add node Node('/sub') multiple times as child."):
+        root.children = [sub, sub]
 
 
 def test_recursion_detection():
@@ -441,3 +455,54 @@ def test_node_kwargs():
     node_a = MyNode('A')
     node_b = MyNode('B', node_a, my_attribute=True)
     eq_(repr(node_b), "MyNode('/A/B', my_attribute=True)")
+
+def test_hookups():
+    """Hookup attributes #29."""
+
+    class MyNode(Node):
+
+        def _pre_attach(self, parent):
+            eq_(str(self.parent), "None")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/B'),)")
+
+        def _post_attach(self, parent):
+            eq_(str(self.parent), "MyNode('/A')")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/A'), MyNode('/A/B'))")
+
+        def _pre_detach(self, parent):
+            eq_(str(self.parent), "MyNode('/A')")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/A'), MyNode('/A/B'))")
+
+        def _post_detach(self, parent):
+            eq_(str(self.parent), "None")
+            eq_(self.children, tuple())
+            eq_(str(self.path), "(MyNode('/B'),)")
+
+    node_a = MyNode('A')
+    node_b = MyNode('B', node_a)  # attach B on A
+    node_b.parent = None  # detach B from A
+
+def test_any_node_parent_error():
+    """Any Node Parent Error."""
+
+    with assert_raises(TreeError, "Parent node 'r' is not of type 'NodeMixin'."):
+        AnyNode("r")
+
+def test_any_node():
+    """Any Node."""
+    r = AnyNode()
+    a = AnyNode()
+    b = AnyNode(foo=4)
+    eq_(r.parent, None)
+    eq_(a.parent, None)
+    eq_(b.parent, None)
+    a.parent = r
+    b.parent = r
+    eq_(r.children, (a, b))
+    eq_(repr(r), "AnyNode()")
+    eq_(repr(a), "AnyNode()")
+    eq_(repr(b), "AnyNode(foo=4)")
+

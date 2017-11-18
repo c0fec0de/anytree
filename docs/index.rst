@@ -11,8 +11,8 @@ Any Python Tree Data
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.2.2
-    :target: http://anytree.readthedocs.io/en/2.2.2/?badge=2.2.2
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.3.dev0
+    :target: http://anytree.readthedocs.io/en/2.3.dev0/?badge=2.3.dev0
 
 .. image:: https://codeclimate.com/github/c0fec0de/anytree.png
     :target: https://codeclimate.com/github/c0fec0de/anytree
@@ -37,7 +37,8 @@ Simple, lightweight and extensible Tree_ data structure.
    installation
    intro
    api
-   dotexport
+   importer
+   exporter
 
 .. _Tree: https://en.wikipedia.org/wiki/Tree_(data_structure)
 
@@ -78,9 +79,9 @@ Udo
     ├── Jan
     └── Joe
 
->>> from anytree.dotexport import RenderTreeGraph
+>>> from anytree.exporter import DotExporter
 >>> # graphviz needs to be installed for the next line!
->>> RenderTreeGraph(root).to_picture("udo.png")
+>>> DotExporter(root).to_picture("udo.png")
 
 .. image:: static/udo.png
 
