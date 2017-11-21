@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -299,8 +300,6 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('http://docs.python.org/3', None),
-    'solib': ('http://readthedocs.commsolid.com/projects/solib/latest', None),
-    'gensolid': ('http://readthedocs.commsolid.com/projects/gensolid/latest', None),
 }
 intersphinx_cache_limit = 0
 
