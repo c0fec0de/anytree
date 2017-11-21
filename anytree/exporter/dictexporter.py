@@ -62,7 +62,6 @@ class DictExporter(object):
         {'a': 'root',
          'children': [{'a': 'sub0',
                        'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]}]}
-
         """
         self.dictcls = dictcls
         self.attriter = attriter
