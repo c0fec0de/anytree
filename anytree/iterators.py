@@ -75,7 +75,7 @@ class PreOrderIter(AbstractIter):
     Start at root and go-down until reaching a leaf node.
     Step upwards then, and search for the next leafs.
 
-    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> from anytree import Node, RenderTree, AsciiStyle, PreOrderIter
     >>> f = Node("f")
     >>> b = Node("b", parent=f)
     >>> a = Node("a", parent=b)
@@ -127,7 +127,7 @@ class PostOrderIter(AbstractIter):
     """
     Iterate over tree applying post-order strategy starting at `node`.
 
-    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> from anytree import Node, RenderTree, AsciiStyle, PostOrderIter
     >>> f = Node("f")
     >>> b = Node("b", parent=f)
     >>> a = Node("a", parent=b)
@@ -177,7 +177,7 @@ class LevelOrderIter(AbstractIter):
     """
     Iterate over tree applying level-order strategy starting at `node`.
 
-    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> from anytree import Node, RenderTree, AsciiStyle, LevelOrderIter
     >>> f = Node("f")
     >>> b = Node("b", parent=f)
     >>> a = Node("a", parent=b)
@@ -231,7 +231,7 @@ class LevelOrderGroupIter(AbstractIter):
     nodes at level 0 (always `node`). The second tuple contains the nodes at level 1
     (children of `node`). The next level contains the children of the children, and so on.
 
-    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> from anytree import Node, RenderTree, AsciiStyle, LevelOrderGroupIter
     >>> f = Node("f")
     >>> b = Node("b", parent=f)
     >>> a = Node("a", parent=b)
