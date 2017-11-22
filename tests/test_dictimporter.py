@@ -10,7 +10,7 @@ def test_dict_importer():
     """Dict Importer."""
     importer = DictImporter()
     exporter = DictExporter()
-    ref = {
+    refdata = {
         'id': 'root', 'children': [
             {'id': 'sub0', 'children': [
                 {'id': 'sub0B'},
@@ -24,8 +24,8 @@ def test_dict_importer():
                 ]}
             ]}
         ]}
-    data = deepcopy(ref)
+    data = deepcopy(refdata)
     root = importer.import_(data)
-    eq_(data, ref)
+    eq_(data, refdata)
     eq_(exporter.export(root), data)
 

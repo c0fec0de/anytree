@@ -5,21 +5,27 @@ from tempfile import NamedTemporaryFile
 from nose.tools import eq_
 
 from anytree import AnyNode
-from anytree.exporter import JsonExporter
+from anytree.importer import JsonImporter
+from anytree.exporter import DictExporter
+from anytree.importer import DictImporter
 
 
-def test_json_exporter():
-    """Json Exporter."""
-    root = AnyNode(id="root")
-    s0 = AnyNode(id="sub0", parent=root)
-    AnyNode(id="sub0B", parent=s0)
-    AnyNode(id="sub0A", parent=s0)
-    s1 = AnyNode(id="sub1", parent=root)
-    AnyNode(id="sub1A", parent=s1)
-    AnyNode(id="sub1B", parent=s1)
-    s1c = AnyNode(id="sub1C", parent=s1)
-    AnyNode(id="sub1Ca", parent=s1c)
-
+def test_json_importer():
+    """Json Importer."""
+    refdata = {
+        'id': 'root', 'children': [
+            {'id': 'sub0', 'children': [
+                {'id': 'sub0B'},
+                {'id': 'sub0A'}
+            ]},
+            {'id': 'sub1', 'children': [
+                {'id': 'sub1A'},
+                {'id': 'sub1B'},
+                {'id': 'sub1C', 'children': [
+                    {'id': 'sub1Ca'}
+                ]}
+            ]}
+        ]}
     lines = [
         '{',
         '  "children": [',
@@ -58,12 +64,10 @@ def test_json_exporter():
         '}'
     ]
 
-    exporter = JsonExporter(indent=2, sort_keys=True)
-    exported = exporter.export(root).split("\n")
-    exported = [e.rstrip() for e in exported]  # just a fix for a strange py2x behavior.
-    eq_(exported, lines)
+    imported = DictExporter().export(JsonImporter().import_("\n".join(lines)))
+    eq_(refdata, imported)
     with NamedTemporaryFile(mode="w+") as ref:
-        with NamedTemporaryFile(mode="w+") as gen:
-            ref.write("\n".join(lines))
-            exporter.write(root, gen)
-            assert filecmp.cmp(ref.name, gen.name)
+        ref.write("\n".join(lines))
+        ref.seek(0)
+        imported = DictExporter().export(JsonImporter().read(ref))
+    eq_(refdata, imported)

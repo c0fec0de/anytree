@@ -8,6 +8,7 @@ Available importers:
 
 .. toctree::
     importer/dictimporter
+    importer/jsonimporter
 
 Importer missing? File a request here: Issues_.
 

@@ -5,7 +5,7 @@ class DictImporter(object):
 
     def __init__(self, nodecls=AnyNode):
         """
-        Import Node from dictionary.
+        Import Tree from dictionary.
 
         Every dictionary is converted to an instance of `nodecls`.
         The dictionaries listed in the children attribute are converted
