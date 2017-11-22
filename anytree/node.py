@@ -490,12 +490,7 @@ class AnyNode(NodeMixin, object):
         self.parent = parent
 
     def __repr__(self):
-        classname = self.__class__.__name__
-        args = ["%s=%r" % (key, value)
-                for key, value in filter(lambda item: not item[0].startswith("_"),
-                                         sorted(self.__dict__.items(),
-                                                key=lambda item: item[0]))]
-        return "%s(%s)" % (classname, ", ".join(args))
+        return _repr(self)
 
 
 class Node(NodeMixin, object):
@@ -540,13 +535,8 @@ class Node(NodeMixin, object):
         self._name = value
 
     def __repr__(self):
-        classname = self.__class__.__name__
         args = ["%r" % self.separator.join([""] + [str(node.name) for node in self.path])]
-        for key, value in filter(lambda item: not item[0].startswith("_"),
-                                 sorted(self.__dict__.items(),
-                                        key=lambda item: item[0])):
-            args.append("%s=%r" % (key, value))
-        return "%s(%s)" % (classname, ", ".join(args))
+        return _repr(self, args=args)
 
 
 class TreeError(RuntimeError):
@@ -561,3 +551,13 @@ class LoopError(TreeError):
     """Tree contains infinite loop."""
 
     pass
+
+
+def _repr(node, args=None):
+    classname = node.__class__.__name__
+    args = args or []
+    for key, value in filter(lambda item: not item[0].startswith("_"),
+                             sorted(node.__dict__.items(),
+                                    key=lambda item: item[0])):
+        args.append("%s=%r" % (key, value))
+    return "%s(%s)" % (classname, ", ".join(args))
