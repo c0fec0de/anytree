@@ -1,13 +1,9 @@
-import filecmp
-
 from tempfile import NamedTemporaryFile
 
 from nose.tools import eq_
 
-from anytree import AnyNode
 from anytree.importer import JsonImporter
 from anytree.exporter import DictExporter
-from anytree.importer import DictImporter
 
 
 def test_json_importer():
