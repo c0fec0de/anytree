@@ -8,4 +8,5 @@ __pycache__
 coverage-report/
 dist/
 docs/build/
-tree.dot
+*.dot
+*.png

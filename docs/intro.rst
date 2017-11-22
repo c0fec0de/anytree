@@ -40,6 +40,7 @@ The only tree relevant information is the `parent` attribute.
 If `None` the node is root node.
 If set to another node, the node becomes the child of it.
 
+>>> from anytree import Node, RenderTree
 >>> udo = Node("Udo")
 >>> marc = Node("Marc")
 >>> lian = Node("Lian", parent=marc)
@@ -186,6 +187,7 @@ MyNode('|Udo')
 
 The resolver takes the custom separator also into account:
 
+>>> from anytree import Resolver
 >>> r = Resolver()
 >>> r.glob(udo, "|Udo|*")
 [MyNode('|Udo|Dan'), MyNode('|Udo|Marc')]
