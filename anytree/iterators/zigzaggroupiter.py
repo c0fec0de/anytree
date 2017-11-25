@@ -46,7 +46,9 @@ class ZigZagGroupIter(AbstractIter):
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
-        _iter = LevelOrderGroupIter._iter(children, filter_, stop, maxlevel)
-        while True:
-            yield next(_iter)
-            yield tuple(reversed(next(_iter)))
+        if children:
+            assert len(children) == 1
+            _iter = LevelOrderGroupIter(children[0], filter_, stop, maxlevel)
+            while True:
+                yield next(_iter)
+                yield tuple(reversed(next(_iter)))
