@@ -1,4 +1,4 @@
-from codecs import open
+import codecs
 from os import path
 from subprocess import check_call
 from tempfile import NamedTemporaryFile
@@ -6,53 +6,7 @@ from tempfile import NamedTemporaryFile
 from anytree import PreOrderIter
 
 
-class _Render(object):
-
-    def to_dotfile(self, filename):
-        """
-        Write graph to `filename`.
-
-        >>> from anytree import Node
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root)
-        >>> s0b = Node("sub0B", parent=s0)
-        >>> s0a = Node("sub0A", parent=s0)
-        >>> s1 = Node("sub1", parent=root)
-        >>> s1a = Node("sub1A", parent=s1)
-        >>> s1b = Node("sub1B", parent=s1)
-        >>> s1c = Node("sub1C", parent=s1)
-        >>> s1ca = Node("sub1Ca", parent=s1c)
-
-        >>> from anytree.exporter import DotExporter
-        >>> DotExporter(root).to_dotfile("tree.dot")
-
-        The generated file should be handed over to the `dot` tool from the
-        http://www.graphviz.org/ package::
-
-            $ dot tree.dot -T png -o tree.png
-        """
-        with open(filename, "w", "utf-8") as file:
-            for line in self:
-                file.write("%s\n" % line)
-
-    def to_picture(self, filename):
-        """
-        Write graph to a temporary file and invoke `dot`.
-
-        The output file type is automatically detected from the file suffix.
-
-        *`graphviz` needs to be installed, before usage of this method.*
-        """
-        fileformat = path.splitext(filename)[1][1:]
-        with NamedTemporaryFile("wb") as dotfile:
-            for line in self:
-                dotfile.write(("%s\n" % line).encode("utf-8"))
-            dotfile.flush()
-            cmd = ["dot", dotfile.name, "-T", fileformat, "-o", filename]
-            check_call(cmd)
-
-
-class DotExporter(_Render):
+class DotExporter(object):
 
     def __init__(self, node, graph="digraph", name="tree", options=None,
                  indent=4, nodenamefunc=None, nodeattrfunc=None,
@@ -174,24 +128,28 @@ class DotExporter(_Render):
     def __iter__(self):
         # prepare
         indent = " " * self.indent
-        nodenamefunc = self.nodenamefunc
-        if not nodenamefunc:
-            def nodenamefunc(node):
-                return node.name
-        nodeattrfunc = self.nodeattrfunc
-        if not nodeattrfunc:
-            def nodeattrfunc(node):
-                return None
-        edgeattrfunc = self.edgeattrfunc
-        if not edgeattrfunc:
-            def edgeattrfunc(node, child):
-                return None
-        edgetypefunc = self.edgetypefunc
-        if not edgetypefunc:
-            def edgetypefunc(node, child):
-                return "->"
+        nodenamefunc = self.nodenamefunc or DotExporter.__default_nodenamefunc
+        nodeattrfunc = self.nodeattrfunc or DotExporter.__default_nodeattrfunc
+        edgeattrfunc = self.edgeattrfunc or DotExporter.__default_edgeattrfunc
+        edgetypefunc = self.edgetypefunc or DotExporter.__default_edgetypefunc
         return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc,
                            edgetypefunc)
+
+    @staticmethod
+    def __default_nodenamefunc(node):
+        return node.name
+
+    @staticmethod
+    def __default_nodeattrfunc(node):
+        return None
+
+    @staticmethod
+    def __default_edgeattrfunc(node, child):
+        return None
+
+    @staticmethod
+    def __default_edgetypefunc(node, child):
+        return "->"
 
     def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc):
         yield "{self.graph} {self.name} {{".format(self=self)
@@ -226,3 +184,46 @@ class DotExporter(_Render):
                 edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
                 yield '%s"%s" %s "%s"%s;' % (indent, nodename, edgetype,
                                              childname, edgeattr)
+
+    def to_dotfile(self, filename):
+        """
+        Write graph to `filename`.
+
+        >>> from anytree import Node
+        >>> root = Node("root")
+        >>> s0 = Node("sub0", parent=root)
+        >>> s0b = Node("sub0B", parent=s0)
+        >>> s0a = Node("sub0A", parent=s0)
+        >>> s1 = Node("sub1", parent=root)
+        >>> s1a = Node("sub1A", parent=s1)
+        >>> s1b = Node("sub1B", parent=s1)
+        >>> s1c = Node("sub1C", parent=s1)
+        >>> s1ca = Node("sub1Ca", parent=s1c)
+
+        >>> from anytree.exporter import DotExporter
+        >>> DotExporter(root).to_dotfile("tree.dot")
+
+        The generated file should be handed over to the `dot` tool from the
+        http://www.graphviz.org/ package::
+
+            $ dot tree.dot -T png -o tree.png
+        """
+        with codecs.open(filename, "w", "utf-8") as file:
+            for line in self:
+                file.write("%s\n" % line)
+
+    def to_picture(self, filename):
+        """
+        Write graph to a temporary file and invoke `dot`.
+
+        The output file type is automatically detected from the file suffix.
+
+        *`graphviz` needs to be installed, before usage of this method.*
+        """
+        fileformat = path.splitext(filename)[1][1:]
+        with NamedTemporaryFile("wb") as dotfile:
+            for line in self:
+                dotfile.write(("%s\n" % line).encode("utf-8"))
+            dotfile.flush()
+            cmd = ["dot", dotfile.name, "-T", fileformat, "-o", filename]
+            check_call(cmd)
