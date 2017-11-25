@@ -23,18 +23,18 @@ class AbstractIter(six.Iterator):
     def __init(self):
         node = self.node
         maxlevel = self.maxlevel
-        if self.filter_ is None:
-            def filter_(node):
-                return True
-        else:
-            filter_ = self.filter_
-        if self.stop is None:
-            def stop(node):
-                return False
-        else:
-            stop = self.stop
+        filter_ = self.filter_ or AbstractIter.__default_filter
+        stop = self.stop or AbstractIter.__default_stop
         children = [] if AbstractIter._abort_at_level(1, maxlevel) else AbstractIter._get_children([node], stop)
         return self._iter(children, filter_, stop, maxlevel)
+
+    @staticmethod
+    def __default_filter(node):
+        return True
+
+    @staticmethod
+    def __default_stop(node):
+        return False
 
     def __iter__(self):
         return self.__init()

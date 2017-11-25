@@ -364,7 +364,7 @@ class NodeMixin(object):
         if parent is None:
             return tuple()
         else:
-            return tuple([node for node in parent.__children_ if node != self])
+            return tuple([node for node in parent.children if node != self])
 
     @property
     def is_leaf(self):
