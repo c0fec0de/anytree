@@ -53,14 +53,14 @@ class JsonImporter(object):
         self.dictimporter = dictimporter
         self.kwargs = kwargs
 
+    def __import(self, data):
+        dictimporter = self.dictimporter or DictImporter()
+        return dictimporter.import_(data)
+
     def import_(self, data):
         """Read JSON from `data`."""
-        dictimporter = self.dictimporter or DictImporter()
-        data = json.loads(data, **self.kwargs)
-        return dictimporter.import_(data)
+        return self.__import(json.loads(data, **self.kwargs))
 
     def read(self, filehandle):
         """Read JSON from `filehandle`."""
-        dictimporter = self.dictimporter or DictImporter()
-        data = json.load(filehandle, **self.kwargs)
-        return dictimporter.import_(data)
+        return self.__import(json.load(filehandle, **self.kwargs))
