@@ -39,6 +39,7 @@ Simple, lightweight and extensible Tree_ data structure.
    api
    importer
    exporter
+   tricks
 
 .. _Tree: https://en.wikipedia.org/wiki/Tree_(data_structure)
 

@@ -1,0 +1,5 @@
+Tricks
+======
+
+.. toctree::
+    tricks/readonly
