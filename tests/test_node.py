@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from helper import assert_raises
 from nose.tools import eq_
 
+from helper import assert_raises
 from anytree import AnyNode
 from anytree import LoopError
 from anytree import Node

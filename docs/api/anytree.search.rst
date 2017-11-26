@@ -1,0 +1,4 @@
+Searching
+=========
+
+.. automodule:: anytree.search
