@@ -9,7 +9,12 @@ Tree Rendering.
     * :any:`DoubleStyle`
 """
 
+import collections
+
 import six
+
+
+Row = collections.namedtuple("Row", ("pre", "fill", "node"))
 
 
 class AbstractStyle(object):
@@ -204,8 +209,8 @@ class RenderTree(object):
         The `childiter` is responsible for iterating over child nodes at the
         same level. An reversed order can be achived by using `reversed`.
 
-        >>> for pre, _, node in RenderTree(root, childiter=reversed):
-        ...     print("%s%s" % (pre, node.name))
+        >>> for row in RenderTree(root, childiter=reversed):
+        ...     print("%s%s" % (row.pre, row.node.name))
         root
         ├── sub1
         └── sub0
@@ -216,8 +221,8 @@ class RenderTree(object):
 
         >>> def mysort(items):
         ...     return sorted(items, key=lambda item: item.name)
-        >>> for pre, _, node in RenderTree(root, childiter=mysort):
-        ...     print("%s%s" % (pre, node.name))
+        >>> for row in RenderTree(root, childiter=mysort):
+        ...     print("%s%s" % (row.pre, row.node.name))
         root
         ├── sub0
         │   ├── sub0A
@@ -265,14 +270,14 @@ class RenderTree(object):
     @staticmethod
     def __item(node, continues, style):
         if not continues:
-            return u'', u'', node
+            return Row(u'', u'', node)
         else:
             items = [style.vertical if cont else style.empty for cont in continues]
             indent = ''.join(items[:-1])
             branch = style.cont if continues[-1] else style.end
             pre = indent + branch
             fill = ''.join(items)
-            return pre, fill, node
+            return Row(pre, fill, node)
 
     def __str__(self):
         lines = ["%s%r" % (pre, node) for pre, _, node in self]
