@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-Node Classes.
 
-* :any:`Node`: a simple tree node with at least a name attribute and any number of additional attributes.
-* :any:`AnyNode`: a generic tree node with any number of attributes.
-* :any:`NodeMixin`: extends any python class to a tree node.
-"""
-
-from __future__ import print_function
-from .iterators import PreOrderIter
 import warnings
+
+from anytree.iterators import PreOrderIter
+
+from .exceptions import LoopError
+from .exceptions import TreeError
 
 
 class NodeMixin(object):
@@ -145,6 +141,7 @@ class NodeMixin(object):
         """
         All child nodes.
 
+        >>> from anytree import Node
         >>> n = Node("n")
         >>> a = Node("a", parent=n)
         >>> b = Node("b", parent=n)
@@ -186,7 +183,7 @@ class NodeMixin(object):
         >>> n.children = [a, b, d, a]
         Traceback (most recent call last):
             ...
-        anytree.node.TreeError: Cannot add node Node('/n/a') multiple times as child.
+        anytree.node.exceptions.TreeError: Cannot add node Node('/n/a') multiple times as child.
         """
         return tuple(self.__children_)
 
@@ -253,6 +250,7 @@ class NodeMixin(object):
         """
         Path of this `Node`.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -279,6 +277,7 @@ class NodeMixin(object):
         """
         All parent nodes and their parent nodes.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -307,6 +306,7 @@ class NodeMixin(object):
         """
         All child nodes and all their child nodes.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -326,6 +326,7 @@ class NodeMixin(object):
         """
         Tree Root Node.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -346,6 +347,7 @@ class NodeMixin(object):
         """
         Tuple of nodes with the same parent.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -371,6 +373,7 @@ class NodeMixin(object):
         """
         `Node` has no children (External Node).
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -388,6 +391,7 @@ class NodeMixin(object):
         """
         `Node` is tree root.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -405,6 +409,7 @@ class NodeMixin(object):
         """
         Number of edges on the longest path to a leaf `Node`.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -425,6 +430,7 @@ class NodeMixin(object):
         """
         Number of edges to the root `Node`.
 
+        >>> from anytree import Node
         >>> udo = Node("Udo")
         >>> marc = Node("Marc", parent=udo)
         >>> lian = Node("Lian", parent=marc)
@@ -452,112 +458,3 @@ class NodeMixin(object):
     def _post_attach(self, parent):
         """Method call after attaching to `parent`."""
         pass
-
-
-class AnyNode(NodeMixin, object):
-
-    def __init__(self, parent=None, **kwargs):
-        u"""
-        A generic tree node with any `kwargs`.
-
-        >>> from anytree import AnyNode, RenderTree
-        >>> root = AnyNode(id="root")
-        >>> s0 = AnyNode(id="sub0", parent=root)
-        >>> s0b = AnyNode(id="sub0B", parent=s0, foo=4, bar=109)
-        >>> s0a = AnyNode(id="sub0A", parent=s0)
-        >>> s1 = AnyNode(id="sub1", parent=root)
-        >>> s1a = AnyNode(id="sub1A", parent=s1)
-        >>> s1b = AnyNode(id="sub1B", parent=s1, bar=8)
-        >>> s1c = AnyNode(id="sub1C", parent=s1)
-        >>> s1ca = AnyNode(id="sub1Ca", parent=s1c)
-
-        >>> root
-        AnyNode(id='root')
-        >>> s0
-        AnyNode(id='sub0')
-        >>> print(RenderTree(root))
-        AnyNode(id='root')
-        ├── AnyNode(id='sub0')
-        │   ├── AnyNode(bar=109, foo=4, id='sub0B')
-        │   └── AnyNode(id='sub0A')
-        └── AnyNode(id='sub1')
-            ├── AnyNode(id='sub1A')
-            ├── AnyNode(bar=8, id='sub1B')
-            └── AnyNode(id='sub1C')
-                └── AnyNode(id='sub1Ca')
-        """
-        self.__dict__.update(kwargs)
-        self.parent = parent
-
-    def __repr__(self):
-        return _repr(self)
-
-
-class Node(NodeMixin, object):
-
-    def __init__(self, name, parent=None, **kwargs):
-        u"""
-        A simple tree node with a `name` and any `kwargs`.
-
-        >>> from anytree import Node, RenderTree
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root)
-        >>> s0b = Node("sub0B", parent=s0, foo=4, bar=109)
-        >>> s0a = Node("sub0A", parent=s0)
-        >>> s1 = Node("sub1", parent=root)
-        >>> s1a = Node("sub1A", parent=s1)
-        >>> s1b = Node("sub1B", parent=s1, bar=8)
-        >>> s1c = Node("sub1C", parent=s1)
-        >>> s1ca = Node("sub1Ca", parent=s1c)
-
-        >>> print(RenderTree(root))
-        Node('/root')
-        ├── Node('/root/sub0')
-        │   ├── Node('/root/sub0/sub0B', bar=109, foo=4)
-        │   └── Node('/root/sub0/sub0A')
-        └── Node('/root/sub1')
-            ├── Node('/root/sub1/sub1A')
-            ├── Node('/root/sub1/sub1B', bar=8)
-            └── Node('/root/sub1/sub1C')
-                └── Node('/root/sub1/sub1C/sub1Ca')
-        """
-        self.__dict__.update(kwargs)
-        self.name = name
-        self.parent = parent
-
-    @property
-    def name(self):
-        """Name."""
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        self._name = value
-
-    def __repr__(self):
-        args = ["%r" % self.separator.join([""] + [str(node.name) for node in self.path])]
-        return _repr(self, args=args)
-
-
-class TreeError(RuntimeError):
-
-    """Tree Error."""
-
-    pass
-
-
-class LoopError(TreeError):
-
-    """Tree contains infinite loop."""
-
-    pass
-
-
-def _repr(node, args=None):
-    classname = node.__class__.__name__
-    args = args or []
-    for key, value in filter(lambda item: not item[0].startswith("_"),
-                             sorted(node.__dict__.items(),
-                                    key=lambda item: item[0])):
-        args.append("%s=%r" % (key, value))
-    return "%s(%s)" % (classname, ", ".join(args))
