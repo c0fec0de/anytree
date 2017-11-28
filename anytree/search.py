@@ -147,12 +147,13 @@ def find(node, filter_=None, stop=None, maxlevel=None):
 
     >>> find(f, lambda node: node.name == "d")
     Node('/f/b/d')
+    >>> find(f, lambda node: node.name == "z")
     >>> find(f, lambda node: b in node.path)  # doctest: +ELLIPSIS
     Traceback (most recent call last):
         ...
-    anytree.search.CountError: Expecting 1 element, but found 5. (Node('/f/b')... Node('/f/b/d/e'))
+    anytree.search.CountError: Expecting 1 elements at maximum, but found 5. (Node('/f/b')... Node('/f/b/d/e'))
     """
-    return _findall(node, filter_=filter_, stop=stop, maxlevel=maxlevel, mincount=1, maxcount=1)[0]
+    return _find(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
 
 def find_by_attr(node, value, name="name", maxlevel=None):
@@ -198,28 +199,24 @@ def find_by_attr(node, value, name="name", maxlevel=None):
     >>> find_by_attr(f, name="foo", value=4)
     Node('/f/b/d/c', foo=4)
     >>> find_by_attr(f, name="foo", value=8)
-    Traceback (most recent call last):
-        ...
-    anytree.search.CountError: Expecting 1 element, but found 0.
     """
-    return _findall(node, filter_=lambda n: _filter_by_name(n, name, value),
-                    maxlevel=maxlevel, mincount=1, maxcount=1)[0]
+    return _find(node, filter_=lambda n: _filter_by_name(n, name, value),
+                 maxlevel=maxlevel)
+
+
+def _find(node, filter_, stop=None, maxlevel=None):
+    items = _findall(node, filter_, stop=stop, maxlevel=maxlevel, maxcount=1)
+    return items[0] if items else None
 
 
 def _findall(node, filter_, stop=None, maxlevel=None, mincount=None, maxcount=None):
     result = tuple(PreOrderIter(node, filter_, stop, maxlevel))
     resultlen = len(result)
     if mincount is not None and resultlen < mincount:
-        if mincount > 1:
-            msg = "Expecting at least %d elements, but found %d."
-        else:
-            msg = "Expecting %d element, but found %d."
+        msg = "Expecting at least %d elements, but found %d."
         raise CountError(msg % (mincount, resultlen), result)
     if maxcount is not None and resultlen > maxcount:
-        if maxcount > 1:
-            msg = "Expecting %d elements at maximum, but found %d."
-        else:
-            msg = "Expecting %d element, but found %d."
+        msg = "Expecting %d elements at maximum, but found %d."
         raise CountError(msg % (maxcount, resultlen), result)
     return result
 
