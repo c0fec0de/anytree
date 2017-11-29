@@ -71,9 +71,9 @@ Udo
 
 >>> from anytree.exporter import DotExporter
 >>> # graphviz needs to be installed for the next line!
->>> DotExporter(udo).to_picture("tree.png")
+>>> DotExporter(udo).to_picture("udo.png")
 
-.. image:: http://anytree.readthedocs.io/en/latest/_images/tree.png
+.. image:: http://anytree.readthedocs.io/en/latest/_images/udo.png
 
 **Manipulation**
 
