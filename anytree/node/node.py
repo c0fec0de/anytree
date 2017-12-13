@@ -36,15 +36,6 @@ class Node(NodeMixin, object):
         self.name = name
         self.parent = parent
 
-    @property
-    def name(self):
-        """Name."""
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        self._name = value
-
     def __repr__(self):
         args = ["%r" % self.separator.join([""] + [str(node.name) for node in self.path])]
-        return _repr(self, args=args)
+        return _repr(self, args=args, nameblacklist=["name"])
