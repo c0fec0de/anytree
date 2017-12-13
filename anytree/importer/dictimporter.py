@@ -35,15 +35,14 @@ class DictImporter(object):
 
     def import_(self, data):
         """Import tree from `data`."""
-        return DictImporter.__import(data)
+        return self.__import(data)
 
-    @staticmethod
-    def __import(data, parent=None):
+    def __import(self, data, parent=None):
         assert isinstance(data, dict)
         assert "parent" not in data
         attrs = dict(data)
         children = attrs.pop("children", [])
-        node = AnyNode(parent=parent, **attrs)
+        node = self.nodecls(parent=parent, **attrs)
         for child in children:
-            DictImporter.__import(child, parent=node)
+            self.__import(child, parent=node)
         return node
