@@ -506,3 +506,22 @@ def test_any_node():
     eq_(repr(a), "AnyNode()")
     eq_(repr(b), "AnyNode(foo=4)")
 
+def test_eq_overwrite():
+    """Node with overwritten __eq__."""
+    class EqOverwrittingNode(NodeMixin):
+
+        def __init__(self, a, b, parent=None):
+            super().__init__()
+            self.a = a
+            self.b = b
+            self.parent = parent
+
+        def __eq__(self, other):
+            if isinstance(other, EqOverwrittingNode):
+                return self.a == other.a and self.b == other.b
+            else:
+                return NotImplemented
+
+    r = EqOverwrittingNode(0, 0)
+    EqOverwrittingNode(1, 0, parent=r)
+    EqOverwrittingNode(1, 0, parent=r)

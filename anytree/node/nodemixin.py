@@ -110,7 +110,7 @@ class NodeMixin(object):
         if parent is not None:
             self._pre_detach(parent)
             parentchildren = parent.__children_
-            assert self in parentchildren, "Tree internal data is corrupt."
+            assert any([child is self for child in parentchildren]), "Tree internal data is corrupt."
             # ATOMIC START
             parentchildren.remove(self)
             self.__parent = None
@@ -121,7 +121,7 @@ class NodeMixin(object):
         if parent is not None:
             self._pre_attach(parent)
             parentchildren = parent.__children_
-            assert self not in parentchildren, "Tree internal data is corrupt."
+            assert not any ([child is self for child in parentchildren]), "Tree internal data is corrupt."
             # ATOMIC START
             parentchildren.append(self)
             self.__parent = parent
