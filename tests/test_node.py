@@ -511,7 +511,7 @@ def test_eq_overwrite():
     class EqOverwrittingNode(NodeMixin):
 
         def __init__(self, a, b, parent=None):
-            super().__init__()
+            super(EqOverwrittingNode, self).__init__()
             self.a = a
             self.b = b
             self.parent = parent
@@ -523,5 +523,11 @@ def test_eq_overwrite():
                 return NotImplemented
 
     r = EqOverwrittingNode(0, 0)
-    EqOverwrittingNode(1, 0, parent=r)
-    EqOverwrittingNode(1, 0, parent=r)
+    a = EqOverwrittingNode(1, 0, parent=r)
+    b = EqOverwrittingNode(1, 0, parent=r)
+    assert a.parent is r
+    assert b.parent is r
+    eq_(a.a, 1)
+    eq_(a.b, 0)
+    eq_(b.a, 1)
+    eq_(b.b, 0)
