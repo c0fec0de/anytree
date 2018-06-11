@@ -102,8 +102,8 @@ class NodeMixin(object):
             if node is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
                 raise LoopError(msg % self)
-            if self in node.path:
-                msg = "Cannot set parent. %r is parent of %r."
+            if any([n is self for n in node.path]):
+                msg = "Cannot set parent. %r is ascendant of %r."
                 raise LoopError(msg % (self, node))
 
     def __detach(self, parent):
