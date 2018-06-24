@@ -16,6 +16,7 @@ def test_node_parent_error():
     with assert_raises(TreeError, "Parent node 'parent' is not of type 'NodeMixin'."):
         Node("root", "parent")
 
+
 def test_parent_child():
     """A tree parent and child attributes."""
     root = Node("root")
@@ -190,6 +191,7 @@ def test_node_children_type():
     root = Node("root")
     with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
         root.children = ["string"]
+
 
 def test_node_children_multiple():
 
@@ -441,20 +443,22 @@ def test_anyname():
     Node('/foo', parent=myroot)
     eq_(str(myroot), "Node('/[1, 2, 3]')")
 
+
 def test_node_kwargs():
     """Ticket #24."""
 
     class MyNode(Node):
+
         def __init__(self, name, parent=None, **kwargs):
             super(MyNode, self).__init__(name, parent, **kwargs)
 
         def _post_attach(self, parent):
             print(self.my_attribute)
 
-
     node_a = MyNode('A')
     node_b = MyNode('B', node_a, my_attribute=True)
     eq_(repr(node_b), "MyNode('/A/B', my_attribute=True)")
+
 
 def test_hookups():
     """Hookup attributes #29."""
@@ -485,11 +489,13 @@ def test_hookups():
     node_b = MyNode('B', node_a)  # attach B on A
     node_b.parent = None  # detach B from A
 
+
 def test_any_node_parent_error():
     """Any Node Parent Error."""
 
     with assert_raises(TreeError, "Parent node 'r' is not of type 'NodeMixin'."):
         AnyNode("r")
+
 
 def test_any_node():
     """Any Node."""
@@ -505,6 +511,7 @@ def test_any_node():
     eq_(repr(r), "AnyNode()")
     eq_(repr(a), "AnyNode()")
     eq_(repr(b), "AnyNode(foo=4)")
+
 
 def test_eq_overwrite():
     """Node with overwritten __eq__."""
@@ -531,3 +538,16 @@ def test_eq_overwrite():
     eq_(a.b, 0)
     eq_(b.a, 1)
     eq_(b.b, 0)
+
+
+def test_node_slots():
+    """__slots__ compatibility."""
+    class MyNode(NodeMixin):
+        __slots__ = ('_name', )
+
+        def __init__(self, name):
+            self._name = name
+
+    n = MyNode('foo')
+    with assert_raises(AttributeError, "'MyNode' object has no attribute 'bar'"):
+        n.bar = 4
