@@ -1,7 +1,8 @@
 import codecs
-from os import path
+from os import path, unlink
 from subprocess import check_call
 from tempfile import NamedTemporaryFile
+from sys import platform
 
 from anytree import PreOrderIter
 
@@ -221,9 +222,17 @@ class DotExporter(object):
         *`graphviz` needs to be installed, before usage of this method.*
         """
         fileformat = path.splitext(filename)[1][1:]
-        with NamedTemporaryFile("wb") as dotfile:
+        
+        # on windows/cygwin, NamedTemporaryFile needs the argument delete=False
+        deleteFile = False if platform == "win32" or platform == "cygwin" else True
+        with NamedTemporaryFile("wb", delete=deleteFile) as dotfile:
             for line in self:
                 dotfile.write(("%s\n" % line).encode("utf-8"))
             dotfile.flush()
-            cmd = ["dot", dotfile.name, "-T", fileformat, "-o", filename]
+            cmd = ["dot", dotfile.name, "-T", fileformat, "-o", filename, ]
             check_call(cmd)
+            
+            tempFileName = dotfile.name
+        
+        # on windows/cygwin, need to unlink the NamedTemporaryFile after use
+        if path.exists(tempFileName): unlink(tempFileName)
