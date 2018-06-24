@@ -1,5 +1,7 @@
+import logging
 import codecs
 from os import path
+from os import remove
 from subprocess import check_call
 from tempfile import NamedTemporaryFile
 
@@ -222,8 +224,14 @@ class DotExporter(object):
         """
         fileformat = path.splitext(filename)[1][1:]
         with NamedTemporaryFile("wb") as dotfile:
+            dotfilename = dotfile.name
             for line in self:
                 dotfile.write(("%s\n" % line).encode("utf-8"))
             dotfile.flush()
-            cmd = ["dot", dotfile.name, "-T", fileformat, "-o", filename]
+            cmd = ["dot", dotfilename, "-T", fileformat, "-o", filename]
             check_call(cmd)
+        try:
+            remove(dotfilename)
+        except Exception:
+            msg = 'Could not remove temporary file %s' % dotfilename
+            logging.getLogger(__name__).warn(msg)
