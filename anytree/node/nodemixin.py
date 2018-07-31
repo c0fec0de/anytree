@@ -189,6 +189,9 @@ class NodeMixin(object):
         """
         return tuple(self.__children_)
 
+    def leaves(self):
+        return [node for node in PreOrderIter(self, filter_= lambda node: node.is_leaf)]
+
     @staticmethod
     def __check_children(children):
         seen = set()
