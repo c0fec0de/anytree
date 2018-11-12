@@ -248,6 +248,14 @@ class RenderTree(object):
         │   └── a
         │       b
         └── Z
+
+        And can be a function:
+        >>> print(RenderTree(root).by_attr(lambda n: " ".join(n.lines)))
+        c0fe c0de
+        ├── ha ba
+        │   ├── 1 2 3
+        │   └── a b
+        └── Z
         """
         if not isinstance(style, AbstractStyle):
             style = style()
@@ -294,7 +302,7 @@ class RenderTree(object):
         """Return rendered tree with node attribute `attrname`."""
         def get():
             for pre, fill, node in self:
-                attr = getattr(node, attrname, "")
+                attr = attrname(node) if callable(attrname) else getattr(node, attrname, "")
                 if isinstance(attr, (list, tuple)):
                     lines = attr
                 else:
