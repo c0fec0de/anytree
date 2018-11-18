@@ -13,7 +13,7 @@ PYYAML_ implements importer and exporter in python. *Please install it, before c
 .. Warning::
 
     It is not safe to call yaml.load with any data received from an untrusted source! yaml.load is as powerful as pickle.load and so may call any Python function.
-    Check the yaml.safe_load function though.
+    The yaml.safe_load function limits the load functionality to built-in types.
 
 Export
 ------
