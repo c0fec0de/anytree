@@ -9,7 +9,6 @@ Available importers:
 .. toctree::
     importer/dictimporter
     importer/jsonimporter
-    importer/indentedstringimporter
 
 Importer missing? File a request here: Issues_.
 
