@@ -189,9 +189,6 @@ class NodeMixin(object):
         """
         return tuple(self.__children_)
 
-    def leaves(self):
-        return [node for node in PreOrderIter(self, filter_= lambda node: node.is_leaf)]
-
     @staticmethod
     def __check_children(children):
         seen = set()
@@ -372,6 +369,24 @@ class NodeMixin(object):
             return tuple()
         else:
             return tuple([node for node in parent.children if node != self])
+
+    @property
+    def leaves(self):
+        """
+        Tuple of all leaf nodes.
+
+        >>> from anytree import Node
+        >>> udo = Node("Udo")
+        >>> marc = Node("Marc", parent=udo)
+        >>> lian = Node("Lian", parent=marc)
+        >>> loui = Node("Loui", parent=marc)
+        >>> lazy = Node("Lazy", parent=marc)
+        >>> udo.leaves
+        (Node('/Udo/Marc/Lian'), Node('/Udo/Marc/Loui'), Node('/Udo/Marc/Lazy'))
+        >>> marc.leaves
+        (Node('/Udo/Marc/Lian'), Node('/Udo/Marc/Loui'), Node('/Udo/Marc/Lazy'))
+        """
+        return tuple(PreOrderIter(self, filter_=lambda node: node.is_leaf))
 
     @property
     def is_leaf(self):
