@@ -250,6 +250,7 @@ class RenderTree(object):
         └── Z
 
         And can be a function:
+
         >>> print(RenderTree(root).by_attr(lambda n: " ".join(n.lines)))
         c0fe c0de
         ├── ha ba
