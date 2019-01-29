@@ -10,6 +10,11 @@ PYYAML_ implements importer and exporter in python. *Please install it, before c
     anytree package does not depend on any external packages.
     It does **NOT** include PYYAML_.
 
+.. Warning::
+
+    It is not safe to call yaml.load with any data received from an untrusted source! yaml.load is as powerful as pickle.load and so may call any Python function.
+    The yaml.safe_load function limits the load functionality to built-in types.
+
 Export
 ------
 
