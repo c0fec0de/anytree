@@ -30,3 +30,57 @@ def commonancestors(*nodes):
         else:
             break
     return tuple(common)
+
+
+def leftsibling(node):
+    """
+    Return Left Sibling of `node`.
+
+    >>> from anytree import Node
+    >>> dan = Node("Dan")
+    >>> jet = Node("Jet", parent=dan)
+    >>> jan = Node("Jan", parent=dan)
+    >>> joe = Node("Joe", parent=dan)
+    >>> leftsibling(dan)
+    >>> leftsibling(jet)
+    >>> leftsibling(jan)
+    Node('/Dan/Jet')
+    >>> leftsibling(joe)
+    Node('/Dan/Jan')
+    """
+    if node.parent:
+        pchildren = node.parent.children
+        idx = pchildren.index(node)
+        if idx:
+            return pchildren[idx - 1]
+        else:
+            return None
+    else:
+        return None
+
+
+def rightsibling(node):
+    """
+    Return Right Sibling of `node`.
+
+    >>> from anytree import Node
+    >>> dan = Node("Dan")
+    >>> jet = Node("Jet", parent=dan)
+    >>> jan = Node("Jan", parent=dan)
+    >>> joe = Node("Joe", parent=dan)
+    >>> rightsibling(dan)
+    >>> rightsibling(jet)
+    Node('/Dan/Jan')
+    >>> rightsibling(jan)
+    Node('/Dan/Joe')
+    >>> rightsibling(joe)
+    """
+    if node.parent:
+        pchildren = node.parent.children
+        idx = pchildren.index(node)
+        try:
+            return pchildren[idx + 1]
+        except IndexError:
+            return None
+    else:
+        return None
