@@ -7,12 +7,27 @@
     ],
     "settings":
     {
+        "python_interpreter": "python3",
+        "rulers":
+        [
+            79, 119
+        ],
         "tab_size": 4,
         "translate_tabs_to_spaces": true,
-        "use_tab_stops": false,
         "trim_trailing_white_space_on_save": true,
-        "rulers": [79],
-        "ensure_newline_at_eof_on_save": true,
+        "default_encoding": "UTF-8",
+        "SublimeLinter.linters.flake8.args": [
+            "--config=$project_path/setup.cfg"
+        ],
+        "SublimeLinter.linters.mypy.args": [
+            "--config=$project_path/setup.cfg"
+        ],
+        "SublimeLinter.linters.pycodestyle.args": [
+            "--config=$project_path/setup.cfg"
+        ],
+        "SublimeLinter.linters.pydocstyle.args": [
+            "--config=$project_path/setup.cfg"
+        ]
     },
     "build_systems":
     [
