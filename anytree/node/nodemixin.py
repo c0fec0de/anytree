@@ -21,19 +21,55 @@ class NodeMixin(object):
     If `None` the :any:`NodeMixin` is root node.
     If set to another node, the :any:`NodeMixin` becomes the child of it.
 
+    The `children` attribute can be used likewise.
+    If `None` the :any:`NodeMixin` has no children (unless the node is set *as* parent).
+    If set to any iterable of :any:`NodeMixin` instances, the nodes become children.
+
     >>> from anytree import NodeMixin, RenderTree
     >>> class MyBaseClass(object):
     ...     foo = 4
     >>> class MyClass(MyBaseClass, NodeMixin):  # Add Node feature
-    ...     def __init__(self, name, length, width, parent=None):
+    ...     def __init__(self, name, length, width, parent=None, children=None):
     ...         super(MyClass, self).__init__()
     ...         self.name = name
     ...         self.length = length
     ...         self.width = width
     ...         self.parent = parent
+    ...         if children:
+    ...             self.children = children
+
+    Construction via `parent`:
 
     >>> my0 = MyClass('my0', 0, 0)
     >>> my1 = MyClass('my1', 1, 0, parent=my0)
+    >>> my2 = MyClass('my2', 0, 2, parent=my0)
+
+    >>> for pre, _, node in RenderTree(my0):
+    ...     treestr = u"%s%s" % (pre, node.name)
+    ...     print(treestr.ljust(8), node.length, node.width)
+    my0      0 0
+    ├── my1  1 0
+    └── my2  0 2
+
+    Construction via `children`:
+
+    >>> my0 = MyClass('my0', 0, 0, children=[
+    ...     MyClass('my1', 1, 0),
+    ...     MyClass('my2', 0, 2),
+    ... ]
+
+    >>> for pre, _, node in RenderTree(my0):
+    ...     treestr = u"%s%s" % (pre, node.name)
+    ...     print(treestr.ljust(8), node.length, node.width)
+    my0      0 0
+    ├── my1  1 0
+    └── my2  0 2
+
+    Both approaches can be mixed:
+
+    >>> my0 = MyClass('my0', 0, 0, children=[
+    ...     MyClass('my1', 1, 0),
+    ... ]
     >>> my2 = MyClass('my2', 0, 2, parent=my0)
 
     >>> for pre, _, node in RenderTree(my0):

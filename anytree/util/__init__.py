@@ -1,3 +1,5 @@
+"""Utilities."""
+
 
 def commonancestors(*nodes):
     """

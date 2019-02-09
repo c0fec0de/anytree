@@ -8,6 +8,7 @@ from anytree import Node
 from anytree import NodeMixin
 from anytree import PostOrderIter
 from anytree import PreOrderIter
+from anytree import RenderTree
 from anytree import TreeError
 
 
@@ -265,6 +266,30 @@ def test_ancestors():
     eq_(s1ca.ancestors, tuple([root, s1, s1c]))
     # deprecated typo
     eq_(s1ca.anchestors, tuple([root, s1, s1c]))
+
+
+def test_node_children_init():
+    """Node With Children Attribute."""
+    root = Node("root", children=[
+        Node("a", children=[
+            Node("aa")
+        ]),
+        Node("b")
+    ])
+    eq_(repr(root.descendants),
+        "(Node('/root/a'), Node('/root/a/aa'), Node('/root/b'))")
+
+
+def test_anynode_children_init():
+    """Anynode With Children Attribute."""
+    root = AnyNode(foo="root", children=[
+        AnyNode(foo="a", children=[
+            AnyNode(foo="aa")
+        ]),
+        AnyNode(foo="b")
+    ])
+    eq_(repr(root.descendants),
+        "(AnyNode(foo='a'), AnyNode(foo='aa'), AnyNode(foo='b'))")
 
 
 def test_descendants():
