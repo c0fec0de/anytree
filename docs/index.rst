@@ -11,8 +11,8 @@ Any Python Tree Data
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.5.0
-    :target: http://anytree.readthedocs.io/en/2.5.0/?badge=2.5.0
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.6.0
+    :target: http://anytree.readthedocs.io/en/2.6.0/?badge=2.6.0
 
 .. image:: https://codeclimate.com/github/c0fec0de/anytree.png
     :target: https://codeclimate.com/github/c0fec0de/anytree
