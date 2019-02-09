@@ -236,6 +236,7 @@ class DotExporter(object):
             msg = 'Could not remove temporary file %s' % dotfilename
             logging.getLogger(__name__).warn(msg)
 
+    @staticmethod
     def esc(str):
         """Escape Strings."""
         return str.replace("\"", "\\\"")
