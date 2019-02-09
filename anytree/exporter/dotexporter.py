@@ -1,5 +1,5 @@
-import logging
 import codecs
+import logging
 from os import path
 from os import remove
 from subprocess import check_call
@@ -174,7 +174,7 @@ class DotExporter(object):
             nodename = nodenamefunc(node)
             nodeattr = nodeattrfunc(node)
             nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
-            yield '%s"%s"%s;' % (indent, nodename, nodeattr)
+            yield '%s"%s"%s;' % (indent, DotExporter.esc(nodename), nodeattr)
 
     def __iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc):
         for node in PreOrderIter(self.node):
@@ -184,8 +184,8 @@ class DotExporter(object):
                 edgeattr = edgeattrfunc(node, child)
                 edgetype = edgetypefunc(node, child)
                 edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
-                yield '%s"%s" %s "%s"%s;' % (indent, nodename, edgetype,
-                                             childname, edgeattr)
+                yield '%s"%s" %s "%s"%s;' % (indent, DotExporter.esc(nodename), edgetype,
+                                             DotExporter.esc(childname), edgeattr)
 
     def to_dotfile(self, filename):
         """
@@ -235,3 +235,7 @@ class DotExporter(object):
         except Exception:  # pragma: no cover
             msg = 'Could not remove temporary file %s' % dotfilename
             logging.getLogger(__name__).warn(msg)
+
+    def esc(str):
+        """Escape Strings."""
+        return str.replace("\"", "\\\"")

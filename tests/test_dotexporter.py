@@ -60,12 +60,39 @@ def test_tree2():
     def edgeattrfunc(node, child):
         return 'label="%s:%s"' % (node.name, child.name)
     r = DotExporter(root, options=["rankdir=LR;"],
-                        nodenamefunc=nodenamefunc,
-                        nodeattrfunc=lambda node: "shape=box",
-                        edgeattrfunc=edgeattrfunc)
+                    nodenamefunc=nodenamefunc,
+                    nodeattrfunc=lambda node: "shape=box",
+                    edgeattrfunc=edgeattrfunc)
 
     r.to_dotfile(join(GENPATH, "tree2.dot"))
     assert cmp(join(GENPATH, "tree2.dot"), join(REFPATH, "tree2.dot"))
+
+
+@with_setup(setup, teardown)
+def test_tree3():
+    """Escape."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root, edge=2)
+    Node('sub"0"B', parent=s0, foo=4, edge=109)
+    Node("sub'0'A", parent=s0, edge="")
+    s1 = Node("sub\"1", parent=root, edge="")
+    Node("sub1A", parent=s1, edge=7)
+    Node("sub1B", parent=s1, edge=8)
+    s1c = Node("sub1C", parent=s1, edge=22)
+    Node("sub1Ca", parent=s1c, edge=42)
+
+    def nodenamefunc(node):
+        return '%s:%s' % (node.name, node.depth)
+
+    def edgeattrfunc(node, child):
+        return 'label="%s:%s"' % (DotExporter.esc(node.name), DotExporter.esc(child.name))
+    r = DotExporter(root, options=["rankdir=LR;"],
+                    nodenamefunc=nodenamefunc,
+                    nodeattrfunc=lambda node: "shape=box",
+                    edgeattrfunc=edgeattrfunc)
+
+    r.to_dotfile(join(GENPATH, "tree3.dot"))
+    assert cmp(join(GENPATH, "tree3.dot"), join(REFPATH, "tree3.dot"))
 
 
 @with_setup(setup, teardown)
