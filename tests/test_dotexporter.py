@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from filecmp import cmp
 from nose.tools import with_setup
 from os import makedirs
@@ -79,7 +80,7 @@ def test_tree3():
     Node("sub1A", parent=s1, edge=7)
     Node("sub1B", parent=s1, edge=8)
     s1c = Node("sub1C", parent=s1, edge=22)
-    Node("sub1Ca", parent=s1c, edge=42)
+    Node(u"sub1Cä", parent=s1c, edge=42)
 
     def nodenamefunc(node):
         return '%s:%s' % (node.name, node.depth)

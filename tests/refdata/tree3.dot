@@ -8,7 +8,7 @@ digraph tree {
     "sub1A:2" [shape=box];
     "sub1B:2" [shape=box];
     "sub1C:2" [shape=box];
-    "sub1Ca:3" [shape=box];
+    "sub1Cä:3" [shape=box];
     "root:0" -> "sub0:1" [label="root:sub0"];
     "root:0" -> "sub\"1:1" [label="root:sub\"1"];
     "sub0:1" -> "sub\"0\"B:2" [label="sub0:sub\"0\"B"];
@@ -16,5 +16,5 @@ digraph tree {
     "sub\"1:1" -> "sub1A:2" [label="sub\"1:sub1A"];
     "sub\"1:1" -> "sub1B:2" [label="sub\"1:sub1B"];
     "sub\"1:1" -> "sub1C:2" [label="sub\"1:sub1C"];
-    "sub1C:2" -> "sub1Ca:3" [label="sub1C:sub1Ca"];
+    "sub1C:2" -> "sub1Cä:3" [label="sub1C:sub1Cä"];
 }
