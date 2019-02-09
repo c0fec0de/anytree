@@ -74,7 +74,6 @@ class DictExporter(object):
 
     def __export(self, node, dictcls, attriter, childiter):
         attr_values = attriter(self._iter_attr_values(node))
-        attr_values = DictExporter.__filter_node_internals(attr_values)
         data = dictcls(attr_values)
         children = [self.__export(child, dictcls, attriter, childiter)
                     for child in childiter(node.children)]
@@ -84,10 +83,3 @@ class DictExporter(object):
 
     def _iter_attr_values(self, node):
         return node.__dict__.items()
-
-    @staticmethod
-    def __filter_node_internals(attr_values):
-        for attr, value in attr_values:
-            if attr in ("_NodeMixin__parent", "_NodeMixin__children"):
-                continue
-            yield attr, value

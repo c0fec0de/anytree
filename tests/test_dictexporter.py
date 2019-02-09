@@ -2,6 +2,7 @@ from nose.tools import eq_
 
 from anytree import AnyNode
 from anytree import Node
+from anytree import NodeMixin
 from anytree.exporter import DictExporter
 
 
@@ -24,7 +25,7 @@ def test_dict_exporter():
                 {'id': 'sub0B'},
                 {'id': 'sub0A'}
             ]},
-            {'id': 'sub1', 'foo':'bar', 'children': [
+            {'id': 'sub1', 'foo': 'bar', 'children': [
                 {'id': 'sub1A'},
                 {'id': 'sub1B'},
                 {'id': 'sub1C', 'children': [
@@ -32,7 +33,8 @@ def test_dict_exporter():
                 ]}
             ]}
         ]}
-    )
+        )
+
 
 def test_dict_exporter_node():
     """Dict Exporter."""
@@ -53,7 +55,7 @@ def test_dict_exporter_node():
                 {'name': 'sub0B'},
                 {'name': 'sub0A'}
             ]},
-            {'name': 'sub1', 'foo':'bar', 'children': [
+            {'name': 'sub1', 'foo': 'bar', 'children': [
                 {'name': 'sub1A'},
                 {'name': 'sub1B'},
                 {'name': 'sub1C', 'children': [
@@ -61,7 +63,8 @@ def test_dict_exporter_node():
                 ]}
             ]}
         ]}
-    )
+        )
+
 
 def test_dict_exporter_filter():
     """Dict Exporter."""
@@ -90,4 +93,42 @@ def test_dict_exporter_filter():
                 ]}
             ]}
         ]}
-    )
+        )
+
+
+def test_dict_exporter_mixin():
+    """Dict Exporter."""
+    class MyClass(NodeMixin):
+
+        def __init__(self, foo, parent=None):
+            super(MyClass, self).__init__()
+            self.foo = foo
+            self.parent = parent
+
+    root = MyClass('root')
+    s0 = MyClass('s0', parent=root)
+    s0b = MyClass('s0b', parent=s0)
+    s0a = MyClass('s0a', parent=s0)
+    s1 = MyClass('s1', parent=root)
+    s1a = MyClass('s1a', parent=s1)
+    s1b = MyClass('s1b', parent=s1)
+    s1c = MyClass('s1c', parent=s1)
+    s1ca = MyClass('s1ca', parent=s1c)
+
+    exporter = DictExporter()
+    eq_(exporter.export(root),
+        {'foo': 'root', 'children': [
+            {'foo': 's0', 'children': [
+                {'foo': 's0b'},
+                {'foo': 's0a'}
+            ]},
+            {
+                'foo': 's1', 'children': [
+                    {'foo': 's1a'},
+                    {'foo': 's1b'},
+                    {'foo': 's1c', 'children': [
+                        {'foo': 's1ca'}
+                    ]}
+                ]}
+        ]}
+        )

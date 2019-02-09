@@ -232,6 +232,6 @@ class DotExporter(object):
             check_call(cmd)
         try:
             remove(dotfilename)
-        except Exception:
+        except Exception:  # pragma: no cover
             msg = 'Could not remove temporary file %s' % dotfilename
             logging.getLogger(__name__).warn(msg)

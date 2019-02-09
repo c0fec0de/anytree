@@ -365,6 +365,25 @@ def test_is_leaf():
     eq_(s1ca.is_leaf, True)
 
 
+def test_leaves():
+    """Node.leaves."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    s0b = Node("sub0B", parent=s0)
+    s0a = Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root)
+    s1c = Node("sub1C", parent=s1)
+    s1ca = Node("sub1Ca", parent=s1c)
+
+    eq_(root.leaves, tuple([s0b, s0a, s1ca]))
+    eq_(s0.leaves, tuple([s0b, s0a]))
+    eq_(s0b.leaves, tuple([s0b]))
+    eq_(s0a.leaves, tuple([s0a]))
+    eq_(s1.leaves, tuple([s1ca]))
+    eq_(s1c.leaves, tuple([s1ca]))
+    eq_(s1ca.leaves, tuple([s1ca]))
+
+
 def test_is_root():
     """Node.is_root."""
     root = Node("root")
