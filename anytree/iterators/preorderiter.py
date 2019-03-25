@@ -41,16 +41,11 @@ class PreOrderIter(AbstractIter):
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
-        stack = [children]
-        while stack:
-            children = stack[-1]
-            if children:
-                child = children.pop(0)
-                if filter_(child):
-                    yield child
-                if not AbstractIter._abort_at_level(len(stack) + 1, maxlevel):
-                    grandchildren = AbstractIter._get_children(child.children, stop)
-                    if grandchildren:
-                        stack.append(grandchildren)
-            else:
-                stack.pop()
+        for child_ in children:
+            if stop(child_):
+                continue
+            if filter_(child_):
+                yield child_
+            if not AbstractIter._abort_at_level(2, maxlevel):
+                for descendant_ in PreOrderIter._iter(child_.children, filter_, stop, maxlevel - 1 if maxlevel else None):
+                    yield descendant_
