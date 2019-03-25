@@ -39,7 +39,7 @@ config['classifiers'] = [
 config['keywords'] = 'tree, tree data, treelib, tree walk, tree structure'
 config['packages'] = ['anytree', 'anytree.node', 'anytree.iterators',
                       'anytree.importer', 'anytree.exporter', 'anytree.util']
-config['install_requires'] = ['six>=1.9.0']
+config['install_requires'] = ['six>=1.9.0', 'fastcache']
 config['extras_require'] = {
     'dev': ['check-manifest'],
     'test': ['coverage'],
