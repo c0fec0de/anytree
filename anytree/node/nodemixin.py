@@ -140,7 +140,7 @@ class NodeMixin(object):
             if node is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
                 raise LoopError(msg % self)
-            if self in node.path:
+            if self in node.reverse_path_iterator():
                 msg = "Cannot set parent. %r is parent of %r."
                 raise LoopError(msg % (self, node))
 
