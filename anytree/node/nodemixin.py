@@ -148,7 +148,7 @@ class NodeMixin(object):
         if parent is not None:
             self._pre_detach(parent)
             parentchildren = parent.__children_
-            assert any([child is self for child in parentchildren]), "Tree internal data is corrupt."
+            assert any(child is self for child in parentchildren), "Tree internal data is corrupt."
             # ATOMIC START
             parentchildren.remove(self)
             self.__parent = None
@@ -159,7 +159,7 @@ class NodeMixin(object):
         if parent is not None:
             self._pre_attach(parent)
             parentchildren = parent.__children_
-            assert not any([child is self for child in parentchildren]), "Tree internal data is corrupt."
+            assert not any(child is self for child in parentchildren), "Tree internal data is corrupt."
             # ATOMIC START
             parentchildren.append(self)
             self.__parent = parent
@@ -301,14 +301,16 @@ class NodeMixin(object):
         """
         return self._path
 
-    @property
-    def _path(self):
-        path = []
+    def reverse_path_iterator(self):
+        """method to iterate up the tree from the current node."""
         node = self
         while node:
-            path.insert(0, node)
+            yield node
             node = node.parent
-        return tuple(path)
+
+    @property
+    def _path(self):
+        return tuple(reversed(list(self.reverse_path_iterator())))
 
     @property
     def ancestors(self):
@@ -326,7 +328,9 @@ class NodeMixin(object):
         >>> lian.ancestors
         (Node('/Udo'), Node('/Udo/Marc'))
         """
-        return self._path[:-1]
+        if not self.parent:
+            return tuple()
+        return self.parent.path
 
     @property
     def anchestors(self):
@@ -375,10 +379,10 @@ class NodeMixin(object):
         >>> lian.root
         Node('/Udo')
         """
-        if self.parent:
-            return self._path[0]
-        else:
-            return self
+        node = self
+        while node.parent:
+            node = node.parent
+        return node
 
     @property
     def siblings(self):
@@ -404,7 +408,7 @@ class NodeMixin(object):
         if parent is None:
             return tuple()
         else:
-            return tuple([node for node in parent.children if node != self])
+            return tuple(node for node in parent.children if node != self)
 
     @property
     def leaves(self):
@@ -477,7 +481,7 @@ class NodeMixin(object):
         0
         """
         if self.__children_:
-            return max([child.height for child in self.__children_]) + 1
+            return max(child.height for child in self.__children_) + 1
         else:
             return 0
 
@@ -497,7 +501,9 @@ class NodeMixin(object):
         >>> lian.depth
         2
         """
-        return len(self._path) - 1
+        for i, _ in enumerate(self.reverse_path_iterator()):
+            continue
+        return i
 
     def _pre_detach(self, parent):
         """Method call before detaching from `parent`."""
