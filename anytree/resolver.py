@@ -219,7 +219,7 @@ class Resolver(object):
                 re_pat += "."
             else:
                 re_pat += re.escape(char)
-        return re_pat + r'\Z(?ms)'
+        return r'(?ms)' + re_pat + r'\Z'
 
 
 class ResolverError(RuntimeError):

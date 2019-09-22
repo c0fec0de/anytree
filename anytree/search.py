@@ -1,6 +1,22 @@
-"""Node Searching."""
+"""
+Node Searching.
 
-from fastcache import clru_cache
+.. note:: You can speed-up node searching, by installing https://pypi.org/project/fastcache/ .
+"""
+
+# fastcache is optional
+try:
+    from fastcache import clru_cache
+except ImportError:
+    from functools import wraps
+
+    def clru_cache(size):
+        def decorator(func):
+            @wraps(func)
+            def wrapped(*args, **kwargs):
+                return func(*args, **kwargs)
+            return wrapped
+        return decorator
 
 from anytree.iterators import PreOrderIter
 
@@ -20,7 +36,7 @@ def findall(node, filter_=None, stop=None, maxlevel=None, mincount=None, maxcoun
     Keyword Args:
         filter_: function called with every `node` as argument, `node` is returned if `True`.
         stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-        maxlevel (int): maximum decending in the node hierarchy.
+        maxlevel (int): maximum descending in the node hierarchy.
         mincount (int): minimum number of nodes.
         maxcount (int): maximum number of nodes.
 
@@ -80,7 +96,7 @@ def findall_by_attr(node, value, name="name", maxlevel=None, mincount=None, maxc
 
     Keyword Args:
         name (str): attribute name need to match
-        maxlevel (int): maximum decending in the node hierarchy.
+        maxlevel (int): maximum descending in the node hierarchy.
         mincount (int): minimum number of nodes.
         maxcount (int): maximum number of nodes.
 
@@ -127,7 +143,7 @@ def find(node, filter_=None, stop=None, maxlevel=None):
     Keyword Args:
         filter_: function called with every `node` as argument, `node` is returned if `True`.
         stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-        maxlevel (int): maximum decending in the node hierarchy.
+        maxlevel (int): maximum descending in the node hierarchy.
 
     Example tree:
 
@@ -177,7 +193,7 @@ def find_by_attr(node, value, name="name", maxlevel=None):
 
     Keyword Args:
         name (str): attribute name need to match
-        maxlevel (int): maximum decending in the node hierarchy.
+        maxlevel (int): maximum descending in the node hierarchy.
 
     Example tree:
 
