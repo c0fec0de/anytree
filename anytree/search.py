@@ -6,11 +6,11 @@ Node Searching.
 
 # fastcache is optional
 try:
-    from fastcache import clru_cache
+    from fastcache import clru_cache as _cache
 except ImportError:
     from functools import wraps
 
-    def clru_cache(size):
+    def _cache(size):
         def decorator(func):
             @wraps(func)
             def wrapped(*args, **kwargs):
@@ -23,7 +23,7 @@ from anytree.iterators import PreOrderIter
 __CACHE_SIZE = 32
 
 
-@clru_cache(__CACHE_SIZE)
+@_cache(__CACHE_SIZE)
 def findall(node, filter_=None, stop=None, maxlevel=None, mincount=None, maxcount=None):
     """
     Search nodes matching `filter_` but stop at `maxlevel` or `stop`.
@@ -83,7 +83,7 @@ def findall(node, filter_=None, stop=None, maxlevel=None, mincount=None, maxcoun
                     maxlevel=maxlevel, mincount=mincount, maxcount=maxcount)
 
 
-@clru_cache(__CACHE_SIZE)
+@_cache(__CACHE_SIZE)
 def findall_by_attr(node, value, name="name", maxlevel=None, mincount=None, maxcount=None):
     """
     Search nodes with attribute `name` having `value` but stop at `maxlevel`.
@@ -130,7 +130,7 @@ def findall_by_attr(node, value, name="name", maxlevel=None, mincount=None, maxc
                     maxlevel=maxlevel, mincount=mincount, maxcount=maxcount)
 
 
-@clru_cache(__CACHE_SIZE)
+@_cache(__CACHE_SIZE)
 def find(node, filter_=None, stop=None, maxlevel=None):
     """
     Search for *single* node matching `filter_` but stop at `maxlevel` or `stop`.
@@ -179,7 +179,7 @@ def find(node, filter_=None, stop=None, maxlevel=None):
     return _find(node, filter_=filter_, stop=stop, maxlevel=maxlevel)
 
 
-@clru_cache(__CACHE_SIZE)
+@_cache(__CACHE_SIZE)
 def find_by_attr(node, value, name="name", maxlevel=None):
     """
     Search for *single* node with attribute `name` having `value` but stop at `maxlevel`.
