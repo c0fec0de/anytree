@@ -12,7 +12,7 @@ class AbstractIter(six.Iterator):
         Keyword Args:
             filter_: function called with every `node` as argument, `node` is returned if `True`.
             stop: stop iteration at `node` if `stop` function returns `True` for `node`.
-            maxlevel (int): maximum decending in the node hierarchy.
+            maxlevel (int): maximum descending in the node hierarchy.
         """
         self.node = node
         self.filter_ = filter_

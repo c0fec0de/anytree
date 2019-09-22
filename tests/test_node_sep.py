@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Test custom node sepator."""
+"""Test custom node separator."""
 
 import six
 
