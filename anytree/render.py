@@ -271,8 +271,9 @@ class RenderTree(object):
         yield RenderTree.__item(node, continues, self.style)
         children = node.children
         if children:
+            children = self.childiter(children)
             lastidx = len(children) - 1
-            for idx, child in enumerate(self.childiter(children)):
+            for idx, child in enumerate(children):
                 for grandchild in self.__next(child, continues + (idx != lastidx, )):
                     yield grandchild
 
