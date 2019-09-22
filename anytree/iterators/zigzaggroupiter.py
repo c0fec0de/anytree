@@ -50,5 +50,8 @@ class ZigZagGroupIter(AbstractIter):
             assert len(children) == 1
             _iter = LevelOrderGroupIter(children[0], filter_, stop, maxlevel)
             while True:
-                yield next(_iter)
-                yield tuple(reversed(next(_iter)))
+                try:
+                    yield next(_iter)
+                    yield tuple(reversed(next(_iter)))
+                except StopIteration:
+                    break
