@@ -64,6 +64,22 @@ class AnyNode(NodeMixin, object):
             ├── AnyNode(bar=8, id='sub1B')
             └── AnyNode(id='sub1C')
                 └── AnyNode(id='sub1Ca')
+
+        Node attributes can be added, modified and deleted the pythonic way:
+
+        >>> root.new = 'a new attribute'
+        >>> s0b.bar = 110  # modified
+        >>> del s1b.bar
+        >>> print(RenderTree(root))
+        AnyNode(id='root', new='a new attribute')
+        ├── AnyNode(id='sub0')
+        │   ├── AnyNode(bar=109, foo=4, id='sub0B')
+        │   └── AnyNode(id='sub0A')
+        └── AnyNode(id='sub1')
+            ├── AnyNode(id='sub1A')
+            ├── AnyNode(bar=8, id='sub1B')
+            └── AnyNode(id='sub1C')
+                └── AnyNode(id='sub1Ca')
         """
         self.__dict__.update(kwargs)
         self.parent = parent
