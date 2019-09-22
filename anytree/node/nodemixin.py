@@ -140,7 +140,7 @@ class NodeMixin(object):
             if node is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
                 raise LoopError(msg % self)
-            if self in node.reverse_path_iterator():
+            if self in node.iter_path_reverse():
                 msg = "Cannot set parent. %r is parent of %r."
                 raise LoopError(msg % (self, node))
 
@@ -301,8 +301,8 @@ class NodeMixin(object):
         """
         return self._path
 
-    def reverse_path_iterator(self):
-        """method to iterate up the tree from the current node."""
+    def iter_path_reverse(self):
+        """Iterate up the tree from the current node."""
         node = self
         while node:
             yield node
@@ -310,7 +310,7 @@ class NodeMixin(object):
 
     @property
     def _path(self):
-        return tuple(reversed(list(self.reverse_path_iterator())))
+        return tuple(reversed(list(self.iter_path_reverse())))
 
     @property
     def ancestors(self):
@@ -501,7 +501,7 @@ class NodeMixin(object):
         >>> lian.depth
         2
         """
-        for i, _ in enumerate(self.reverse_path_iterator()):
+        for i, _ in enumerate(self.iter_path_reverse()):
             continue
         return i
 
