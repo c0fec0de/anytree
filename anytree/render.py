@@ -272,9 +272,8 @@ class RenderTree(object):
         children = node.children
         if children:
             children = self.childiter(children)
-            lastidx = len(children) - 1
-            for idx, child in enumerate(children):
-                for grandchild in self.__next(child, continues + (idx != lastidx, )):
+            for child, is_last in _is_last(children):
+                for grandchild in self.__next(child, continues + (not is_last, )):
                     yield grandchild
 
     @staticmethod
@@ -313,3 +312,21 @@ class RenderTree(object):
                 for line in lines[1:]:
                     yield u"%s%s" % (fill, line)
         return "\n".join(get())
+
+
+def _is_last(iterable):
+    iter_ = iter(iterable)
+    try:
+        nextitem = next(iter_)
+    except StopIteration:
+        pass
+    else:
+        item = nextitem
+        while True:
+            try:
+                nextitem = next(iter_)
+                yield item, False
+            except StopIteration:
+                yield nextitem, True
+                break
+            item = nextitem
