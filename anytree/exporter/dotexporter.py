@@ -6,6 +6,8 @@ from os import remove
 from subprocess import check_call
 from tempfile import NamedTemporaryFile
 
+import six
+
 from anytree import PreOrderIter
 
 _RE_ESC = re.compile(r'["\\]')
@@ -252,7 +254,7 @@ class DotExporter(object):
     @staticmethod
     def esc(value):
         """Escape Strings."""
-        return _RE_ESC.sub(lambda m: r"\%s" % m.group(0), str(value))
+        return _RE_ESC.sub(lambda m: r"\%s" % m.group(0), six.text_type(value))
 
 
 class UniqueDotExporter(DotExporter):
