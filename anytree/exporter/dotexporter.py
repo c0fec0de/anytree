@@ -57,6 +57,8 @@ class DotExporter(object):
         >>> s1c = Node("sub1C", parent=s1, edge=22)
         >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
 
+        .. note:: If the node names are not unqiue, see :any:`UniqueDotExporter`.
+
         A directed graph:
 
         >>> from anytree.exporter import DotExporter
@@ -138,27 +140,27 @@ class DotExporter(object):
     def __iter__(self):
         # prepare
         indent = " " * self.indent
-        nodenamefunc = self.nodenamefunc or DotExporter.__default_nodenamefunc
-        nodeattrfunc = self.nodeattrfunc or DotExporter.__default_nodeattrfunc
-        edgeattrfunc = self.edgeattrfunc or DotExporter.__default_edgeattrfunc
-        edgetypefunc = self.edgetypefunc or DotExporter.__default_edgetypefunc
+        nodenamefunc = self.nodenamefunc or self._default_nodenamefunc
+        nodeattrfunc = self.nodeattrfunc or self._default_nodeattrfunc
+        edgeattrfunc = self.edgeattrfunc or self._default_edgeattrfunc
+        edgetypefunc = self.edgetypefunc or self._default_edgetypefunc
         return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc,
                            edgetypefunc)
 
     @staticmethod
-    def __default_nodenamefunc(node):
+    def _default_nodenamefunc(node):
         return node.name
 
     @staticmethod
-    def __default_nodeattrfunc(node):
+    def _default_nodeattrfunc(node):
         return None
 
     @staticmethod
-    def __default_edgeattrfunc(node, child):
+    def _default_edgeattrfunc(node, child):
         return None
 
     @staticmethod
-    def __default_edgetypefunc(node, child):
+    def _default_edgetypefunc(node, child):
         return "->"
 
     def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc):
@@ -248,3 +250,91 @@ class DotExporter(object):
     def esc(str):
         """Escape Strings."""
         return str.replace("\"", "\\\"")
+
+
+class UniqueDotExporter(DotExporter):
+
+    def __init__(self, node, graph="digraph", name="tree", options=None,
+                 indent=4, nodenamefunc=None, nodeattrfunc=None,
+                 edgeattrfunc=None, edgetypefunc=None):
+        """
+        Unqiue Dot Language Exporter.
+
+        Args:
+            node (Node): start node.
+
+        Keyword Args:
+            graph: DOT graph type.
+
+            name: DOT graph name.
+
+            options: list of options added to the graph.
+
+            indent (int): number of spaces for indent.
+
+            nodenamefunc: Function to extract node name from `node` object.
+                          The function shall accept one `node` object as
+                          argument and return the name of it.
+
+            nodeattrfunc: Function to decorate a node with attributes.
+                          The function shall accept one `node` object as
+                          argument and return the attributes.
+
+            edgeattrfunc: Function to decorate a edge with attributes.
+                          The function shall accept two `node` objects as
+                          argument. The first the node and the second the child
+                          and return the attributes.
+
+            edgetypefunc: Function to which gives the edge type.
+                          The function shall accept two `node` objects as
+                          argument. The first the node and the second the child
+                          and return the edge (i.e. '->').
+
+        >>> from anytree import Node
+        >>> root = Node("root")
+        >>> s0 = Node("sub0", parent=root)
+        >>> s0b = Node("s0", parent=s0)
+        >>> s0a = Node("s0", parent=s0)
+        >>> s1 = Node("sub1", parent=root)
+        >>> s1a = Node("s1", parent=s1)
+        >>> s1b = Node("s1", parent=s1)
+        >>> s1c = Node("s1", parent=s1)
+        >>> s1ca = Node("sub1Ca", parent=s1c)
+
+        >>> from anytree.exporter import UniqueDotExporter
+        >>> for line in UniqueDotExporter(root):  # doctest: +SKIP
+        ...     print(line)
+        digraph tree {
+            "0x7f1bf2c9c510" [label="root"];
+            "0x7f1bf2c9c5a0" [label="sub0"];
+            "0x7f1bf2c9c630" [label="s0"];
+            "0x7f1bf2c9c6c0" [label="s0"];
+            "0x7f1bf2c9c750" [label="sub1"];
+            "0x7f1bf2c9c7e0" [label="s1"];
+            "0x7f1bf2c9c870" [label="s1"];
+            "0x7f1bf2c9c900" [label="s1"];
+            "0x7f1bf2c9c990" [label="sub1Ca"];
+            "0x7f1bf2c9c510" -> "0x7f1bf2c9c5a0";
+            "0x7f1bf2c9c510" -> "0x7f1bf2c9c750";
+            "0x7f1bf2c9c5a0" -> "0x7f1bf2c9c630";
+            "0x7f1bf2c9c5a0" -> "0x7f1bf2c9c6c0";
+            "0x7f1bf2c9c750" -> "0x7f1bf2c9c7e0";
+            "0x7f1bf2c9c750" -> "0x7f1bf2c9c870";
+            "0x7f1bf2c9c750" -> "0x7f1bf2c9c900";
+            "0x7f1bf2c9c900" -> "0x7f1bf2c9c990";
+        }
+
+        The resulting graph:
+
+        .. image:: ../static/uniquedotexporter2.png
+        """
+        super(UniqueDotExporter, self).__init__(node, graph=graph, name=name, options=options, indent=indent,
+                                                nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
+                                                edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc)
+    @staticmethod
+    def _default_nodenamefunc(node):
+        return hex(id(node))
+
+    @staticmethod
+    def _default_nodeattrfunc(node):
+        return 'label="%s"' % (node.name)
