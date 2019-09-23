@@ -131,6 +131,27 @@ class DotExporter(object):
         The resulting graph:
 
         .. image:: ../static/dotexporter1.png
+
+        To export custom node implementations or :any:`AnyNode`, please provide a proper `nodenamefunc`:
+
+        >>> from anytree import AnyNode
+        >>> root = AnyNode(id="root")
+        >>> s0 = AnyNode(id="sub0", parent=root)
+        >>> s0b = AnyNode(id="s0b", parent=s0)
+        >>> s0a = AnyNode(id="s0a", parent=s0)
+
+        >>> from anytree.exporter import DotExporter
+        >>> for line in DotExporter(root, nodenamefunc=lambda n: n.id):
+        ...     print(line)
+        digraph tree {
+            "root";
+            "sub0";
+            "s0b";
+            "s0a";
+            "root" -> "sub0";
+            "sub0" -> "s0b";
+            "sub0" -> "s0a";
+        }
         """
         self.node = node
         self.graph = graph
@@ -265,6 +286,8 @@ class UniqueDotExporter(DotExporter):
         """
         Unqiue Dot Language Exporter.
 
+        Handle trees with random or conflicting node names gracefully.
+
         Args:
             node (Node): start node.
 
@@ -332,6 +355,27 @@ class UniqueDotExporter(DotExporter):
         The resulting graph:
 
         .. image:: ../static/uniquedotexporter2.png
+
+        To export custom node implementations or :any:`AnyNode`, please provide a proper `nodeattrfunc`:
+
+        >>> from anytree import AnyNode
+        >>> root = AnyNode(id="root")
+        >>> s0 = AnyNode(id="sub0", parent=root)
+        >>> s0b = AnyNode(id="s0", parent=s0)
+        >>> s0a = AnyNode(id="s0", parent=s0)
+
+        >>> from anytree.exporter import UniqueDotExporter
+        >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):  # doctest: +SKIP
+        ...     print(line)
+        digraph tree {
+            "0x7f5c70449af8" [label="root"];
+            "0x7f5c70449bd0" [label="sub0"];
+            "0x7f5c70449c60" [label="s0"];
+            "0x7f5c70449cf0" [label="s0"];
+            "0x7f5c70449af8" -> "0x7f5c70449bd0";
+            "0x7f5c70449bd0" -> "0x7f5c70449c60";
+            "0x7f5c70449bd0" -> "0x7f5c70449cf0";
+        }
         """
         super(UniqueDotExporter, self).__init__(node, graph=graph, name=name, options=options, indent=indent,
                                                 nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
