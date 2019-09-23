@@ -247,9 +247,9 @@ class DotExporter(object):
             logging.getLogger(__name__).warn(msg)
 
     @staticmethod
-    def esc(str):
+    def esc(value):
         """Escape Strings."""
-        return str.replace("\"", "\\\"")
+        return str(value).replace("\"", "\\\"")
 
 
 class UniqueDotExporter(DotExporter):

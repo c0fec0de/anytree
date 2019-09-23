@@ -7,7 +7,7 @@ digraph tree {
     "sub1A";
     "sub1B";
     "sub1C";
-    "sub1Ca";
+    "99";
     "root" -> "sub0";
     "root" -> "sub1";
     "sub0" -> "sub0B";
@@ -15,5 +15,5 @@ digraph tree {
     "sub1" -> "sub1A";
     "sub1" -> "sub1B";
     "sub1" -> "sub1C";
-    "sub1C" -> "sub1Ca";
+    "sub1C" -> "99";
 }

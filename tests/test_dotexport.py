@@ -35,7 +35,7 @@ def test_tree1():
     Node("sub1A", parent=s1)
     Node("sub1B", parent=s1)
     s1c = Node("sub1C", parent=s1)
-    Node("sub1Ca", parent=s1c)
+    Node(99, parent=s1c)
 
     RenderTreeGraph(root).to_dotfile(join(GENPATH, "tree1.dot"))
     assert cmp(join(GENPATH, "tree1.dot"), join(REFPATH, "tree1.dot"))
