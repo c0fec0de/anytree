@@ -82,6 +82,10 @@ class DotExporter(object):
             "sub1C" -> "sub1Ca";
         }
 
+        The resulting graph:
+
+        .. image:: ../static/dotexporter0.png
+
         An undirected graph:
 
         >>> def nodenamefunc(node):
@@ -116,6 +120,10 @@ class DotExporter(object):
             "sub1:1" -- "sub1C:2" [label="sub1:sub1C"];
             "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
         }
+
+        The resulting graph:
+
+        .. image:: ../static/dotexporter1.png
         """
         self.node = node
         self.graph = graph
