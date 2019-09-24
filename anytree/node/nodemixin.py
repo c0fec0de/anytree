@@ -24,7 +24,7 @@ class NodeMixin(object):
     If set to any iterable of :any:`NodeMixin` instances, the nodes become children.
 
     >>> from anytree import NodeMixin, RenderTree
-    >>> class MyBaseClass(object):
+    >>> class MyBaseClass(object):  # Just an example of a base class
     ...     foo = 4
     >>> class MyClass(MyBaseClass, NodeMixin):  # Add Node feature
     ...     def __init__(self, name, length, width, parent=None, children=None):

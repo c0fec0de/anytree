@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""Powerful and Lightweight Python Tree Data Structure."""
+"""
+Powerful and Lightweight Python Tree Data Structure.
+
+
+"""
 
 __version__ = "2.6.0"
 __author__ = "c0fec0de"
@@ -39,3 +43,4 @@ from . import util  # noqa
 
 # legacy
 LevelGroupOrderIter = LevelOrderGroupIter
+
