@@ -29,6 +29,7 @@ def test_preorder():
     it = PreOrderIter(f)
     eq_(next(it), f)
     eq_(next(it), b)
+    eq_(list(it), [a, d, c, e, g, i, h])
 
 
 def test_postorder():
@@ -52,6 +53,7 @@ def test_postorder():
     it = PostOrderIter(f)
     eq_(next(it), a)
     eq_(next(it), c)
+    eq_(list(it), [e, d, b, h, i, g, f])
 
 
 def test_levelorder():
@@ -75,6 +77,7 @@ def test_levelorder():
     it = LevelOrderIter(f)
     eq_(next(it), f)
     eq_(next(it), b)
+    eq_(list(it), [g, a, d, i, c, e, h])
 
 
 def test_levelgrouporder():
@@ -103,6 +106,7 @@ def test_levelgrouporder():
     it = LevelGroupOrderIter(f)
     eq_(next(it), (f, ))
     eq_(next(it), (b, g))
+    eq_(list(it),  [(a, d, i), (c, e, h)])
 
 
 def test_levelordergroup():
@@ -131,6 +135,7 @@ def test_levelordergroup():
     it = LevelOrderGroupIter(f)
     eq_(next(it), (f, ))
     eq_(next(it), (b, g))
+    eq_(list(it), [(a, d, i), (c, e, h)])
 
 
 def test_zigzaggroup():
@@ -159,3 +164,4 @@ def test_zigzaggroup():
     it = ZigZagGroupIter(f)
     eq_(next(it), (f, ))
     eq_(next(it), (g, b))
+    eq_(list(it), [(a, d, i), (h, e, c)])

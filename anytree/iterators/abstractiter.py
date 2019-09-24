@@ -37,7 +37,7 @@ class AbstractIter(six.Iterator):
         return False
 
     def __iter__(self):
-        return self.__init()
+        return self
 
     def __next__(self):
         if self.__iter is None:
