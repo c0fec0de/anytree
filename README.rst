@@ -16,9 +16,6 @@
 .. image:: https://img.shields.io/pypi/pyversions/anytree.svg
    :target: https://pypi.python.org/pypi/anytree
 
-.. image:: https://landscape.io/github/c0fec0de/anytree/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/c0fec0de/anytree/master
-
 .. image:: https://img.shields.io/badge/code%20style-pep8-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0008/
 
