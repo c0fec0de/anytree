@@ -10,8 +10,6 @@ from .exceptions import TreeError
 
 class NodeMixin(object):
 
-    __slots__ = ("__parent", "__children")
-
     separator = "/"
 
     u"""

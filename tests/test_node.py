@@ -582,16 +582,3 @@ def test_eq_overwrite():
     eq_(a.b, 0)
     eq_(b.a, 1)
     eq_(b.b, 0)
-
-
-def test_node_slots():
-    """__slots__ compatibility."""
-    class MyNode(NodeMixin):
-        __slots__ = ('_name', )
-
-        def __init__(self, name):
-            self._name = name
-
-    n = MyNode('foo')
-    with assert_raises(AttributeError, "'MyNode' object has no attribute 'bar'"):
-        n.bar = 4

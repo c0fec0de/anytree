@@ -82,4 +82,7 @@ class DictExporter(object):
         return data
 
     def _iter_attr_values(self, node):
-        return node.__dict__.items()
+        for k, v in node.__dict__.items():
+            if k in ('_NodeMixin__children', '_NodeMixin__parent'):
+                continue
+            yield k, v
