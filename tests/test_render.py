@@ -26,6 +26,15 @@ def test_render_str():
     ])
     eq_str(str(r), expected)
 
+    r = anytree.RenderTree(root, childiter=lambda nodes: [n for n in nodes if len(n.name) < 5])
+
+    expected = u"\n".join([
+        u"Node('/root')",
+        u"├── Node('/root/sub0')",
+        u"└── Node('/root/sub1')",
+    ])
+    eq_str(str(r), expected)
+
 
 def test_render_repr():
     """Render representation."""
