@@ -9,6 +9,7 @@ def test_commonancestors():
     """commonancestors."""
     udo = Node("Udo")
     marc = Node("Marc", parent=udo)
+    lian = Node("Lian", parent=marc)
     dan = Node("Dan", parent=udo)
     jet = Node("Jet", parent=dan)
     joe = Node("Joe", parent=dan)
@@ -17,6 +18,7 @@ def test_commonancestors():
     eq_(commonancestors(jet, marc), (udo,))
     eq_(commonancestors(jet), (udo, dan))
     eq_(commonancestors(), ())
+    eq_(commonancestors(jet, lian), (udo, ))
 
 
 def test_leftsibling():
