@@ -38,6 +38,7 @@ from .resolver import Resolver  # noqa
 from .resolver import ResolverError  # noqa
 from .walker import WalkError  # noqa
 from .walker import Walker  # noqa
+from . import cachedsearch  # noqa
 from . import util  # noqa
 
 
