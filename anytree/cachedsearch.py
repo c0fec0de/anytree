@@ -11,9 +11,6 @@ try:
     from fastcache import clru_cache as _cache
 except ImportError:
     from functools import wraps
-    import warnings
-
-    warnings.warn("python module 'fastcache' missing. Disabling cache.", UserWarning)
 
     def _cache(size):
         def decorator(func):
