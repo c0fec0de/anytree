@@ -120,7 +120,7 @@ Disable read-only mode:
 
 >>> a.readonly = False
 
-Modifications are allowd now:
+Modifications are allowed now:
 
 >>> a0.parent = a2
 >>> print(RenderTree(a).by_attr("foo"))

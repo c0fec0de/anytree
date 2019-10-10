@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Powerful and Lightweight Python Tree Data Structure.
-
-
-"""
+"""Powerful and Lightweight Python Tree Data Structure."""
 
 __version__ = "2.7.1"
 __author__ = "c0fec0de"

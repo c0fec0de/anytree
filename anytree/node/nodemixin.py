@@ -20,8 +20,9 @@ class NodeMixin(object):
     If set to another node, the :any:`NodeMixin` becomes the child of it.
 
     The `children` attribute can be used likewise.
-    If `None` the :any:`NodeMixin` has no children (unless the node is set *as* parent).
-    If set to any iterable of :any:`NodeMixin` instances, the nodes become children.
+    If `None` the :any:`NodeMixin` has no children.
+    The `children` attribute can be set to any iterable of :any:`NodeMixin` instances.
+    These instances become children of the node.
 
     >>> from anytree import NodeMixin, RenderTree
     >>> class MyBaseClass(object):  # Just an example of a base class
@@ -300,7 +301,26 @@ class NodeMixin(object):
         return self._path
 
     def iter_path_reverse(self):
-        """Iterate up the tree from the current node."""
+        """
+        Iterate up the tree from the current node.
+
+        >>> from anytree import Node
+        >>> udo = Node("Udo")
+        >>> marc = Node("Marc", parent=udo)
+        >>> lian = Node("Lian", parent=marc)
+        >>> for node in udo.iter_path_reverse():
+        ...     print(node)
+        Node('/Udo')
+        >>> for node in marc.iter_path_reverse():
+        ...     print(node)
+        Node('/Udo/Marc')
+        Node('/Udo')
+        >>> for node in lian.iter_path_reverse():
+        ...     print(node)
+        Node('/Udo/Marc/Lian')
+        Node('/Udo/Marc')
+        Node('/Udo')
+        """
         node = self
         while node:
             yield node
@@ -336,7 +356,7 @@ class NodeMixin(object):
         All parent nodes and their parent nodes - see :any:`ancestors`.
 
         The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
-        This attribute will be removed in the 2.0.0 release.
+        This attribute will be removed in the 3.0.0 release.
         """
         warnings.warn(".anchestors was a typo and will be removed in version 3.0.0", DeprecationWarning)
         return self.ancestors

@@ -50,7 +50,7 @@ Node('/Udo')
 Node('/Marc')
 └── Node('/Marc/Lian')
 
-Every node has an :any:`children` attribute with a tuple of all children:
+Every node has a :any:`children` attribute with a tuple of all children:
 
 >>> udo.children
 ()
