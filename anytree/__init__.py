@@ -2,7 +2,7 @@
 
 """Powerful and Lightweight Python Tree Data Structure."""
 
-__version__ = "2.7.2"
+__version__ = "2.7.3"
 __author__ = "c0fec0de"
 __author_email__ = "c0fec0de@gmail.com"
 __description__ = """Powerful and Lightweight Python Tree Data Structure.."""
@@ -40,4 +40,3 @@ from . import util  # noqa
 
 # legacy
 LevelGroupOrderIter = LevelOrderGroupIter
-
