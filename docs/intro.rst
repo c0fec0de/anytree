@@ -4,7 +4,7 @@ Introduction
 Overview
 --------
 
-`anytree` is splitted into the following parts:
+`anytree` is split into the following parts:
 
 **Node Classes**
 
