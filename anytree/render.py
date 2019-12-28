@@ -151,7 +151,7 @@ class DoubleStyle(AbstractStyle):
 @six.python_2_unicode_compatible
 class RenderTree(object):
 
-    def __init__(self, node, style=ContStyle(), childiter=list):
+    def __init__(self, node, style=ContStyle(), childiter=list, maxlevel=None):
         u"""
         Render tree starting at `node`.
 
@@ -257,23 +257,32 @@ class RenderTree(object):
         │   ├── 1 2 3
         │   └── a b
         └── Z
+
+        Maxlevel limits the depth of the tree:
+
+        >>> print(RenderTree(root, maxlevel=2))
+        root
+        ├── sub0
+        └── sub1
         """
         if not isinstance(style, AbstractStyle):
             style = style()
         self.node = node
         self.style = style
         self.childiter = childiter
+        self.maxlevel = maxlevel
 
     def __iter__(self):
         return self.__next(self.node, tuple())
 
-    def __next(self, node, continues):
+    def __next(self, node, continues, level=0):
         yield RenderTree.__item(node, continues, self.style)
         children = node.children
-        if children:
+        level += 1
+        if children and (self.maxlevel is None or level < self.maxlevel):
             children = self.childiter(children)
             for child, is_last in _is_last(children):
-                for grandchild in self.__next(child, continues + (not is_last, )):
+                for grandchild in self.__next(child, continues + (not is_last, ), level=level):
                     yield grandchild
 
     @staticmethod
