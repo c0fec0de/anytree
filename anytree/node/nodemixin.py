@@ -139,7 +139,7 @@ class NodeMixin(object):
             if node is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
                 raise LoopError(msg % self)
-            if self in node.iter_path_reverse():
+            if any(child is self for child in node.iter_path_reverse()):
                 msg = "Cannot set parent. %r is parent of %r."
                 raise LoopError(msg % (self, node))
 
@@ -149,7 +149,7 @@ class NodeMixin(object):
             parentchildren = parent.__children_
             assert any(child is self for child in parentchildren), "Tree internal data is corrupt."  # pragma: no cover
             # ATOMIC START
-            parentchildren.remove(self)
+            parentchildren[:] = [child for child in parentchildren if child is not self]
             self.__parent = None
             # ATOMIC END
             self._post_detach(parent)
@@ -232,8 +232,8 @@ class NodeMixin(object):
                 msg = ("Cannot add non-node object %r. "
                        "It is not a subclass of 'NodeMixin'.") % child
                 raise TreeError(msg)
-            if child not in seen:
-                seen.add(child)
+            if id(child) not in seen:
+                seen.add(id(child))
             else:
                 msg = "Cannot add node %r multiple times as child." % child
                 raise TreeError(msg)
@@ -322,7 +322,7 @@ class NodeMixin(object):
         Node('/Udo')
         """
         node = self
-        while node:
+        while node is not None:
             yield node
             node = node.parent
 
@@ -346,7 +346,7 @@ class NodeMixin(object):
         >>> lian.ancestors
         (Node('/Udo'), Node('/Udo/Marc'))
         """
-        if not self.parent:
+        if self.parent is None:
             return tuple()
         return self.parent.path
 
@@ -398,7 +398,7 @@ class NodeMixin(object):
         Node('/Udo')
         """
         node = self
-        while node.parent:
+        while node.parent is not None:
             node = node.parent
         return node
 
@@ -426,7 +426,7 @@ class NodeMixin(object):
         if parent is None:
             return tuple()
         else:
-            return tuple(node for node in parent.children if node != self)
+            return tuple(node for node in parent.children if node is not self)
 
     @property
     def leaves(self):
