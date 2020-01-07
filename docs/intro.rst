@@ -163,9 +163,9 @@ _post_detach NotifiedNode('/b')
 
 
 .. important::
-    An exeception raised by :any:`_pre_detach(parent)` and :any:`_pre_attach(parent)` will **prevent** the tree structure to be updated.
+    An exception raised by :any:`_pre_detach(parent)` and :any:`_pre_attach(parent)` will **prevent** the tree structure to be updated.
     The node keeps the old state.
-    An exeception raised by :any:`_post_detach(parent)` and :any:`_post_attach(parent)` does **not rollback** the tree structure modification.
+    An exception raised by :any:`_post_detach(parent)` and :any:`_post_attach(parent)` does **not rollback** the tree structure modification.
 
 
 Custom Separator

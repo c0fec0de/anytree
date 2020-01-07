@@ -31,7 +31,7 @@ Any Python Tree Data
 
 Simple, lightweight and extensible Tree_ data structure.
 
-Feel free to share_ infos about your anytree project.
+Feel free to share_ info about your anytree project.
 
 .. _share: https://github.com/c0fec0de/anytree/issues/34
 
