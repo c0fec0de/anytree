@@ -1,5 +1,5 @@
 import filecmp
-
+import os
 from tempfile import NamedTemporaryFile
 
 from nose.tools import eq_
@@ -62,8 +62,13 @@ def test_json_exporter():
     exported = exporter.export(root).split("\n")
     exported = [e.rstrip() for e in exported]  # just a fix for a strange py2x behavior.
     eq_(exported, lines)
-    with NamedTemporaryFile(mode="w+") as ref:
-        with NamedTemporaryFile(mode="w+") as gen:
-            ref.write("\n".join(lines))
-            exporter.write(root, gen)
-            assert filecmp.cmp(ref.name, gen.name)
+    try:
+        with NamedTemporaryFile(mode="w+", delete=False) as ref:
+            with NamedTemporaryFile(mode="w+", delete=False) as gen:
+                ref.write("\n".join(lines))
+                exporter.write(root, gen)
+        # on Windows, you must close the files before comparison
+        filecmp.cmp(ref.name, gen.name)
+    finally:
+        os.remove(ref.name)
+        os.remove(gen.name)
