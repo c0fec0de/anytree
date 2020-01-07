@@ -123,7 +123,7 @@ class NodeMixin(object):
     @parent.setter
     def parent(self, value):
         if value is not None and not isinstance(value, NodeMixin):
-            msg = "Parent node %r is not of type 'NodeMixin'." % (value)
+            msg = "Parent node %r is not of type 'NodeMixin'." % value
             raise TreeError(msg)
         try:
             parent = self.__parent
@@ -158,7 +158,9 @@ class NodeMixin(object):
         if parent is not None:
             self._pre_attach(parent)
             parentchildren = parent.__children_
-            assert not any(child is self for child in parentchildren), "Tree internal data is corrupt."  # pragma: no cover
+            assert not any(
+                child is self for child in parentchildren
+            ), "Tree internal data is corrupt."  # pragma: no cover
             # ATOMIC START
             parentchildren.append(self)
             self.__parent = parent
@@ -229,8 +231,7 @@ class NodeMixin(object):
         seen = set()
         for child in children:
             if not isinstance(child, NodeMixin):
-                msg = ("Cannot add non-node object %r. "
-                       "It is not a subclass of 'NodeMixin'.") % child
+                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % child
                 raise TreeError(msg)
             if child not in seen:
                 seen.add(child)
