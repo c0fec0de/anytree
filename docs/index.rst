@@ -168,7 +168,7 @@ The `children` can be used likewise:
 >>> my0 = MyClass('my0', 0, 0, children=[
 ...     MyClass('my1', 1, 0),
 ...     MyClass('my2', 0, 2),
-... ]
+... ])
 
 >>> for pre, fill, node in RenderTree(my0):
 ...     treestr = u"%s%s" % (pre, node.name)
