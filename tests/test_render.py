@@ -90,6 +90,24 @@ def test_render():
     ]
     eq_(result, expected)
 
+def test_maxlevel():
+    root = anytree.Node("root", lines=["c0fe", "c0de"])
+    s0 = anytree.Node("sub0", parent=root, lines=["ha", "ba"])
+    s0b = anytree.Node("sub0B", parent=s0, lines=["1", "2", "3"])
+    s0a = anytree.Node("sub0A", parent=s0, lines=["a", "b"])
+    s1 = anytree.Node("sub1", parent=root, lines=["Z"])
+
+    r = anytree.RenderTree(root, maxlevel=2)
+    result = [(pre, node) for pre, _, node in r]
+    expected = [
+        (u'', root),
+        (u'├── ', s0),
+        (u'└── ', s1),
+    ]
+    print(expected)
+    print(result)
+    eq_(result, expected)
+
 
 def test_asciistyle():
     style = anytree.AsciiStyle()
