@@ -380,6 +380,7 @@ class UniqueDotExporter(DotExporter):
         super(UniqueDotExporter, self).__init__(node, graph=graph, name=name, options=options, indent=indent,
                                                 nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
                                                 edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc)
+
     @staticmethod
     def _default_nodenamefunc(node):
         return hex(id(node))
