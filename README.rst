@@ -28,13 +28,13 @@
 * Documentation_
 * GitHub_
 * Changelog_
-* Issue_
+* Issues
 * Contributors_
 
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
-.. _Issue Tracker: https://github.com/c0fec0de/anytree/issues
+.. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
 
 
