@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from nose.tools import eq_
 
-from anytree.util import commonancestors, leftsibling, rightsibling
 from anytree import Node
+from anytree.util import commonancestors
+from anytree.util import leftsibling
+from anytree.util import rightsibling
 
 
 def test_commonancestors():

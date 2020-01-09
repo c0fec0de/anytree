@@ -1,10 +1,11 @@
 from filecmp import cmp
-from nose.tools import with_setup
 from os import makedirs
 from os.path import dirname
 from os.path import exists
 from os.path import join
 from shutil import rmtree
+
+from nose.tools import with_setup
 
 from anytree import Node
 from anytree.dotexport import RenderTreeGraph

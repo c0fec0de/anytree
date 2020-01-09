@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from nose.tools import eq_
 
-from helper import assert_raises
 from anytree import AnyNode
 from anytree import LoopError
 from anytree import Node
@@ -10,6 +9,7 @@ from anytree import PostOrderIter
 from anytree import PreOrderIter
 from anytree import RenderTree
 from anytree import TreeError
+from helper import assert_raises
 
 
 def test_node_parent_error():

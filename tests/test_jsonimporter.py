@@ -2,8 +2,8 @@ from tempfile import NamedTemporaryFile
 
 from nose.tools import eq_
 
-from anytree.importer import JsonImporter
 from anytree.exporter import DictExporter
+from anytree.importer import JsonImporter
 
 
 def test_json_importer():

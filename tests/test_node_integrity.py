@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from helper import assert_raises
 from nose.tools import eq_
 
 from anytree import LoopError
@@ -8,6 +7,7 @@ from anytree import NodeMixin
 from anytree import PostOrderIter
 from anytree import PreOrderIter
 from anytree import TreeError
+from helper import assert_raises
 
 
 def test_readonly_pre():

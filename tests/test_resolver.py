@@ -2,7 +2,6 @@
 from nose.tools import eq_
 
 import anytree as at
-
 from helper import assert_raises
 
 

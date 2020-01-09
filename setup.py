@@ -2,11 +2,12 @@
 Powerful and Lightweight Python Tree Data Structure with various plugins.
 """
 
-# Always prefer setuptools over distutils
-from setuptools import setup
 # To use a consistent encoding
 from codecs import open
 from os import path
+
+# Always prefer setuptools over distutils
+from setuptools import setup
 
 
 def _read_metainfo(filepath):

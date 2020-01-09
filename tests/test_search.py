@@ -1,12 +1,13 @@
 from nose.tools import eq_
 
 from anytree import AsciiStyle
+from anytree import CountError
 from anytree import Node
 from anytree import PreOrderIter
 from anytree import RenderTree
 from anytree import find
 from anytree import find_by_attr
-from anytree import findall, CountError
+from anytree import findall
 from anytree import findall_by_attr
 from helper import assert_raises
 

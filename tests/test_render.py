@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import six
-
 from nose.tools import eq_
 
 import anytree
-
 from helper import eq_str
 
 
