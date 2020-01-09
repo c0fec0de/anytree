@@ -25,10 +25,13 @@
 .. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0257/
 
+Links
+-----
+
 * Documentation_
 * GitHub_
 * Changelog_
-* Issues
+* Issues_
 * Contributors_
 
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
