@@ -1,6 +1,4 @@
-"""
-Powerful and Lightweight Python Tree Data Structure with various plugins.
-"""
+"""Powerful and Lightweight Python Tree Data Structure with various plugins."""
 
 # To use a consistent encoding
 from codecs import open
@@ -42,7 +40,7 @@ config['packages'] = ['anytree', 'anytree.node', 'anytree.iterators',
                       'anytree.importer', 'anytree.exporter', 'anytree.util']
 config['install_requires'] = ['six>=1.9.0']
 config['extras_require'] = {
-        'fastcache':  ['fastcache'],
+    'fastcache':  ['fastcache'],
 }
 config['extras_require'] = {
     'dev': ['check-manifest'],

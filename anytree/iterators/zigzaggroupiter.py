@@ -3,7 +3,6 @@ from .levelordergroupiter import LevelOrderGroupIter
 
 
 class ZigZagGroupIter(AbstractIter):
-
     """
     Iterate over tree applying Zig-Zag strategy with grouping starting at `node`.
 

@@ -31,6 +31,7 @@ def test_findall():
             "(Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))")):
         findall(f, filter_=lambda node: d in node.path, maxcount=2)
 
+
 def test_findall_by_attr():
     f = Node("f")
     b = Node("b", parent=f)
@@ -43,6 +44,7 @@ def test_findall_by_attr():
     with assert_raises(CountError, (
             "Expecting at least 1 elements, but found 0.")):
         findall_by_attr(f, "z", mincount=1)
+
 
 def test_find():
     f = Node("f")
@@ -58,9 +60,10 @@ def test_find():
     eq_(find(f, lambda n: n.name == "d"), d)
     eq_(find(f, lambda n: n.name == "z"), None)
     with assert_raises(CountError, (
-        "Expecting 1 elements at maximum, but found 5. "
-        "(Node('/f/b'), Node('/f/b/a'), Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))")):
+            "Expecting 1 elements at maximum, but found 5. "
+            "(Node('/f/b'), Node('/f/b/a'), Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))")):
         find(f, lambda n: b in n.path)
+
 
 def test_find_by_attr():
     f = Node("f")

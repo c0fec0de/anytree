@@ -2,7 +2,6 @@ from .abstractiter import AbstractIter
 
 
 class LevelOrderIter(AbstractIter):
-
     """
     Iterate over tree applying level-order strategy starting at `node`.
 

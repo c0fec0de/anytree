@@ -18,6 +18,8 @@ class Walker(object):
         Raises:
             WalkError: on no common root node.
 
+        Example:
+
         >>> from anytree import Node, RenderTree, AsciiStyle
         >>> f = Node("f")
         >>> b = Node("b", parent=f)
@@ -90,5 +92,4 @@ class Walker(object):
 
 
 class WalkError(RuntimeError):
-
     """Walk Error."""

@@ -2,7 +2,6 @@ from .abstractiter import AbstractIter
 
 
 class PreOrderIter(AbstractIter):
-
     """
     Iterate over tree applying pre-order strategy starting at `node`.
 

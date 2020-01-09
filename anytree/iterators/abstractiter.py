@@ -5,9 +5,9 @@ class AbstractIter(six.Iterator):
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
-        Base class for all iterators.
-
         Iterate over tree starting at `node`.
+
+        Base class for all iterators.
 
         Keyword Args:
             filter_: function called with every `node` as argument, `node` is returned if `True`.

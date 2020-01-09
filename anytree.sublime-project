@@ -16,28 +16,11 @@
         "translate_tabs_to_spaces": true,
         "trim_trailing_white_space_on_save": true,
         "default_encoding": "UTF-8",
-        "SublimeLinter.linters.flake8.args": [
-            "--config=$project_path/setup.cfg"
-        ],
-        "SublimeLinter.linters.mypy.args": [
-            "--config=$project_path/setup.cfg"
-        ],
         "SublimeLinter.linters.pycodestyle.args": [
             "--config=$project_path/setup.cfg"
         ],
         "SublimeLinter.linters.pydocstyle.args": [
             "--config=$project_path/setup.cfg"
         ]
-    },
-    "build_systems":
-    [
-        {
-            "name": "Anytree All --with-doctest",
-            "shell_cmd": "(cd $project_path && nosetests --with-doctest); (cd $project_path/docs && make html); (cd $project_path/ && flake8 anytree); (cd $project_path && pep257 anytree --ignore='D100,D101,D105,D211'); (cd $project_path && python -m doctest README.rst docs/*.rst docs/*/*.rst)"
-        },
-        {
-            "name": "Anytree All",
-            "shell_cmd": "(cd $project_path && nosetests); (cd $project_path/docs && make html); (cd $project_path/ && flake8 anytree); (cd $project_path && pep257 anytree --ignore='D100,D101,D105,D211')"
-        }
-    ]
+    }
 }
