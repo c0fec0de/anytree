@@ -13,12 +13,10 @@ import collections
 
 import six
 
-
 Row = collections.namedtuple("Row", ("pre", "fill", "node"))
 
 
 class AbstractStyle(object):
-
     def __init__(self, vertical, cont, end):
         """
         Tree Render Style.
@@ -35,9 +33,11 @@ class AbstractStyle(object):
         self.vertical = vertical
         self.cont = cont
         self.end = end
-        assert (len(cont) == len(vertical) and len(cont) == len(end)), (
-            "'%s', '%s' and '%s' need to have equal length" % (vertical, cont,
-                                                               end))
+        assert len(cont) == len(vertical) == len(end), "'%s', '%s' and '%s' need to have equal length" % (
+            vertical,
+            cont,
+            end,
+        )
 
     @property
     def empty(self):
@@ -50,7 +50,6 @@ class AbstractStyle(object):
 
 
 class AsciiStyle(AbstractStyle):
-
     def __init__(self):
         """
         Ascii style.
@@ -73,7 +72,6 @@ class AsciiStyle(AbstractStyle):
 
 
 class ContStyle(AbstractStyle):
-
     def __init__(self):
         u"""
         Continued style, without gaps.
@@ -98,7 +96,6 @@ class ContStyle(AbstractStyle):
 
 
 class ContRoundStyle(AbstractStyle):
-
     def __init__(self):
         u"""
         Continued style, without gaps, round edges.
@@ -123,7 +120,6 @@ class ContRoundStyle(AbstractStyle):
 
 
 class DoubleStyle(AbstractStyle):
-
     def __init__(self):
         u"""
         Double line style, without gaps.
@@ -150,7 +146,6 @@ class DoubleStyle(AbstractStyle):
 
 @six.python_2_unicode_compatible
 class RenderTree(object):
-
     def __init__(self, node, style=ContStyle(), childiter=list):
         u"""
         Render tree starting at `node`.
@@ -273,7 +268,7 @@ class RenderTree(object):
         if children:
             children = self.childiter(children)
             for child, is_last in _is_last(children):
-                for grandchild in self.__next(child, continues + (not is_last, )):
+                for grandchild in self.__next(child, continues + (not is_last,)):
                     yield grandchild
 
     @staticmethod
@@ -300,7 +295,7 @@ class RenderTree(object):
         return "%s(%s)" % (classname, ", ".join(args))
 
     def by_attr(self, attrname="name"):
-        """
+        u"""
         Return rendered tree with node attribute `attrname`.
 
         >>> from anytree import AnyNode, RenderTree
@@ -324,7 +319,6 @@ class RenderTree(object):
             └── sub1C
                 └── sub1Ca
 
-
         """
         def get():
             for pre, fill, node in self:
@@ -336,6 +330,7 @@ class RenderTree(object):
                 yield u"%s%s" % (pre, lines[0])
                 for line in lines[1:]:
                     yield u"%s%s" % (fill, line)
+
         return "\n".join(get())
 
 

@@ -1,7 +1,7 @@
 """
 Node Searching.
 
-.. note:: You can speed-up node searching, by installing https://pypi.org/project/fastcache/ and 
+.. note:: You can speed-up node searching, by installing https://pypi.org/project/fastcache/ and
           using :any:`cachedsearch`.
 """
 

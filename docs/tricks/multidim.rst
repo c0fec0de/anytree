@@ -19,7 +19,7 @@ representations in the corresponding trees.
 ...         self.x = None
 ...         self.y = None
 ...     def __repr__(self):
-...         return "Item(%r)" % (self.name)
+...         return "Item(%r)" % self.name
 >>> a = Item('A')
 >>> b = Item('B')
 >>> c = Item('C')

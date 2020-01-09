@@ -20,7 +20,6 @@ except ImportError:
             return wrapped
         return decorator
 
-from anytree.iterators import PreOrderIter
 
 CACHE_SIZE = 32
 
