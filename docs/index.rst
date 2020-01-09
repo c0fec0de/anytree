@@ -23,9 +23,6 @@ Any Python Tree Data
 .. image:: https://img.shields.io/pypi/pyversions/anytree.svg
    :target: https://pypi.python.org/pypi/anytree
 
-.. image:: https://img.shields.io/pypi/dm/anytree.svg?label=PyPI%20downloads
-   :target: https://pypi.python.org/pypi/anytree
-
 .. image:: https://img.shields.io/badge/code%20style-pep8-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0008/
 
