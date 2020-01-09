@@ -5,7 +5,7 @@ Any Python Tree Data
 .. image:: https://badge.fury.io/py/anytree.svg
     :target: https://badge.fury.io/py/anytree
 
-.. image:: https://img.shields.io/pypi/dm/anytree.svg?label=PyPI%20downloads
+.. image:: https://img.shields.io/pypi/dm/anytree.svg?label=pypi%20downloads
    :target: https://pypi.python.org/pypi/anytree
 
 .. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
@@ -31,10 +31,6 @@ Any Python Tree Data
 
 Simple, lightweight and extensible Tree_ data structure.
 
-Feel free to share_ infos about your anytree project.
-
-.. _share: https://github.com/c0fec0de/anytree/issues/34
-
 .. toctree::
    :maxdepth: 2
 
@@ -45,6 +41,22 @@ Feel free to share_ infos about your anytree project.
    exporter
    tricks
 
+
+Links
+=====
+
+* GitHub_
+* Changelog_
+* Issues_
+* Contributors_
+
+Feel free to share_ infos about your anytree project.
+
+.. _GitHub: https://github.com/c0fec0de/anytree
+.. _Changelog: https://github.com/c0fec0de/anytree/releases
+.. _Issues: https://github.com/c0fec0de/anytree/issues
+.. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
+.. _share: https://github.com/c0fec0de/anytree/issues/34
 .. _Tree: https://en.wikipedia.org/wiki/Tree_(data_structure)
 
 Getting started

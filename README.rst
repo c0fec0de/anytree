@@ -1,7 +1,7 @@
 .. image:: https://badge.fury.io/py/anytree.svg
     :target: https://badge.fury.io/py/anytree
 
-.. image:: https://img.shields.io/pypi/dm/anytree.svg?label=PyPI%20downloads
+.. image:: https://img.shields.io/pypi/dm/anytree.svg?label=pypi%20downloads
    :target: https://pypi.python.org/pypi/anytree
 
 .. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
@@ -25,12 +25,18 @@
 .. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0257/
 
-Documentation
-=============
-
-The Documentation_ is hosted on http://anytree.readthedocs.io/en/2.7.3/
+* Documentation_
+* GitHub_
+* Changelog_
+* Issue_
+* Contributors_
 
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
+.. _GitHub: https://github.com/c0fec0de/anytree
+.. _Changelog: https://github.com/c0fec0de/anytree/releases
+.. _Issue Tracker: https://github.com/c0fec0de/anytree/issues
+.. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
+
 
 Getting started
 ===============
