@@ -17,6 +17,7 @@ Row = collections.namedtuple("Row", ("pre", "fill", "node"))
 
 
 class AbstractStyle(object):
+
     def __init__(self, vertical, cont, end):
         """
         Tree Render Style.
@@ -50,6 +51,7 @@ class AbstractStyle(object):
 
 
 class AsciiStyle(AbstractStyle):
+
     def __init__(self):
         """
         Ascii style.
@@ -72,6 +74,7 @@ class AsciiStyle(AbstractStyle):
 
 
 class ContStyle(AbstractStyle):
+
     def __init__(self):
         u"""
         Continued style, without gaps.
@@ -96,6 +99,7 @@ class ContStyle(AbstractStyle):
 
 
 class ContRoundStyle(AbstractStyle):
+
     def __init__(self):
         u"""
         Continued style, without gaps, round edges.
@@ -120,6 +124,7 @@ class ContRoundStyle(AbstractStyle):
 
 
 class DoubleStyle(AbstractStyle):
+
     def __init__(self):
         u"""
         Double line style, without gaps.
@@ -146,6 +151,7 @@ class DoubleStyle(AbstractStyle):
 
 @six.python_2_unicode_compatible
 class RenderTree(object):
+
     def __init__(self, node, style=ContStyle(), childiter=list, maxlevel=None):
         u"""
         Render tree starting at `node`.

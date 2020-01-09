@@ -88,6 +88,7 @@ def test_render():
     ]
     eq_(result, expected)
 
+
 def test_maxlevel():
     root = anytree.Node("root", lines=["c0fe", "c0de"])
     s0 = anytree.Node("sub0", parent=root, lines=["ha", "ba"])
