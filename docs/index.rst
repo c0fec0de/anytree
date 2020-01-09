@@ -5,6 +5,9 @@ Any Python Tree Data
 .. image:: https://badge.fury.io/py/anytree.svg
     :target: https://badge.fury.io/py/anytree
 
+.. image:: https://img.shields.io/pypi/dm/anytree.svg?label=PyPI%20downloads
+   :target: https://pypi.python.org/pypi/anytree
+
 .. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
     :target: https://travis-ci.org/c0fec0de/anytree
 
