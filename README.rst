@@ -26,15 +26,17 @@
    :target: https://www.python.org/dev/peps/pep-0257/
 
 Links
------
+=====
 
 * Documentation_
+* PyPI_
 * GitHub_
 * Changelog_
 * Issues_
 * Contributors_
 
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
+.. _PyPI: https://pypi.org/project/anytree/2.7.3/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
@@ -42,7 +44,7 @@ Links
 
 
 Getting started
-===============
+---------------
 
 .. _getting_started:
 
@@ -173,7 +175,7 @@ my0      0 0
 
 
 Installation
-============
+------------
 
 To install the `anytree` module run::
 

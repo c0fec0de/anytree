@@ -45,14 +45,18 @@ Simple, lightweight and extensible Tree_ data structure.
 Links
 =====
 
+* Documentation_
 * GitHub_
+* PyPI_
 * Changelog_
 * Issues_
 * Contributors_
 
 Feel free to share_ infos about your anytree project.
 
+.. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
 .. _GitHub: https://github.com/c0fec0de/anytree
+.. _PyPI: https://pypi.org/project/anytree/2.7.3/
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
