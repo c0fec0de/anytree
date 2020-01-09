@@ -56,7 +56,7 @@ Links
 * Issues_
 * Contributors_
 
-Feel free to share_ infos about your anytree project.
+Feel free to share_ info about your anytree project.
 
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
 .. _GitHub: https://github.com/c0fec0de/anytree
