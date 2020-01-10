@@ -51,6 +51,11 @@ Links
 * Changelog_
 * Issues_
 * Contributors_
+* If you want to say thank you:
+
+  .. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
+     :width: 200
+     :target: https://www.buymeacoffee.com/1oYX0sw
 
 Feel free to share_ infos about your anytree project.
 
