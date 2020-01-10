@@ -34,6 +34,11 @@ Links
 * Changelog_
 * Issues_
 * Contributors_
+* If you want to say thank you:
+
+  .. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
+     :width: 200
+     :target: https://www.buymeacoffee.com/1oYX0sw
 
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
 .. _PyPI: https://pypi.org/project/anytree/2.7.3/
@@ -41,7 +46,6 @@ Links
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
-
 
 Getting started
 ---------------
