@@ -26,8 +26,7 @@
    :target: https://www.python.org/dev/peps/pep-0257/
 
 .. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
-   :scale: 50
-   :width: 150
+   :width: 50 %
    :target: https://www.buymeacoffee.com/1oYX0sw
 
 Links
