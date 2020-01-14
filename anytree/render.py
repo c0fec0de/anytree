@@ -159,6 +159,7 @@ class RenderTree(object):
         Keyword Args:
             style (AbstractStyle): Render Style.
             childiter: Child iterator.
+            maxlevel: Limit rendering to this depth.
 
         :any:`RenderTree` is an iterator, returning a tuple with 3 items:
 
@@ -206,6 +207,13 @@ class RenderTree(object):
         │   └── a
         │       b
         └── Z
+
+        `maxlevel` limits the depth of the tree:
+
+        >>> print(RenderTree(root, maxlevel=2))
+        Node('/root', lines=['c0fe', 'c0de'])
+        ├── Node('/root/sub0', lines=['ha', 'ba'])
+        └── Node('/root/sub1', lines=['Z'])
 
         The `childiter` is responsible for iterating over child nodes at the
         same level. An reversed order can be achived by using `reversed`.
@@ -258,13 +266,6 @@ class RenderTree(object):
         │   ├── 1 2 3
         │   └── a b
         └── Z
-
-        Maxlevel limits the depth of the tree:
-
-        >>> print(RenderTree(root, maxlevel=2))
-        root
-        ├── sub0
-        └── sub1
         """
         if not isinstance(style, AbstractStyle):
             style = style()
