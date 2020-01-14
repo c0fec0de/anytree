@@ -34,18 +34,27 @@ Links
 * Changelog_
 * Issues_
 * Contributors_
-* If you want to say thank you:
+* If you enjoy anytree_
 
   .. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
-     :width: 200
+     :width: 150
      :target: https://www.buymeacoffee.com/1oYX0sw
 
+.. _anytree: http://anytree.readthedocs.io/en/2.7.3/
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
 .. _PyPI: https://pypi.org/project/anytree/2.7.3/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
+
+.. _Node: https://anytree.readthedocs.io/en/2.7.3/api/anytree.node.html#anytree.node.node.Node
+.. _RenderTree: https://anytree.readthedocs.io/en/2.7.3/api/anytree.render.html#anytree.render.RenderTree
+.. _DotExporter: https://anytree.readthedocs.io/en/2.7.3/exporter/dotexporter.html#anytree.exporter.dotexporter.DotExporter
+.. _NodeMixin: https://anytree.readthedocs.io/en/2.7.3/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
+.. _Importer: file:///home/djakschik/projects/anytree/docs/build/html/importer.html
+.. _Exporter: file:///home/djakschik/projects/anytree/docs/build/html/exporter.html
+.. _Tricks: https://anytree.readthedocs.io/en/2.7.3/tricks.html
 
 Getting started
 ---------------
@@ -84,11 +93,27 @@ Udo
     ├── Jan
     └── Joe
 
+For details see Node_ and RenderTree_.
+
+**Visualization**
+
 >>> from anytree.exporter import DotExporter
 >>> # graphviz needs to be installed for the next line!
 >>> DotExporter(udo).to_picture("udo.png")
 
 .. image:: http://anytree.readthedocs.io/en/latest/_images/udo.png
+
+The DotExporter_ can be started at any node and has various formatting hookups:
+
+>>> DotExporter(dan,
+...             nodeattrfunc=lambda node: "fixedsize=true, width=2, height=1.5, shape=diamond",
+...             edgeattrfunc=lambda parent, child: "style=bold"
+... ).to_picture("dan.png")
+
+.. image:: http://anytree.readthedocs.io/en/latest/_images/static/dan.png
+  :scale: 60%
+
+There are various other Importer_ and Exporter_.
 
 **Manipulation**
 
@@ -137,6 +162,9 @@ Node('/Dan')
 
 **Extending any python class to become a tree node**
 
+The enitre tree magic is encapsulated by NodeMixin_
+add it as base class and the class becomes a tree node:
+
 >>> from anytree import NodeMixin, RenderTree
 >>> class MyBaseClass(object):  # Just an example of a base class
 ...     foo = 4
@@ -177,6 +205,10 @@ my0      0 0
 ├── my1  1 0
 └── my2  0 2
 
+Documentation
+-------------
+
+Please see the Documentation_ for all details.
 
 Installation
 ------------

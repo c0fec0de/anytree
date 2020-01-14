@@ -55,14 +55,15 @@ Links
 * Changelog_
 * Issues_
 * Contributors_
-* If you want to say thank you:
+* If you enjoy anytree_
 
   .. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
-     :width: 200
+     :width: 150
      :target: https://www.buymeacoffee.com/1oYX0sw
 
 Feel free to share_ info about your anytree project.
 
+.. _anytree: http://anytree.readthedocs.io/en/2.7.3/
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _PyPI: https://pypi.org/project/anytree/2.7.3/
@@ -109,11 +110,25 @@ Udo
     ├── Jan
     └── Joe
 
+For details see :any:`Node` and :any:`RenderTree`.
+
+**Visualization**
+
 >>> from anytree.exporter import DotExporter
 >>> # graphviz needs to be installed for the next line!
 >>> DotExporter(udo).to_picture("udo.png")
 
 .. image:: static/udo.png
+
+The :any:`DotExporter` can be started at any node and has various formatting hookups:
+
+>>> DotExporter(dan,
+...             nodeattrfunc=lambda node: "fixedsize=true, width=2, height=1.5, shape=diamond",
+...             edgeattrfunc=lambda parent, child: "style=bold"
+... ).to_picture("dan.png")
+
+.. image:: static/dan.png
+  :scale: 60%
 
 **Manipulation**
 
@@ -162,6 +177,9 @@ Node('/Dan')
 
 **Extending any python class to become a tree node**
 
+The enitre tree magic is encapsulated by :any:`NodeMixin`,
+add it as base class and the class becomes a tree node:
+
 >>> from anytree import NodeMixin, RenderTree
 >>> class MyBaseClass(object):  # Just an example of a base class
 ...     foo = 4
@@ -172,7 +190,7 @@ Node('/Dan')
 ...         self.length = length
 ...         self.width = width
 ...         self.parent = parent
-...         if children:
+...         if children:  # set children only if given
 ...             self.children = children
 
 Just set the `parent` attribute to reflect the tree relation:
