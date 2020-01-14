@@ -25,6 +25,11 @@
 .. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0257/
 
+.. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
+   :scale: 50
+   :width: 150
+   :target: https://www.buymeacoffee.com/1oYX0sw
+
 Links
 =====
 
@@ -34,12 +39,6 @@ Links
 * Changelog_
 * Issues_
 * Contributors_
-* If you enjoy anytree_
-
-  .. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
-     :scale: 50
-     :width: 150
-     :target: https://www.buymeacoffee.com/1oYX0sw
 
 .. _anytree: http://anytree.readthedocs.io/en/2.7.3/
 .. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
