@@ -25,8 +25,7 @@
 .. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0257/
 
-.. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
-   :width: 50 %
+.. image:: https://github.com/c0fec0de/anytree/raw/devel/docs/static/tree.png
    :target: https://www.buymeacoffee.com/1oYX0sw
 
 Links

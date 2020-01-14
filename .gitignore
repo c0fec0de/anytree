@@ -9,4 +9,3 @@ coverage-report/
 dist/
 docs/build/
 *.dot
-*.png
