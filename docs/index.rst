@@ -58,6 +58,7 @@ Links
 * If you enjoy anytree_
 
   .. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
+     :scale: 50
      :width: 150
      :target: https://www.buymeacoffee.com/1oYX0sw
 
