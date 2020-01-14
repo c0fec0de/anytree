@@ -146,10 +146,10 @@ class NodeMixin(object):
     def __detach(self, parent):
         if parent is not None:
             self._pre_detach(parent)
-            parentchildren = parent.__children_
-            assert any(child is self for child in parentchildren), "Tree internal data is corrupt."  # pragma: no cover
+            parentchildren = parent.__children_or_empty
+            assert any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
             # ATOMIC START
-            parentchildren[:] = [child for child in parentchildren if child is not self]
+            parent.__children = [child for child in parentchildren if child is not self]
             self.__parent = None
             # ATOMIC END
             self._post_detach(parent)
@@ -157,10 +157,8 @@ class NodeMixin(object):
     def __attach(self, parent):
         if parent is not None:
             self._pre_attach(parent)
-            parentchildren = parent.__children_
-            assert not any(
-                child is self for child in parentchildren
-            ), "Tree internal data is corrupt."  # pragma: no cover
+            parentchildren = parent.__children_or_empty
+            assert not any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
             # ATOMIC START
             parentchildren.append(self)
             self.__parent = parent
@@ -168,7 +166,7 @@ class NodeMixin(object):
             self._post_attach(parent)
 
     @property
-    def __children_(self):
+    def __children_or_empty(self):
         try:
             return self.__children
         except AttributeError:
@@ -224,7 +222,7 @@ class NodeMixin(object):
             ...
         anytree.node.exceptions.TreeError: Cannot add node Node('/n/a') multiple times as child.
         """
-        return tuple(self.__children_)
+        return tuple(self.__children_or_empty)
 
     @staticmethod
     def __check_children(children):
@@ -233,8 +231,9 @@ class NodeMixin(object):
             if not isinstance(child, NodeMixin):
                 msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % child
                 raise TreeError(msg)
-            if id(child) not in seen:
-                seen.add(id(child))
+            childid = id(child)
+            if childid not in seen:
+                seen.add(childid)
             else:
                 msg = "Cannot add node %r multiple times as child." % child
                 raise TreeError(msg)
@@ -463,7 +462,7 @@ class NodeMixin(object):
         >>> lian.is_leaf
         True
         """
-        return len(self.__children_) == 0
+        return len(self.__children_or_empty) == 0
 
     @property
     def is_root(self):
@@ -499,8 +498,9 @@ class NodeMixin(object):
         >>> lian.height
         0
         """
-        if self.__children_:
-            return max(child.height for child in self.__children_) + 1
+        children = self.__children_or_empty
+        if children:
+            return max(child.height for child in children) + 1
         else:
             return 0
 
@@ -520,6 +520,7 @@ class NodeMixin(object):
         >>> lian.depth
         2
         """
+        # count without storing the entire path
         for i, _ in enumerate(self.iter_path_reverse()):
             continue
         return i
