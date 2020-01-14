@@ -17,7 +17,7 @@ class DotExporter(object):
 
     def __init__(self, node, graph="digraph", name="tree", options=None,
                  indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None):
+                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None):
         """
         Dot Language Exporter.
 
@@ -50,6 +50,8 @@ class DotExporter(object):
                           The function shall accept two `node` objects as
                           argument. The first the node and the second the child
                           and return the edge (i.e. '->').
+
+            maxlevel (int): Limit export to this number of levels.
 
         >>> from anytree import Node
         >>> root = Node("root")
@@ -162,6 +164,7 @@ class DotExporter(object):
         self.nodeattrfunc = nodeattrfunc
         self.edgeattrfunc = edgeattrfunc
         self.edgetypefunc = edgetypefunc
+        self.maxlevel = maxlevel
 
     def __iter__(self):
         # prepare
@@ -206,14 +209,15 @@ class DotExporter(object):
                 yield "%s%s" % (indent, option)
 
     def __iter_nodes(self, indent, nodenamefunc, nodeattrfunc):
-        for node in PreOrderIter(self.node):
+        for node in PreOrderIter(self.node, maxlevel=self.maxlevel):
             nodename = nodenamefunc(node)
             nodeattr = nodeattrfunc(node)
             nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
             yield '%s"%s"%s;' % (indent, DotExporter.esc(nodename), nodeattr)
 
     def __iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc):
-        for node in PreOrderIter(self.node):
+        maxlevel = self.maxlevel - 1 if self.maxlevel else None
+        for node in PreOrderIter(self.node, maxlevel=maxlevel):
             nodename = nodenamefunc(node)
             for child in node.children:
                 childname = nodenamefunc(child)

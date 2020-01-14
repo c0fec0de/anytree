@@ -1,7 +1,7 @@
 
 class DictExporter(object):
 
-    def __init__(self, dictcls=dict, attriter=None, childiter=list):
+    def __init__(self, dictcls=dict, attriter=None, childiter=list, maxlevel=None):
         """
         Tree to dictionary exporter.
 
@@ -14,6 +14,7 @@ class DictExporter(object):
             dictcls: class used as dictionary. :any:`dict` by default.
             attriter: attribute iterator for sorting and/or filtering.
             childiter: child iterator for sorting and/or filtering.
+            maxlevel (int): Limit export to this number of levels.
 
         >>> from pprint import pprint  # just for nice printing
         >>> from anytree import AnyNode
@@ -66,19 +67,22 @@ class DictExporter(object):
         self.dictcls = dictcls
         self.attriter = attriter
         self.childiter = childiter
+        self.maxlevel = maxlevel
 
     def export(self, node):
         """Export tree starting at `node`."""
         attriter = self.attriter or (lambda attr_values: attr_values)
         return self.__export(node, self.dictcls, attriter, self.childiter)
 
-    def __export(self, node, dictcls, attriter, childiter):
+    def __export(self, node, dictcls, attriter, childiter, level=1):
         attr_values = attriter(self._iter_attr_values(node))
         data = dictcls(attr_values)
-        children = [self.__export(child, dictcls, attriter, childiter)
-                    for child in childiter(node.children)]
-        if children:
-            data['children'] = children
+        maxlevel = self.maxlevel
+        if maxlevel is None or level < maxlevel:
+            children = [self.__export(child, dictcls, attriter, childiter, level=level + 1)
+                        for child in childiter(node.children)]
+            if children:
+                data['children'] = children
         return data
 
     def _iter_attr_values(self, node):

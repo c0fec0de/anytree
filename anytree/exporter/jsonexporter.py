@@ -5,7 +5,7 @@ from .dictexporter import DictExporter
 
 class JsonExporter(object):
 
-    def __init__(self, dictexporter=None, **kwargs):
+    def __init__(self, dictexporter=None, maxlevel=None, **kwargs):
         """
         Tree to JSON exporter.
 
@@ -13,6 +13,7 @@ class JsonExporter(object):
 
         Keyword Arguments:
             dictexporter: Dictionary Exporter used (see :any:`DictExporter`).
+            maxlevel (int): Limit export to this number of levels.
             kwargs: All other arguments are passed to
                     :any:`json.dump`/:any:`json.dumps`.
                     See documentation for reference.
@@ -49,16 +50,21 @@ class JsonExporter(object):
         }
         """
         self.dictexporter = dictexporter
+        self.maxlevel = maxlevel
         self.kwargs = kwargs
+
+    def _export(self, node):
+        dictexporter = self.dictexporter or DictExporter()
+        if self.maxlevel is not None:
+            dictexporter.maxlevel = self.maxlevel
+        return dictexporter.export(node)
 
     def export(self, node):
         """Return JSON for tree starting at `node`."""
-        dictexporter = self.dictexporter or DictExporter()
-        data = dictexporter.export(node)
+        data = self._export(node)
         return json.dumps(data, **self.kwargs)
 
     def write(self, node, filehandle):
         """Write JSON to `filehandle` starting at `node`."""
-        dictexporter = self.dictexporter or DictExporter()
-        data = dictexporter.export(node)
+        data = self._export(node)
         return json.dump(data, filehandle, **self.kwargs)

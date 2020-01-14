@@ -99,6 +99,23 @@ def test_tree3():
 
 
 @with_setup(setup, teardown)
+def test_tree4():
+    """Maxlevel."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    Node("sub0B", parent=s0)
+    Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root)
+    Node("sub1A", parent=s1)
+    Node("sub1B", parent=s1)
+    s1c = Node("sub1C", parent=s1)
+    Node(99, parent=s1c)
+
+    DotExporter(root, maxlevel=2).to_dotfile(join(GENPATH, "tree4.dot"))
+    assert cmp(join(GENPATH, "tree4.dot"), join(REFPATH, "tree4.dot"))
+
+
+@with_setup(setup, teardown)
 def test_tree_png():
     """Tree to png."""
     root = Node("root")
