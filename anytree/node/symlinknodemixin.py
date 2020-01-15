@@ -53,6 +53,6 @@ class SymlinkNodeMixin(NodeMixin):
 
     def __setattr__(self, name, value):
         if name in ('_NodeMixin__parent', '_NodeMixin__children', 'parent', 'children', 'target'):
-            super().__setattr__(name, value)
+            super(SymlinkNodeMixin, self).__setattr__(name, value)
         else:
             return setattr(self.target, name, value)
