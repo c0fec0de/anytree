@@ -48,6 +48,9 @@ class JsonExporter(object):
             }
           ]
         }
+
+        .. note:: Whenever the json output does not meet your expections, see the :any:`json` documentation.
+                  For instance, if you have unicode/ascii issues, please try `JsonExporter(..., ensure_ascii=False)`.
         """
         self.dictexporter = dictexporter
         self.maxlevel = maxlevel
