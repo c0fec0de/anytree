@@ -4,9 +4,9 @@ from nose.tools import eq_
 from anytree import AnyNode
 from anytree import Node
 from anytree import NodeMixin
-from anytree import SymlinkNode
 from anytree import PostOrderIter
 from anytree import PreOrderIter
+from anytree import SymlinkNode
 
 
 def test_symlink():

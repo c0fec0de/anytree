@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from .util import _repr
-
 from .symlinknodemixin import SymlinkNodeMixin
+from .util import _repr
 
 
 class SymlinkNode(SymlinkNodeMixin):
