@@ -51,9 +51,6 @@ Links
 .. _RenderTree: https://anytree.readthedocs.io/en/2.7.3/api/anytree.render.html#anytree.render.RenderTree
 .. _DotExporter: https://anytree.readthedocs.io/en/2.7.3/exporter/dotexporter.html#anytree.exporter.dotexporter.DotExporter
 .. _NodeMixin: https://anytree.readthedocs.io/en/2.7.3/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
-.. _Importer: file:///home/djakschik/projects/anytree/docs/build/html/importer.html
-.. _Exporter: file:///home/djakschik/projects/anytree/docs/build/html/exporter.html
-.. _Tricks: https://anytree.readthedocs.io/en/2.7.3/tricks.html
 
 Getting started
 ---------------
@@ -112,6 +109,9 @@ The DotExporter_ can be started at any node and has various formatting hookups:
 .. image:: http://anytree.readthedocs.io/en/latest/_images/static/dan.png
 
 There are various other Importer_ and Exporter_.
+
+.. _Importer: file:///home/djakschik/projects/anytree/docs/build/html/importer.html
+.. _Exporter: file:///home/djakschik/projects/anytree/docs/build/html/exporter.html
 
 **Manipulation**
 
