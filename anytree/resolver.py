@@ -78,7 +78,7 @@ class Resolver(object):
 
     def __get(self, node, name):
         for child in node.children:
-            if _getattr(child, self.pathattr) == name:
+            if str(_getattr(child, self.pathattr)) == name:
                 return child
         raise ChildResolverError(node, name, self.pathattr)
 
@@ -151,7 +151,7 @@ class Resolver(object):
         parts = path.split(sep)
         if path.startswith(sep):
             node = node.root
-            rootpart = _getattr(node, self.pathattr)
+            rootpart = str(_getattr(node, self.pathattr))
             parts.pop(0)
             if not parts[0]:
                 msg = "root node missing. root is '%s%s'."
@@ -181,7 +181,7 @@ class Resolver(object):
     def __find(self, node, pat, remainder):
         matches = []
         for child in node.children:
-            name = _getattr(child, self.pathattr)
+            name = str(_getattr(child, self.pathattr))
             try:
                 if Resolver.__match(name, pat):
                     if remainder:

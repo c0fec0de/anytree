@@ -1,3 +1,5 @@
+from enum import IntEnum
+
 from nose.tools import eq_
 
 from anytree import AsciiStyle
@@ -79,3 +81,19 @@ def test_find_by_attr():
     eq_(find_by_attr(f, "d"), d)
     eq_(find_by_attr(f, name="foo", value=4), c)
     eq_(find_by_attr(f, name="foo", value=8), None)
+
+
+def test_enum():
+
+    class Animals(IntEnum):
+        Mammal = 1
+        Cat = 2
+        Dog = 3
+
+    root = Node("ANIMAL")
+    mammal = Node(Animals.Mammal, parent=root)
+    cat = Node(Animals.Cat, parent=mammal)
+    dog = Node(Animals.Dog, parent=mammal)
+
+    eq_(findall(root), (root, mammal, cat, dog))
+    eq_(findall_by_attr(root, Animals.Cat), (cat, ))

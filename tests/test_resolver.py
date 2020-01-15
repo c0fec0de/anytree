@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+from enum import IntEnum
+
 from nose.tools import eq_
 
 import anytree as at
+from anytree import Node
+from anytree import RenderTree
+from anytree import Resolver
 from helper import assert_raises
 
 
@@ -77,3 +82,19 @@ def test_same_name():
     r = at.Resolver()
     eq_(r.get(root, "sub"), sub0)
     eq_(r.glob(root, "sub"), [sub0, sub1])
+
+
+def test_enum():
+    class Animals(IntEnum):
+        Mammal = 1
+        Cat = 2
+        Dog = 3
+
+    root = Node("ANIMAL")
+    mammal = Node(Animals.Mammal, parent=root)
+    cat = Node(Animals.Cat, parent=mammal)
+    dog = Node(Animals.Dog, parent=mammal)
+
+    r = Resolver()
+    eq_(r.glob(root, "/ANIMAL/*"), [mammal])
+    eq_(r.glob(root, "/ANIMAL/*/*"), [cat, dog])
