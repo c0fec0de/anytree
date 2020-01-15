@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .util import _repr
 
 from .symlinknodemixin import SymlinkNodeMixin
@@ -6,7 +7,7 @@ from .symlinknodemixin import SymlinkNodeMixin
 class SymlinkNode(SymlinkNodeMixin):
 
     def __init__(self, target, parent=None, children=None, **kwargs):
-        """
+        u"""
         Tree node which references to another tree node.
 
         Args:
