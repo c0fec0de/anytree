@@ -15,7 +15,6 @@ install:
   - "pip list"
 
 script:
-  - nosetests docs/*/
   - nosetests
   - pycodestyle
   - pydocstyle
