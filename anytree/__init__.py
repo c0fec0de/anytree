@@ -22,6 +22,8 @@ from .node import AnyNode  # noqa
 from .node import LoopError  # noqa
 from .node import Node  # noqa
 from .node import NodeMixin  # noqa
+from .node import SymlinkNode  # noqa
+from .node import SymlinkNodeMixin  # noqa
 from .node import TreeError  # noqa
 from .render import AbstractStyle  # noqa
 from .render import AsciiStyle  # noqa

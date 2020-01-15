@@ -10,6 +10,17 @@ class Node(NodeMixin, object):
         u"""
         A simple tree node with a `name` and any `kwargs`.
 
+        Args:
+            name: A name or any other object this node can reference to as idendifier.
+
+        Keyword Args:
+            parent: Reference to parent node.
+            children: Iterable with child nodes.
+            *: Any other given attribute is just stored as object attribute.
+
+        Other than :any:`AnyNode` this class has at least the `name` attribute,
+        to distinguish between different instances.
+
         The `parent` attribute refers the parent node:
 
         >>> from anytree import Node, RenderTree

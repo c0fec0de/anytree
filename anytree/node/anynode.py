@@ -10,6 +10,14 @@ class AnyNode(NodeMixin, object):
         u"""
         A generic tree node with any `kwargs`.
 
+        Keyword Args:
+            parent: Reference to parent node.
+            children: Iterable with child nodes.
+            *: Any other given attribute is just stored as object attribute.
+
+        Other than :any:`Node` this class has no default idenifier.
+        It is up to the user to use other attributes for identification.
+
         The `parent` attribute refers the parent node:
 
         >>> from anytree import AnyNode, RenderTree

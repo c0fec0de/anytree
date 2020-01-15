@@ -105,12 +105,11 @@ For details see Node_ and RenderTree_.
 The DotExporter_ can be started at any node and has various formatting hookups:
 
 >>> DotExporter(dan,
-...             nodeattrfunc=lambda node: "fixedsize=true, width=2, height=1.5, shape=diamond",
+...             nodeattrfunc=lambda node: "fixedsize=true, width=1, height=1, shape=diamond",
 ...             edgeattrfunc=lambda parent, child: "style=bold"
 ... ).to_picture("dan.png")
 
 .. image:: http://anytree.readthedocs.io/en/latest/_images/static/dan.png
-  :scale: 60%
 
 There are various other Importer_ and Exporter_.
 
