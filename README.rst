@@ -51,8 +51,8 @@ Links
 .. _RenderTree: https://anytree.readthedocs.io/en/2.7.3/api/anytree.render.html#anytree.render.RenderTree
 .. _DotExporter: https://anytree.readthedocs.io/en/2.7.3/exporter/dotexporter.html#anytree.exporter.dotexporter.DotExporter
 .. _NodeMixin: https://anytree.readthedocs.io/en/2.7.3/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
-.. _Importers: file:///home/djakschik/projects/anytree/docs/build/html/importer.html
-.. _Exporters: file:///home/djakschik/projects/anytree/docs/build/html/exporter.html
+.. _Importers: https://anytree.readthedocs.io/en/2.7.3/importer.html
+.. _Exporters: https://anytree.readthedocs.io/en/2.7.3/exporter.html
 
 Getting started
 ---------------
