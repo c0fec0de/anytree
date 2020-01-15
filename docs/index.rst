@@ -14,8 +14,8 @@ Any Python Tree Data
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.7.3
-    :target: http://anytree.readthedocs.io/en/2.7.3/?badge=2.7.3
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.8.0
+    :target: http://anytree.readthedocs.io/en/2.8.0/?badge=2.8.0
 
 .. image:: https://codeclimate.com/github/c0fec0de/anytree.png
     :target: https://codeclimate.com/github/c0fec0de/anytree
@@ -63,10 +63,10 @@ Links
 
 Feel free to share_ info about your anytree project.
 
-.. _anytree: http://anytree.readthedocs.io/en/2.7.3/
-.. _Documentation: http://anytree.readthedocs.io/en/2.7.3/
+.. _anytree: http://anytree.readthedocs.io/en/2.8.0/
+.. _Documentation: http://anytree.readthedocs.io/en/2.8.0/
 .. _GitHub: https://github.com/c0fec0de/anytree
-.. _PyPI: https://pypi.org/project/anytree/2.7.3/
+.. _PyPI: https://pypi.org/project/anytree/2.8.0/
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
