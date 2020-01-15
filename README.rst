@@ -99,7 +99,7 @@ For details see Node_ and RenderTree_.
 >>> # graphviz needs to be installed for the next line!
 >>> DotExporter(udo).to_picture("udo.png")
 
-.. image:: http://anytree.readthedocs.io/en/latest/_images/udo.png
+.. image:: https://anytree.readthedocs.io/en/latest/_images/udo.png
 
 The DotExporter_ can be started at any node and has various formatting hookups:
 
@@ -108,7 +108,7 @@ The DotExporter_ can be started at any node and has various formatting hookups:
 ...             edgeattrfunc=lambda parent, child: "style=bold"
 ... ).to_picture("dan.png")
 
-.. image:: http://anytree.readthedocs.io/en/latest/_images/static/dan.png
+.. image:: https://anytree.readthedocs.io/en/latest/_images/dan.png
 
 There are various other Importers_ and Exporters_.
 
