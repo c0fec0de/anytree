@@ -41,5 +41,5 @@ a (0)
 ...             edgeattrfunc=lambda parent, child: "style=bold,label=%d" % (child.weight or 0)
 ... ).to_picture("weight.png")  # doctest: +SKIP
 
-.. image:: static/weight.png
+.. image:: ../static/weight.png
 
