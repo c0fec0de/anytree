@@ -5,3 +5,4 @@ Tricks
     tricks/readonly
     tricks/yaml
     tricks/multidim
+    tricks/weightededges
