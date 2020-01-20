@@ -391,4 +391,4 @@ class UniqueDotExporter(DotExporter):
 
     @staticmethod
     def _default_nodeattrfunc(node):
-        return 'label="%s"' % (node.name)
+        return 'label="%s"' % (node.name, )

@@ -123,7 +123,7 @@ class NodeMixin(object):
     @parent.setter
     def parent(self, value):
         if value is not None and not isinstance(value, NodeMixin):
-            msg = "Parent node %r is not of type 'NodeMixin'." % value
+            msg = "Parent node %r is not of type 'NodeMixin'." % (value, )
             raise TreeError(msg)
         try:
             parent = self.__parent
@@ -138,7 +138,7 @@ class NodeMixin(object):
         if node is not None:
             if node is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
-                raise LoopError(msg % self)
+                raise LoopError(msg % (self, ))
             if any(child is self for child in node.iter_path_reverse()):
                 msg = "Cannot set parent. %r is parent of %r."
                 raise LoopError(msg % (self, node))
@@ -229,13 +229,13 @@ class NodeMixin(object):
         seen = set()
         for child in children:
             if not isinstance(child, NodeMixin):
-                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % child
+                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % (child, )
                 raise TreeError(msg)
             childid = id(child)
             if childid not in seen:
                 seen.add(childid)
             else:
-                msg = "Cannot add node %r multiple times as child." % child
+                msg = "Cannot add node %r multiple times as child." % (child, )
                 raise TreeError(msg)
 
     @children.setter

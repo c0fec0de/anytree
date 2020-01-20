@@ -582,3 +582,16 @@ def test_eq_overwrite():
     eq_(a.b, 0)
     eq_(b.a, 1)
     eq_(b.b, 0)
+
+
+def test_tuple():
+    """Tuple as parent."""
+    with assert_raises(TreeError, "Parent node (1, 0, 3) is not of type 'NodeMixin'."):
+        Node((0, 1, 2), parent=(1, 0, 3))
+
+
+def test_tuple_as_children():
+    """Tuple as children."""
+    n = Node('foo')
+    with assert_raises(TreeError, "Cannot add non-node object (0, 1, 2). It is not a subclass of 'NodeMixin'."):
+        n.children = [(0, 1, 2)]
