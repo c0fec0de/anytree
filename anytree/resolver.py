@@ -101,7 +101,7 @@ class Resolver(object):
 
         Behaves identical to :any:`get`, but accepts wildcards and returns
         a list of found nodes.
--
+
         * `*` matches any characters, except '/'.
         * `?` matches a single character, except '/'.
 
