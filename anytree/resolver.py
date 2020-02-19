@@ -12,10 +12,11 @@ class Resolver(object):
 
     _match_cache = {}
 
-    def __init__(self, pathattr='name'):
+    def __init__(self, pathattr='name', case_insensitive=False):
         """Resolve :any:`NodeMixin` paths using attribute `pathattr`."""
         super(Resolver, self).__init__()
         self.pathattr = pathattr
+        self.case_insensitive = case_insensitive
 
     def get(self, node, path):
         """
@@ -75,6 +76,17 @@ class Resolver(object):
 
         .. note:: Please not that :any:`get()` returned `None` in exactly that case above,
                   which was a bug until version 1.8.1.
+
+        Case insensitive matching:
+
+        >>> r.get(top, '/TOP')
+        Traceback (most recent call last):
+            ...
+        anytree.resolver.ResolverError: unknown root node '/TOP'. root is '/top'.
+
+        >>> r = Resolver('name', case_insensitive=True)
+        >>> r.get(top, '/TOp')
+        Node('/top')
         """
         node, parts = self.__start(node, path)
         for part in parts:
@@ -89,9 +101,15 @@ class Resolver(object):
                 node = self.__get(node, part)
         return node
 
+    def __normalize(self, string):
+        if self.case_insensitive:
+            return str(string).upper()
+        else:
+            return str(string)
+
     def __get(self, node, name):
         for child in node.children:
-            if str(_getattr(child, self.pathattr)) == name:
+            if self.__normalize(_getattr(child, self.pathattr)) == self.__normalize(name):
                 return child
         raise ChildResolverError(node, name, self.pathattr)
 
@@ -177,7 +195,7 @@ class Resolver(object):
             if not parts[0]:
                 msg = "root node missing. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, str(rootpart)))
-            elif parts[0] != rootpart:
+            elif self.__normalize(parts[0]) != self.__normalize(rootpart):
                 msg = "unknown root node '%s%s'. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, parts[0], sep, str(rootpart)))
             parts.pop(0)
@@ -209,9 +227,9 @@ class Resolver(object):
     def __find(self, node, pat, remainder):
         matches = []
         for child in node.children:
-            name = str(_getattr(child, self.pathattr))
+            name = self.__normalize(_getattr(child, self.pathattr))
             try:
-                if Resolver.__match(name, pat):
+                if Resolver.__match(name, pat, case_insensitive=self.case_insensitive):
                     if remainder:
                         matches += self.__glob(child, remainder)
                     else:
@@ -227,14 +245,17 @@ class Resolver(object):
         return "?" in path or "*" in path
 
     @staticmethod
-    def __match(name, pat):
+    def __match(name, pat, case_insensitive=False):
         try:
             re_pat = Resolver._match_cache[pat]
         except KeyError:
             res = Resolver.__translate(pat)
             if len(Resolver._match_cache) >= _MAXCACHE:
                 Resolver._match_cache.clear()
-            Resolver._match_cache[pat] = re_pat = re.compile(res)
+            flags = 0
+            if case_insensitive:
+                flags |= re.IGNORECASE
+            Resolver._match_cache[pat] = re_pat = re.compile(res, flags=flags)
         return re_pat.match(name) is not None
 
     @staticmethod
