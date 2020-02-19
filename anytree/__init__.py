@@ -34,6 +34,7 @@ from .render import RenderTree  # noqa
 from .resolver import ChildResolverError  # noqa
 from .resolver import Resolver  # noqa
 from .resolver import ResolverError  # noqa
+from .resolver import RootResolverError  # noqa
 from .walker import WalkError  # noqa
 from .walker import Walker  # noqa
 from . import cachedsearch  # noqa

@@ -65,11 +65,24 @@ class Resolver(object):
         Traceback (most recent call last):
           ...
         anytree.resolver.ResolverError: unknown root node '/bar'. root is '/top'.
+
+        Going above the root node raises a :any:`RootResolverError`:
+
+        >>> r.get(top, "..")
+        Traceback (most recent call last):
+            ...
+        anytree.resolver.RootResolverError: Cannot go above root node Node('/top')
+
+        .. note:: Please not that :any:`get()` returned `None` in exactly that case above,
+                  which was a bug until version 1.8.1.
         """
         node, parts = self.__start(node, path)
         for part in parts:
             if part == "..":
-                node = node.parent
+                parent = node.parent
+                if parent is None:
+                    raise RootResolverError(node)
+                node = parent
             elif part in ("", "."):
                 pass
             else:
@@ -88,7 +101,7 @@ class Resolver(object):
 
         Behaves identical to :any:`get`, but accepts wildcards and returns
         a list of found nodes.
-
+-
         * `*` matches any characters, except '/'.
         * `?` matches a single character, except '/'.
 
@@ -142,6 +155,13 @@ class Resolver(object):
         Traceback (most recent call last):
           ...
         anytree.resolver.ResolverError: unknown root node '/bar'. root is '/top'.
+
+        Going above the root node raises a :any:`RootResolverError`:
+
+        >>> r.glob(top, "..")
+        Traceback (most recent call last):
+            ...
+        anytree.resolver.RootResolverError: Cannot go above root node Node('/top')
         """
         node, parts = self.__start(node, path)
         return self.__glob(node, parts)
@@ -149,6 +169,7 @@ class Resolver(object):
     def __start(self, node, path):
         sep = node.separator
         parts = path.split(sep)
+        # resolve root
         if path.startswith(sep):
             node = node.root
             rootpart = str(_getattr(node, self.pathattr))
@@ -163,19 +184,26 @@ class Resolver(object):
         return node, parts
 
     def __glob(self, node, parts):
+        assert node is not None
         nodes = []
-        name = parts[0]
-        remainder = parts[1:]
-        # handle relative
-        if name == "..":
-            nodes += self.__glob(node.parent, remainder)
-        elif name in ("", "."):
-            nodes += self.__glob(node, remainder)
+        if parts:
+            name = parts[0]
+            remainder = parts[1:]
+            # handle relative
+            if name == "..":
+                parent = node.parent
+                if parent is None:
+                    raise RootResolverError(node)
+                nodes += self.__glob(parent, remainder)
+            elif name in ("", "."):
+                nodes += self.__glob(node, remainder)
+            else:
+                matches = self.__find(node, name, remainder)
+                if not matches and not Resolver.is_wildcard(name):
+                    raise ChildResolverError(node, name, self.pathattr)
+                nodes += matches
         else:
-            matches = self.__find(node, name, remainder)
-            if not matches and not Resolver.is_wildcard(name):
-                raise ChildResolverError(node, name, self.pathattr)
-            nodes += matches
+            nodes = [node]
         return nodes
 
     def __find(self, node, pat, remainder):
@@ -229,6 +257,15 @@ class ResolverError(RuntimeError):
         super(ResolverError, self).__init__(msg)
         self.node = node
         self.child = child
+
+
+class RootResolverError(ResolverError):
+
+    def __init__(self, root):
+        """Root Resolve Error, cannot go above root node."""
+        msg = "Cannot go above root node %r"
+        msg = msg % (root, )
+        super(ResolverError, self).__init__(msg)
 
 
 class ChildResolverError(ResolverError):

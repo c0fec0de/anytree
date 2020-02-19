@@ -20,6 +20,8 @@ def test_get():
     r = at.Resolver('name')
     eq_(r.get(top, "sub0/sub0sub0"), sub0sub0)
     eq_(r.get(sub1, ".."), top)
+    eq_(r.get(sub1, "../"), top)
+    eq_(r.get(sub1, "../."), top)
     eq_(r.get(sub1, "../sub0/sub0sub1"), sub0sub1)
     eq_(r.get(sub1, "."), sub1)
     eq_(r.get(sub1, ""), sub1)
@@ -28,6 +30,8 @@ def test_get():
         r.get(top, "sub2")
     eq_(r.get(sub0sub0, "/top"), top)
     eq_(r.get(sub0sub0, "/top/sub0"), sub0)
+    with assert_raises(at.RootResolverError, "Cannot go above root node Node('/top')"):
+        r.get(top, "..")
     with assert_raises(at.ResolverError, "root node missing. root is '/top'."):
         r.get(sub0sub0, "/")
     with assert_raises(at.ResolverError, "unknown root node '/bar'. root is '/top'."):
@@ -45,12 +49,27 @@ def test_glob():
     sub1 = at.Node("sub1", parent=top)
     sub1sub0 = at.Node("sub0", parent=sub1)
     r = at.Resolver()
-    eq_(r.glob(top, "*/*/sub0"), [sub0sub1sub0])
 
+    eq_(r.glob(top, "sub0/sub0"), [sub0sub0])
+    eq_(r.glob(sub1, ".."), [top])
+    eq_(r.glob(sub1, "../"), [top])
+    eq_(r.glob(sub1, "../."), [top])
+    eq_(r.glob(sub1, "../././."), [top])
+    eq_(r.glob(sub1, ".././././sub0/.."), [top])
+    eq_(r.glob(sub1, "../sub0/sub1"), [sub0sub1])
+    eq_(r.glob(sub1, "."), [sub1])
+    eq_(r.glob(sub1, "./"), [sub1])
+    eq_(r.glob(sub1, ""), [sub1])
+
+    eq_(r.glob(top, "*/*/sub0"), [sub0sub1sub0])
     eq_(r.glob(top, "sub0/sub?"), [sub0sub0, sub0sub1])
     eq_(r.glob(sub1, ".././*"), [sub0, sub1])
     eq_(r.glob(top, "*/*"), [sub0sub0, sub0sub1, sub1sub0])
     eq_(r.glob(top, "*/sub0"), [sub0sub0, sub1sub0])
+    with assert_raises(at.RootResolverError, "Cannot go above root node Node('/top')"):
+        r.glob(top, "..")
+    with assert_raises(at.RootResolverError, "Cannot go above root node Node('/top')"):
+        r.glob(sub1, ".././..")
     with assert_raises(at.ChildResolverError,
                        "Node('/top/sub1') has no child sub1. Children are: 'sub0'."):
         r.glob(top, "sub1/sub1")
