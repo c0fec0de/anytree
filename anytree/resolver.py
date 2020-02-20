@@ -76,7 +76,7 @@ class Resolver(object):
         .. note:: Please not that :any:`get()` returned `None` in exactly that case above,
                   which was a bug until version 1.8.1.
         """
-        node, parts = self.__start(node, path)
+        node, parts = self.__start(node, path, Resolver.__cmp)
         for part in parts:
             if part == "..":
                 parent = node.parent
@@ -163,10 +163,10 @@ class Resolver(object):
             ...
         anytree.resolver.RootResolverError: Cannot go above root node Node('/top')
         """
-        node, parts = self.__start(node, path)
+        node, parts = self.__start(node, path, Resolver.__match)
         return self.__glob(node, parts)
 
-    def __start(self, node, path):
+    def __start(self, node, path, cmp_):
         sep = node.separator
         parts = path.split(sep)
         # resolve root
@@ -177,7 +177,7 @@ class Resolver(object):
             if not parts[0]:
                 msg = "root node missing. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, str(rootpart)))
-            elif parts[0] != rootpart:
+            elif not cmp_(rootpart, parts[0]):
                 msg = "unknown root node '%s%s'. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, parts[0], sep, str(rootpart)))
             parts.pop(0)
@@ -236,6 +236,10 @@ class Resolver(object):
                 Resolver._match_cache.clear()
             Resolver._match_cache[pat] = re_pat = re.compile(res)
         return re_pat.match(name) is not None
+
+    @staticmethod
+    def __cmp(name, pat):
+        return name == pat
 
     @staticmethod
     def __translate(pat):

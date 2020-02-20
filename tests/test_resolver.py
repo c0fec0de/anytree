@@ -61,6 +61,9 @@ def test_glob():
     eq_(r.glob(sub1, "./"), [sub1])
     eq_(r.glob(sub1, ""), [sub1])
 
+    eq_(r.glob(sub1, "/top"), [top])
+    eq_(r.glob(sub1, "/*"), [top])
+
     eq_(r.glob(top, "*/*/sub0"), [sub0sub1sub0])
     eq_(r.glob(top, "sub0/sub?"), [sub0sub0, sub0sub1])
     eq_(r.glob(sub1, ".././*"), [sub0, sub1])
@@ -73,6 +76,9 @@ def test_glob():
     with assert_raises(at.ChildResolverError,
                        "Node('/top/sub1') has no child sub1. Children are: 'sub0'."):
         r.glob(top, "sub1/sub1")
+
+    with assert_raises(at.ResolverError, "unknown root node '/z*'. root is '/top'."):
+        r.glob(sub1, "/z*")
 
 
 def test_glob_cache():
