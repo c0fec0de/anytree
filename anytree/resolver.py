@@ -12,10 +12,17 @@ class Resolver(object):
 
     _match_cache = {}
 
-    def __init__(self, pathattr='name'):
-        """Resolve :any:`NodeMixin` paths using attribute `pathattr`."""
+    def __init__(self, pathattr='name', ignorecase=False):
+        """
+        Resolve :any:`NodeMixin` paths using attribute `pathattr`.
+
+        Keyword Args:
+            name (str): Name of the node attribute to be used for resolving
+            ignorecase (bool): Enable case insensisitve handling.
+        """
         super(Resolver, self).__init__()
         self.pathattr = pathattr
+        self.ignorecase = ignorecase
 
     def get(self, node, path):
         """
@@ -75,8 +82,19 @@ class Resolver(object):
 
         .. note:: Please not that :any:`get()` returned `None` in exactly that case above,
                   which was a bug until version 1.8.1.
+
+        Case insensitive matching:
+
+        >>> r.get(top, '/TOP')
+        Traceback (most recent call last):
+            ...
+        anytree.resolver.ResolverError: unknown root node '/TOP'. root is '/top'.
+
+        >>> r = Resolver('name', ignorecase=True)
+        >>> r.get(top, '/TOp')
+        Node('/top')
         """
-        node, parts = self.__start(node, path, Resolver.__cmp)
+        node, parts = self.__start(node, path, self.__cmp)
         for part in parts:
             if part == "..":
                 parent = node.parent
@@ -90,8 +108,9 @@ class Resolver(object):
         return node
 
     def __get(self, node, name):
+        namestr = str(name)
         for child in node.children:
-            if str(_getattr(child, self.pathattr)) == name:
+            if self.__cmp(_getattr(child, self.pathattr), namestr):
                 return child
         raise ChildResolverError(node, name, self.pathattr)
 
@@ -163,7 +182,7 @@ class Resolver(object):
             ...
         anytree.resolver.RootResolverError: Cannot go above root node Node('/top')
         """
-        node, parts = self.__start(node, path, Resolver.__match)
+        node, parts = self.__start(node, path, self.__match)
         return self.__glob(node, parts)
 
     def __start(self, node, path, cmp_):
@@ -172,7 +191,7 @@ class Resolver(object):
         # resolve root
         if path.startswith(sep):
             node = node.root
-            rootpart = str(_getattr(node, self.pathattr))
+            rootpart = _getattr(node, self.pathattr)
             parts.pop(0)
             if not parts[0]:
                 msg = "root node missing. root is '%s%s'."
@@ -209,9 +228,9 @@ class Resolver(object):
     def __find(self, node, pat, remainder):
         matches = []
         for child in node.children:
-            name = str(_getattr(child, self.pathattr))
+            name = _getattr(child, self.pathattr)
             try:
-                if Resolver.__match(name, pat):
+                if self.__match(name, pat):
                     if remainder:
                         matches += self.__glob(child, remainder)
                     else:
@@ -226,20 +245,25 @@ class Resolver(object):
         """Return `True` is a wildcard."""
         return "?" in path or "*" in path
 
-    @staticmethod
-    def __match(name, pat):
+    def __match(self, name, pat):
+        k = (pat, self.ignorecase)
         try:
-            re_pat = Resolver._match_cache[pat]
+            re_pat = Resolver._match_cache[k]
         except KeyError:
             res = Resolver.__translate(pat)
             if len(Resolver._match_cache) >= _MAXCACHE:
                 Resolver._match_cache.clear()
-            Resolver._match_cache[pat] = re_pat = re.compile(res)
+            flags = 0
+            if self.ignorecase:
+                flags |= re.IGNORECASE
+            Resolver._match_cache[k] = re_pat = re.compile(res, flags=flags)
         return re_pat.match(name) is not None
 
-    @staticmethod
-    def __cmp(name, pat):
-        return name == pat
+    def __cmp(self, name, pat):
+        if self.ignorecase:
+            return name.upper() == pat.upper()
+        else:
+            return name == pat
 
     @staticmethod
     def __translate(pat):
@@ -283,4 +307,4 @@ class ChildResolverError(ResolverError):
 
 
 def _getattr(node, name):
-    return getattr(node, name, None)
+    return str(getattr(node, name, None))
