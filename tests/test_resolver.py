@@ -112,12 +112,16 @@ def test_same_name():
 def test_ignorecase():
     """ Case insensitive resolver """
     root = at.Node("root")
-    sub0 = at.Node("sub0", parent=root)
+    sub0 = at.Node("sUB0", parent=root)
     sub1 = at.Node("sub1", parent=root)
     r = at.Resolver(ignorecase=True)
 
     eq_(r.get(root, "SUB0"), sub0)
+    eq_(r.get(root, "sub0"), sub0)
+    eq_(r.get(root, "sUB0"), sub0)
     eq_(r.glob(root, "SU*1"), [sub1])
+    eq_(r.glob(root, "/*/SU*1"), [sub1])
+    eq_(r.glob(sub0, "../*1"), [sub1])
 
 
 def test_enum():
