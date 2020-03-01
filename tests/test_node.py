@@ -421,6 +421,23 @@ def test_height():
     eq_(s1c.height, 1)
     eq_(s1ca.height, 0)
 
+def test_size():
+    """Node.size."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    s0b = Node("sub0B", parent=s0)
+    s0a = Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root)
+    s1c = Node("sub1C", parent=s1)
+    s1ca = Node("sub1Ca", parent=s1c)
+
+    eq_(root.size, 7)
+    eq_(s0.size, 3)
+    eq_(s0b.size, 1)
+    eq_(s0a.size, 1)
+    eq_(s1.size, 3)
+    eq_(s1c.size, 2)
+    eq_(s1ca.size, 1)
 
 def test_depth():
     """Node.depth."""
