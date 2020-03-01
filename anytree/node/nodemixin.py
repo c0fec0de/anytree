@@ -525,6 +525,31 @@ class NodeMixin(object):
             continue
         return i
 
+    @property
+    def size(self):
+        """
+        Tree size --- the number of nodes in tree starting at this node.
+
+        >>> from anytree import Node
+        >>> udo = Node("Udo")
+        >>> marc = Node("Marc", parent=udo)
+        >>> lian = Node("Lian", parent=marc)
+        >>> loui = Node("Loui", parent=marc)
+        >>> soe = Node("Soe", parent=lian)
+        >>> udo.size
+        5
+        >>> marc.size
+        4
+        >>> lian.size
+        2
+        >>> loui.size
+        1
+        """
+        # count without storing the entire path
+        for i, _ in enumerate(PreOrderIter(self), 1):
+            continue
+        return i
+
     def _pre_detach(self, parent):
         """Method call before detaching from `parent`."""
         pass
