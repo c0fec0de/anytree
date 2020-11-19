@@ -159,7 +159,7 @@ Node('/Dan')
 
 **Extending any python class to become a tree node**
 
-The enitre tree magic is encapsulated by NodeMixin_
+The entire tree magic is encapsulated by NodeMixin_
 add it as base class and the class becomes a tree node:
 
 >>> from anytree import NodeMixin, RenderTree
