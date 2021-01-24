@@ -14,13 +14,9 @@ sub0
 sub1
 """[1:-1]
 
-docstring_sample_expected = """
-Node('/root')
-├── Node('/root/sub0')
-│   ├── Node('/root/sub0/sub0A')
-│   └── Node('/root/sub0/sub0B')
-└── Node('/root/sub1')
-"""[1:-1]
+check_docstring_sample = ["root", 0, "sub0", 0, "sub0A", -1, 1, "sub0B", -1, -1,
+                          1, "sub1"]
+
 
 faulty_indent = """
 sub0
@@ -29,11 +25,13 @@ sub0
 sub1
 """[1:-1]
 
+
 early_bad_indent = """
         
    sub0 - (note: only whitespace in line above)
    sub1
 """[1:-1]
+
 
 large_example = """
 foo
@@ -43,7 +41,7 @@ foo
     so does this one; lots of text to go around here
   what if I embed a / in here
     these/should/still/work/
-      even/though/we're/filling/them/with////slashes//
+      /with/many////slashes
 
 and there was a blank line in here too,
                      
@@ -52,21 +50,27 @@ and there was a blank line in here too,
 how is it?
 """[1:-1]
 
-large_example_expected = """
-Node('/root')
-├── Node('/root/foo')
-│   ├── Node('/root/foo/bar')
-│   │   └── Node('/root/foo/bar/baz')
-│   ├── Node('/root/foo/this line has a lot of text on it')
-│   │   └── Node('/root/foo/this line has a lot of text on it/so does this one; lots of text to go around here')
-│   └── Node('/root/foo/what if I embed a / in here')
-│       └── Node('/root/foo/what if I embed a / in here/these/should/still/work/')
-│           └── Node("/root/foo/what if I embed a / in here/these/should/still/work//even/though/we're/filling/them/with////slashes//")
-├── Node('/root/and there was a blank line in here too,')
-│   ├── Node('/root/and there was a blank line in here too,/including blank lines with white space,')
-│   └── Node('/root/and there was a blank line in here too,/and indentation afterwards')
-└── Node('/root/how is it?')
-"""[1:-1]
+
+check_large_example = ["root", 0, "foo", 0, "bar", 0, "baz", -1, -1, 1,
+                       "this line has a lot of text on it", 0,
+                       "so does this one; lots of text to go around here",
+                       -1, -1, 2, "what if I embed a / in here", 0,
+                       "these/should/still/work/", 0, "/with/many////slashes",
+                       -1, -1, -1, -1, 1,
+                       "and there was a blank line in here too,", 0,
+                       "including blank lines with white space,", -1, 1,
+                       "and indentation afterwards", -1, -1, 2, "how is it?"]
+
+
+def check(node, instructions):
+    for cmd in instructions:
+        if cmd == -1:  # "go up"
+            node = node.parent
+        elif isinstance(cmd, int):  # "go to numbered child"
+            node = node.children[cmd]
+        else:
+            if cmd != node.name:  # "verify that this is the text"
+                raise ValueError("unexpected value located", cmd, node.name)
 
 
 def test_importer():
@@ -74,7 +78,7 @@ def test_importer():
     importer = IndentedTextImporter()
     root = importer.import_(docstring_sample)
     r = RenderTree(root)
-    eq_str(str(r), docstring_sample_expected)
+    check(root, check_docstring_sample)
 
 
 def test_faulty_indent():
@@ -107,7 +111,4 @@ def test_large_example():
     """IndentedTextImporter: bad indentation test"""
     importer = IndentedTextImporter()
     root = importer.import_(large_example)
-    r = RenderTree(root)
-    eq_str(str(r), large_example_expected)
-
-
+    check(root, check_large_example)

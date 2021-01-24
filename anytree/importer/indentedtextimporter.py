@@ -3,7 +3,7 @@ from anytree import Node
 
 
 class IndentedTextImporter(object):
-    
+
     def __init__(self, rootname="root"):
         u"""
         Import Tree from indented text.
@@ -11,18 +11,18 @@ class IndentedTextImporter(object):
         Every line of text is converted to an instance of Node.
         The text of the lines establish the names of the nodes.
         Indentation establishes the hierarchy between the nodes.
-        
+
         White space must be all spaces, and what constitutes
         indentation must be consistent -- That is, if you use x2
         spaces to establish 1 level of indentation, then all
         indentations much be x2 spaces.  The first found indentation
         sets the model for all further indentation.
-        
+
         (If you wish to use this with tabs, simply replace the input
          text string's leading tabs with spaces, before use.
          This may be as simple as s.replace("\t", "  "), if the only
          tabs used are used for indentation.)
-        
+
         The name for a root node must be supplied;
         Every line starting at column 0 is a child of this root node.
 
@@ -47,7 +47,7 @@ class IndentedTextImporter(object):
         └── Node('/root/sub1')
         """
         self.rootname = rootname
-    
+
     def import_(self, text):
         """Import tree from `text`."""
         expected_indentation = None
@@ -89,4 +89,3 @@ class IndentedTextImporter(object):
 
 class IndentedTextImporterError(RuntimeError):
     """IndentedTextImporter Error."""
-
