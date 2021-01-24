@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from helper import eq_str
 from nose.tools import eq_
 
 from anytree import Node
 from anytree import RenderTree
-from anytree.importer import IndentedTextImporter, IndentedTextImporterError
-from helper import eq_str
-
+from anytree.importer import IndentedTextImporter
+from anytree.importer import IndentedTextImporterError
 
 docstring_sample = """
 sub0
@@ -27,8 +27,7 @@ sub1
 
 
 early_bad_indent = """
-        
-   sub0 - (note: only whitespace in line above)
+   sub0
    sub1
 """[1:-1]
 
@@ -44,8 +43,8 @@ foo
       /with/many////slashes
 
 and there was a blank line in here too,
-                     
-  including blank lines with white space,
+
+  and another blank line,
   and indentation afterwards
 how is it?
 """[1:-1]
@@ -58,7 +57,7 @@ check_large_example = ["root", 0, "foo", 0, "bar", 0, "baz", -1, -1, 1,
                        "these/should/still/work/", 0, "/with/many////slashes",
                        -1, -1, -1, -1, 1,
                        "and there was a blank line in here too,", 0,
-                       "including blank lines with white space,", -1, 1,
+                       "and another blank line,", -1, 1,
                        "and indentation afterwards", -1, -1, 2, "how is it?"]
 
 
@@ -101,10 +100,10 @@ def test_early_bad_indent():
         root = importer.import_(early_bad_indent)
     except IndentedTextImporterError as e:
         (err_name, err_lineno) = e.args
-        if err_name == "bad indent at line" and err_lineno == 1:
+        if err_name == "bad indent at line" and err_lineno == 0:
             pass
         else:
-            raise ValueError("expected bad indent error on line 1")
+            raise ValueError("expected bad indent error on line 0")
 
 
 def test_large_example():

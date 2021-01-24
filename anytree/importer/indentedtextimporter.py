@@ -5,7 +5,7 @@ from anytree import Node
 class IndentedTextImporter(object):
 
     def __init__(self, rootname="root"):
-        u"""
+        r"""
         Import Tree from indented text.
 
         Every line of text is converted to an instance of Node.
