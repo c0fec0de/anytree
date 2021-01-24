@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-from helper import eq_str
-from nose.tools import eq_
-
-from anytree import Node
-from anytree import RenderTree
 from anytree.importer import IndentedTextImporter
 from anytree.importer import IndentedTextImporterError
 
@@ -76,7 +71,6 @@ def test_importer():
     """IndentedTextImporter test"""
     importer = IndentedTextImporter()
     root = importer.import_(docstring_sample)
-    r = RenderTree(root)
     check(root, check_docstring_sample)
 
 
