@@ -227,9 +227,9 @@ def _findall(node, filter_, stop=None, maxlevel=None, mincount=None, maxcount=No
 
 
 def _filter_by_name(node, name, value):
-    try:
+    if hasattr(node, name):
         return getattr(node, name) == value
-    except AttributeError:
+    else:
         return False
 
 
