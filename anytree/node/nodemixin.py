@@ -115,14 +115,20 @@ class NodeMixin(object):
         >>> marc.is_root
         True
         """
-        return getattr(self, "__parent", None)
+        if hasattr(self, "_NodeMixin__parent"):
+            return self.__parent
+        else:
+            return None
 
     @parent.setter
     def parent(self, value):
         if value is not None and not isinstance(value, NodeMixin):
             msg = "Parent node %r is not of type 'NodeMixin'." % (value, )
             raise TreeError(msg)
-        parent = getattr(self, "__parent", None)
+        if hasattr(self, "_NodeMixin__parent"):
+            parent = self.__parent
+        else:
+            parent = None
         if parent is not value:
             self.__check_loop(value)
             self.__detach(parent)
@@ -161,7 +167,11 @@ class NodeMixin(object):
 
     @property
     def __children_or_empty(self):
-        return getattr(self, "__children", [])
+        if hasattr(self, "_NodeMixin__children"):
+            return self.__children
+        else:
+            self.__children = []
+            return self.__children
 
     @property
     def children(self):
