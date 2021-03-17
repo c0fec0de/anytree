@@ -161,11 +161,7 @@ class NodeMixin(object):
 
     @property
     def __children_or_empty(self):
-        if hasattr(self, "__children"):
-            return self.__children
-        else:
-            self.__children = []
-            return self.__children
+        return getattr(self, "__children", [])
 
     @property
     def children(self):
