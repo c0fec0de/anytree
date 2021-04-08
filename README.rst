@@ -13,7 +13,7 @@
 .. image:: https://readthedocs.org/projects/anytree/badge/?version=2.8.0
     :target: http://anytree.readthedocs.io/en/2.8.0/?badge=2.8.0
 
-.. image:: https://codeclimate.com/github/c0fec0de/anytree.png
+.. image:: https://codeclimate.com/github/c0fec0de/anytree.svg
     :target: https://codeclimate.com/github/c0fec0de/anytree
 
 .. image:: https://img.shields.io/pypi/pyversions/anytree.svg
