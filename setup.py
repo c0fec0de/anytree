@@ -49,7 +49,6 @@ config['extras_require'] = {
 }
 config['tests_require'] = ['nose']
 config['test_suite'] = 'nose.collector'
-config['data_files'] = [('', ['LICENSE'])]
 
 # Get the long description from the README file
 here = path.abspath(path.dirname(__file__))
