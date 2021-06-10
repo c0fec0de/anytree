@@ -11,7 +11,7 @@ class Node(NodeMixin, object):
         A simple tree node with a `name` and any `kwargs`.
 
         Args:
-            name: A name or any other object this node can reference to as idendifier.
+            name: A name or any other object this node can reference to as identifier.
 
         Keyword Args:
             parent: Reference to parent node.
