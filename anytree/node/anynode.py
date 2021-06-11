@@ -15,7 +15,7 @@ class AnyNode(NodeMixin, object):
             children: Iterable with child nodes.
             *: Any other given attribute is just stored as object attribute.
 
-        Other than :any:`Node` this class has no default idenifier.
+        Other than :any:`Node` this class has no default identifier.
         It is up to the user to use other attributes for identification.
 
         The `parent` attribute refers the parent node:
