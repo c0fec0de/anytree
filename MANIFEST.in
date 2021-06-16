@@ -2,7 +2,6 @@ graft anytree
 graft docs
 graft tests
 
-include LICENSE
 include tox.ini
 
 # Sublime Text configuration file
