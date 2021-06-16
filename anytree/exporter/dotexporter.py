@@ -286,7 +286,7 @@ class UniqueDotExporter(DotExporter):
 
     def __init__(self, node, graph="digraph", name="tree", options=None,
                  indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None):
+                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None):
         """
         Unqiue Dot Language Exporter.
 
@@ -321,6 +321,8 @@ class UniqueDotExporter(DotExporter):
                           The function shall accept two `node` objects as
                           argument. The first the node and the second the child
                           and return the edge (i.e. '->').
+
+            maxlevel (int): Limit export to this number of levels.
 
         >>> from anytree import Node
         >>> root = Node("root")
@@ -383,7 +385,8 @@ class UniqueDotExporter(DotExporter):
         """
         super(UniqueDotExporter, self).__init__(node, graph=graph, name=name, options=options, indent=indent,
                                                 nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
-                                                edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc)
+                                                edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc,
+                                                maxlevel=maxlevel)
 
     @staticmethod
     def _default_nodenamefunc(node):
