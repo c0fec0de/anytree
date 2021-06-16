@@ -49,7 +49,7 @@ Links
 
 .. _Node: https://anytree.readthedocs.io/en/2.8.0/api/anytree.node.html#anytree.node.node.Node
 .. _RenderTree: https://anytree.readthedocs.io/en/2.8.0/api/anytree.render.html#anytree.render.RenderTree
-.. _DotExporter: https://anytree.readthedocs.io/en/2.8.0/exporter/dotexporter.html#anytree.exporter.dotexporter.DotExporter
+.. _UniqueDotExporter: https://anytree.readthedocs.io/en/2.8.0/exporter/dotexporter.html#anytree.exporter.dotexporter.UniqueDotExporter
 .. _NodeMixin: https://anytree.readthedocs.io/en/2.8.0/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
 .. _Importers: https://anytree.readthedocs.io/en/2.8.0/importer.html
 .. _Exporters: https://anytree.readthedocs.io/en/2.8.0/exporter.html
@@ -95,17 +95,17 @@ For details see Node_ and RenderTree_.
 
 **Visualization**
 
->>> from anytree.exporter import DotExporter
+>>> from anytree.exporter import UniqueDotExporter
 >>> # graphviz needs to be installed for the next line!
->>> DotExporter(udo).to_picture("udo.png")
+>>> UniqueDotExporter(udo).to_picture("udo.png")
 
 .. image:: https://anytree.readthedocs.io/en/latest/_images/udo.png
 
-The DotExporter_ can be started at any node and has various formatting hookups:
+The UniqueDotExporter_ can be started at any node and has various formatting hookups:
 
->>> DotExporter(dan,
-...             nodeattrfunc=lambda node: "fixedsize=true, width=1, height=1, shape=diamond",
-...             edgeattrfunc=lambda parent, child: "style=bold"
+>>> UniqueDotExporter(dan,
+...                   nodeattrfunc=lambda node: "fixedsize=true, width=1, height=1, shape=diamond",
+...                   edgeattrfunc=lambda parent, child: "style=bold"
 ... ).to_picture("dan.png")
 
 .. image:: https://anytree.readthedocs.io/en/latest/_images/dan.png
@@ -159,7 +159,7 @@ Node('/Dan')
 
 **Extending any python class to become a tree node**
 
-The enitre tree magic is encapsulated by NodeMixin_
+The entire tree magic is encapsulated by NodeMixin_
 add it as base class and the class becomes a tree node:
 
 >>> from anytree import NodeMixin, RenderTree

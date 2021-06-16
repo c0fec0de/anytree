@@ -114,17 +114,17 @@ For details see :any:`Node` and :any:`RenderTree`.
 
 **Visualization**
 
->>> from anytree.exporter import DotExporter
+>>> from anytree.exporter import UniqueDotExporter
 >>> # graphviz needs to be installed for the next line!
->>> DotExporter(udo).to_picture("udo.png")
+>>> UniqueDotExporter(udo).to_picture("udo.png")
 
 .. image:: static/udo.png
 
-The :any:`DotExporter` can be started at any node and has various formatting hookups:
+The :any:`UniqueDotExporter` can be started at any node and has various formatting hookups:
 
->>> DotExporter(dan,
-...             nodeattrfunc=lambda node: "fixedsize=true, width=1, height=1, shape=diamond",
-...             edgeattrfunc=lambda parent, child: "style=bold"
+>>> UniqueDotExporter(dan,
+...                   nodeattrfunc=lambda node: "fixedsize=true, width=1, height=1, shape=diamond",
+...                   edgeattrfunc=lambda parent, child: "style=bold"
 ... ).to_picture("dan.png")
 
 .. image:: static/dan.png
