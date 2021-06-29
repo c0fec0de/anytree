@@ -285,7 +285,7 @@ class NodeMixin(object):
     @property
     def path(self):
         """
-        Path of this `Node`.
+        Path from root node down to this `Node`.
 
         >>> from anytree import Node
         >>> udo = Node("Udo")
@@ -302,7 +302,7 @@ class NodeMixin(object):
 
     def iter_path_reverse(self):
         """
-        Iterate up the tree from the current node.
+        Iterate up the tree from the current node to the root node.
 
         >>> from anytree import Node
         >>> udo = Node("Udo")
