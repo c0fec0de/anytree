@@ -3,8 +3,7 @@ import json
 from .dictexporter import DictExporter
 
 
-class JsonExporter(object):
-
+class JsonExporter:
     def __init__(self, dictexporter=None, maxlevel=None, **kwargs):
         """
         Tree to JSON exporter.

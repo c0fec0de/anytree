@@ -14,11 +14,14 @@ except ImportError:
 
     # dummy decorator which does NOT cache
     def _cache(size):
+        # pylint: disable=W0613
         def decorator(func):
             @wraps(func)
             def wrapped(*args, **kwargs):
                 return func(*args, **kwargs)
+
             return wrapped
+
         return decorator
 
 

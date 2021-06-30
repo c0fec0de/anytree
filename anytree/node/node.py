@@ -4,8 +4,7 @@ from .nodemixin import NodeMixin
 from .util import _repr
 
 
-class Node(NodeMixin, object):
-
+class Node(NodeMixin):
     def __init__(self, name, parent=None, children=None, **kwargs):
         u"""
         A simple tree node with a `name` and any `kwargs`.

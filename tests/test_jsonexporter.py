@@ -2,7 +2,7 @@ import filecmp
 import os
 from tempfile import NamedTemporaryFile
 
-from nose.tools import eq_
+from helper import eq_
 
 from anytree import AnyNode
 from anytree.exporter import JsonExporter
@@ -24,41 +24,41 @@ def test_json_exporter():
     exported = exporter.export(root).split("\n")
     exported = [e.rstrip() for e in exported]  # just a fix for a strange py2x behavior.
     lines = [
-        '{',
+        "{",
         '  "children": [',
-        '    {',
+        "    {",
         '      "children": [',
-        '        {',
+        "        {",
         '          "id": "sub0B"',
-        '        },',
-        '        {',
+        "        },",
+        "        {",
         '          "id": "sub0A"',
-        '        }',
-        '      ],',
+        "        }",
+        "      ],",
         '      "id": "sub0"',
-        '    },',
-        '    {',
+        "    },",
+        "    {",
         '      "children": [',
-        '        {',
+        "        {",
         '          "id": "sub1A"',
-        '        },',
-        '        {',
+        "        },",
+        "        {",
         '          "id": "sub1B"',
-        '        },',
-        '        {',
+        "        },",
+        "        {",
         '          "children": [',
-        '            {',
+        "            {",
         '              "id": "sub1Ca"',
-        '            }',
-        '          ],',
+        "            }",
+        "          ],",
         '          "id": "sub1C"',
-        '        }',
-        '      ],',
+        "        }",
+        "      ],",
         '      "id": "sub1"',
-        '    }',
-        '  ],',
+        "    }",
+        "  ],",
         '  "id": "root"',
-        '}'
+        "}",
     ]
     eq_(exported, lines)
 
@@ -66,17 +66,17 @@ def test_json_exporter():
     exported = exporter.export(root).split("\n")
     exported = [e.rstrip() for e in exported]  # just a fix for a strange py2x behavior.
     limitedlines = [
-        '{',
+        "{",
         '  "children": [',
-        '    {',
+        "    {",
         '      "id": "sub0"',
-        '    },',
-        '    {',
+        "    },",
+        "    {",
         '      "id": "sub1"',
-        '    }',
-        '  ],',
+        "    }",
+        "  ],",
         '  "id": "root"',
-        '}'
+        "}",
     ]
 
     eq_(exported, limitedlines)

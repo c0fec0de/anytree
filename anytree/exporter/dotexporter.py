@@ -1,8 +1,7 @@
 import codecs
 import logging
 import re
-from os import path
-from os import remove
+from os import path, remove
 from subprocess import check_call
 from tempfile import NamedTemporaryFile
 
@@ -13,11 +12,20 @@ from anytree import PreOrderIter
 _RE_ESC = re.compile(r'["\\]')
 
 
-class DotExporter(object):
-
-    def __init__(self, node, graph="digraph", name="tree", options=None,
-                 indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None):
+class DotExporter:
+    def __init__(
+        self,
+        node,
+        graph="digraph",
+        name="tree",
+        options=None,
+        indent=4,
+        nodenamefunc=None,
+        nodeattrfunc=None,
+        edgeattrfunc=None,
+        edgetypefunc=None,
+        maxlevel=None,
+    ):
         """
         Dot Language Exporter.
 
@@ -173,8 +181,7 @@ class DotExporter(object):
         nodeattrfunc = self.nodeattrfunc or self._default_nodeattrfunc
         edgeattrfunc = self.edgeattrfunc or self._default_edgeattrfunc
         edgetypefunc = self.edgetypefunc or self._default_edgetypefunc
-        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc,
-                           edgetypefunc)
+        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc)
 
     @staticmethod
     def _default_nodenamefunc(node):
@@ -182,14 +189,17 @@ class DotExporter(object):
 
     @staticmethod
     def _default_nodeattrfunc(node):
+        # pylint: disable=W0613
         return None
 
     @staticmethod
     def _default_edgeattrfunc(node, child):
+        # pylint: disable=W0613
         return None
 
     @staticmethod
     def _default_edgetypefunc(node, child):
+        # pylint: disable=W0613
         return "->"
 
     def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc):
@@ -224,8 +234,13 @@ class DotExporter(object):
                 edgeattr = edgeattrfunc(node, child)
                 edgetype = edgetypefunc(node, child)
                 edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
-                yield '%s"%s" %s "%s"%s;' % (indent, DotExporter.esc(nodename), edgetype,
-                                             DotExporter.esc(childname), edgeattr)
+                yield '%s"%s" %s "%s"%s;' % (
+                    indent,
+                    DotExporter.esc(nodename),
+                    edgetype,
+                    DotExporter.esc(childname),
+                    edgeattr,
+                )
 
     def to_dotfile(self, filename):
         """
@@ -262,6 +277,7 @@ class DotExporter(object):
 
         *`graphviz` needs to be installed, before usage of this method.*
         """
+        # pylint: disable=W0703
         fileformat = path.splitext(filename)[1][1:]
         with NamedTemporaryFile("wb", delete=False) as dotfile:
             dotfilename = dotfile.name
@@ -273,8 +289,7 @@ class DotExporter(object):
         try:
             remove(dotfilename)
         except Exception:  # pragma: no cover
-            msg = 'Could not remove temporary file %s' % dotfilename
-            logging.getLogger(__name__).warn(msg)
+            logging.getLogger(__name__).warning("Could not remove temporary file %s", dotfilename)
 
     @staticmethod
     def esc(value):
@@ -283,10 +298,19 @@ class DotExporter(object):
 
 
 class UniqueDotExporter(DotExporter):
-
-    def __init__(self, node, graph="digraph", name="tree", options=None,
-                 indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None):
+    def __init__(
+        self,
+        node,
+        graph="digraph",
+        name="tree",
+        options=None,
+        indent=4,
+        nodenamefunc=None,
+        nodeattrfunc=None,
+        edgeattrfunc=None,
+        edgetypefunc=None,
+        maxlevel=None,
+    ):
         """
         Unqiue Dot Language Exporter.
 
@@ -383,10 +407,18 @@ class UniqueDotExporter(DotExporter):
             "0x7f5c70449bd0" -> "0x7f5c70449cf0";
         }
         """
-        super(UniqueDotExporter, self).__init__(node, graph=graph, name=name, options=options, indent=indent,
-                                                nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
-                                                edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc,
-                                                maxlevel=maxlevel)
+        super(UniqueDotExporter, self).__init__(
+            node,
+            graph=graph,
+            name=name,
+            options=options,
+            indent=indent,
+            nodenamefunc=nodenamefunc,
+            nodeattrfunc=nodeattrfunc,
+            edgeattrfunc=edgeattrfunc,
+            edgetypefunc=edgetypefunc,
+            maxlevel=maxlevel,
+        )
 
     @staticmethod
     def _default_nodenamefunc(node):
@@ -394,4 +426,4 @@ class UniqueDotExporter(DotExporter):
 
     @staticmethod
     def _default_nodeattrfunc(node):
-        return 'label="%s"' % (node.name, )
+        return 'label="%s"' % (node.name,)

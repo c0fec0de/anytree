@@ -1,6 +1,4 @@
-
-class DictExporter(object):
-
+class DictExporter:
     def __init__(self, dictcls=dict, attriter=None, childiter=list, maxlevel=None):
         """
         Tree to dictionary exporter.
@@ -79,14 +77,18 @@ class DictExporter(object):
         data = dictcls(attr_values)
         maxlevel = self.maxlevel
         if maxlevel is None or level < maxlevel:
-            children = [self.__export(child, dictcls, attriter, childiter, level=level + 1)
-                        for child in childiter(node.children)]
+            children = [
+                self.__export(child, dictcls, attriter, childiter, level=level + 1)
+                for child in childiter(node.children)
+            ]
             if children:
-                data['children'] = children
+                data["children"] = children
         return data
 
-    def _iter_attr_values(self, node):
+    @staticmethod
+    def _iter_attr_values(node):
+        # pylint: disable=C0103
         for k, v in node.__dict__.items():
-            if k in ('_NodeMixin__children', '_NodeMixin__parent'):
+            if k in ("_NodeMixin__children", "_NodeMixin__parent"):
                 continue
             yield k, v

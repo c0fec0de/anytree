@@ -2,7 +2,10 @@
 from contextlib import contextmanager
 
 import six
-from nose.tools import eq_
+
+
+def eq_(one, other):
+    assert one == other
 
 
 # hack own assert_raises, because py26 has a different impelmentation
@@ -20,6 +23,35 @@ def assert_raises(exccls, msg):
 def eq_str(value, expected):
     """Python 2.x and 3.x compatible string compare."""
     if six.PY2:
-        eq_(value.decode('utf-8'), expected)
+        eq_(value.decode("utf-8"), expected)
     else:
         eq_(value, expected)
+
+
+def with_setup(setup=None, teardown=None):
+    def decorate(func, setup=setup, teardown=teardown):
+        if setup:
+            if hasattr(func, "setup"):
+                _old_s = func.setup
+
+                def _s():
+                    setup()
+                    _old_s()
+
+                func.setup = _s
+            else:
+                func.setup = setup
+        if teardown:
+            if hasattr(func, "teardown"):
+                _old_t = func.teardown
+
+                def _t():
+                    _old_t()
+                    teardown()
+
+                func.teardown = _t
+            else:
+                func.teardown = teardown
+        return func
+
+    return decorate

@@ -4,8 +4,7 @@ import json
 from .dictimporter import DictImporter
 
 
-class JsonImporter(object):
-
+class JsonImporter:
     def __init__(self, dictimporter=None, **kwargs):
         u"""
         Import Tree from JSON.

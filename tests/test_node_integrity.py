@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
-from nose.tools import eq_
+from helper import assert_raises, eq_
 
-from anytree import LoopError
-from anytree import Node
-from anytree import NodeMixin
-from anytree import PostOrderIter
-from anytree import PreOrderIter
-from anytree import TreeError
-from helper import assert_raises
+from anytree import LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, TreeError
 
 
 def test_readonly_pre():

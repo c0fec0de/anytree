@@ -4,11 +4,10 @@ import warnings
 
 from anytree.iterators import PreOrderIter
 
-from .exceptions import LoopError
-from .exceptions import TreeError
+from .exceptions import LoopError, TreeError
 
 
-class NodeMixin(object):
+class NodeMixin:
 
     separator = "/"
 
@@ -117,13 +116,12 @@ class NodeMixin(object):
         """
         if hasattr(self, "_NodeMixin__parent"):
             return self.__parent
-        else:
-            return None
+        return None
 
     @parent.setter
     def parent(self, value):
         if value is not None and not isinstance(value, NodeMixin):
-            msg = "Parent node %r is not of type 'NodeMixin'." % (value, )
+            msg = "Parent node %r is not of type 'NodeMixin'." % (value,)
             raise TreeError(msg)
         if hasattr(self, "_NodeMixin__parent"):
             parent = self.__parent
@@ -138,12 +136,13 @@ class NodeMixin(object):
         if node is not None:
             if node is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
-                raise LoopError(msg % (self, ))
+                raise LoopError(msg % (self,))
             if any(child is self for child in node.iter_path_reverse()):
                 msg = "Cannot set parent. %r is parent of %r."
                 raise LoopError(msg % (self, node))
 
     def __detach(self, parent):
+        # pylint: disable=W0212,W0238
         if parent is not None:
             self._pre_detach(parent)
             parentchildren = parent.__children_or_empty
@@ -155,6 +154,7 @@ class NodeMixin(object):
             self._post_detach(parent)
 
     def __attach(self, parent):
+        # pylint: disable=W0212
         if parent is not None:
             self._pre_attach(parent)
             parentchildren = parent.__children_or_empty
@@ -167,11 +167,9 @@ class NodeMixin(object):
 
     @property
     def __children_or_empty(self):
-        if hasattr(self, "_NodeMixin__children"):
-            return self.__children
-        else:
+        if not hasattr(self, "_NodeMixin__children"):
             self.__children = []
-            return self.__children
+        return self.__children
 
     @property
     def children(self):
@@ -229,13 +227,13 @@ class NodeMixin(object):
         seen = set()
         for child in children:
             if not isinstance(child, NodeMixin):
-                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % (child, )
+                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % (child,)
                 raise TreeError(msg)
             childid = id(child)
             if childid not in seen:
                 seen.add(childid)
             else:
-                msg = "Cannot add node %r multiple times as child." % (child, )
+                msg = "Cannot add node %r multiple times as child." % (child,)
                 raise TreeError(msg)
 
     @children.setter
@@ -268,19 +266,15 @@ class NodeMixin(object):
 
     def _pre_detach_children(self, children):
         """Method call before detaching `children`."""
-        pass
 
     def _post_detach_children(self, children):
         """Method call after detaching `children`."""
-        pass
 
     def _pre_attach_children(self, children):
         """Method call before attaching `children`."""
-        pass
 
     def _post_attach_children(self, children):
         """Method call after attaching `children`."""
-        pass
 
     @property
     def path(self):
@@ -425,8 +419,7 @@ class NodeMixin(object):
         parent = self.parent
         if parent is None:
             return tuple()
-        else:
-            return tuple(node for node in parent.children if node is not self)
+        return tuple(node for node in parent.children if node is not self)
 
     @property
     def leaves(self):
@@ -501,8 +494,7 @@ class NodeMixin(object):
         children = self.__children_or_empty
         if children:
             return max(child.height for child in children) + 1
-        else:
-            return 0
+        return 0
 
     @property
     def depth(self):
@@ -521,9 +513,10 @@ class NodeMixin(object):
         2
         """
         # count without storing the entire path
-        for i, _ in enumerate(self.iter_path_reverse()):
+        # pylint: disable=W0631
+        for depth, _ in enumerate(self.iter_path_reverse()):
             continue
-        return i
+        return depth
 
     @property
     def size(self):
@@ -546,22 +539,19 @@ class NodeMixin(object):
         1
         """
         # count without storing the entire path
-        for i, _ in enumerate(PreOrderIter(self), 1):
+        # pylint: disable=W0631
+        for size, _ in enumerate(PreOrderIter(self), 1):
             continue
-        return i
+        return size
 
     def _pre_detach(self, parent):
         """Method call before detaching from `parent`."""
-        pass
 
     def _post_detach(self, parent):
         """Method call after detaching from `parent`."""
-        pass
 
     def _pre_attach(self, parent):
         """Method call before attaching to `parent`."""
-        pass
 
     def _post_attach(self, parent):
         """Method call after attaching to `parent`."""
-        pass

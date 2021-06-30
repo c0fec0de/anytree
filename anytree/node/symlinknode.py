@@ -4,7 +4,6 @@ from .util import _repr
 
 
 class SymlinkNode(SymlinkNodeMixin):
-
     def __init__(self, target, parent=None, children=None, **kwargs):
         u"""
         Tree node which references to another tree node.
@@ -51,4 +50,4 @@ class SymlinkNode(SymlinkNodeMixin):
             self.children = children
 
     def __repr__(self):
-        return _repr(self, [repr(self.target)], nameblacklist=("target", ))
+        return _repr(self, [repr(self.target)], nameblacklist=("target",))
