@@ -1,0 +1,123 @@
+[tool.poetry]
+name = "anytree"
+version = "2.9.0"
+description = "Powerful and Lightweight Python Tree Data Structure with various plugins"
+authors = [
+  "c0fec0de <c0fec0de@gmail.com>"
+]
+readme = "README.rst"
+
+license = "MIT"
+
+homepage = "https://github.com/c0fec0de/anytree"
+repository = "https://github.com/c0fec0de/anytree"
+
+keywords = [
+    "tree",
+    "tree data",
+    "treelib",
+    "tree walk",
+    "tree structure",
+]
+
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
+
+
+[tool.poetry.scripts]
+ebt = "anytree.cli:main"
+
+[tool.poetry.dependencies]
+python = ">= 3.6.2, < 4"
+
+[tool.poetry.dev-dependencies]
+black = "^21.6b0"
+coverage = {extras = ["toml"], version = "^5.5"}
+coveralls = "^3.1"
+importlib-metadata = {version = "^1.0", python = "<3.8"}
+isort = "^5.9"
+pylint = "^2.9"
+pytest = "^6.2"
+Sphinx = "^4.0"
+readme-renderer = "^28.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.doctest]
+doctest-module = true
+
+[tool.coverage.run]
+branch = true
+omit = [".tox/*", "tests/*", ".cache/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "return NotImplemented",
+    "raise NotImplementedError",
+    "if __name__ == __main__:",
+]
+
+[tool.black]
+line-length = 119
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 120
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+disable = [
+  "C0114",
+  "C0115",
+  "R0801",
+  "R0902",
+  "R0903",
+  "R0913",
+  "R1725",
+]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = true
+envlist = py
+
+[testenv]
+whitelist_externals = poetry
+commands =
+    poetry install -v
+    poetry run isort .
+    poetry run black .
+    poetry run coverage erase
+    poetry run coverage run -m pytest --doctest-modules --log-level=DEBUG -vv --doctest-ignore-import-errors
+    poetry run coverage report
+    poetry run coverage html
+    poetry run pylint anytree
+    poetry run make api -C docs
+    poetry run make html -C docs
+    poetry run python -m readme_renderer README.rst -o docs/build/readme.html
+"""

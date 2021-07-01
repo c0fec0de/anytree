@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-from nose.tools import eq_
+from helper import eq_
 
-from anytree import AnyNode
-from anytree import Node
-from anytree import NodeMixin
-from anytree import PostOrderIter
-from anytree import PreOrderIter
-from anytree import SymlinkNode
+from anytree import AnyNode, Node, NodeMixin, PostOrderIter, PreOrderIter, SymlinkNode
 
 
 def test_symlink():
@@ -54,7 +49,7 @@ def test_symlink():
     eq_(s1.bar, 9)
 
     result = [node.name for node in PreOrderIter(root)]
-    eq_(result, ['root', 'sub0', 'sub0B', 'sub0A', 'sub1', 'sub1A', 'sub1B', 'sub1C', 'sub1Ca', 'sub1', 'l0'])
+    eq_(result, ["root", "sub0", "sub0B", "sub0A", "sub1", "sub1A", "sub1B", "sub1C", "sub1Ca", "sub1", "l0"])
 
     result = [node.name for node in PostOrderIter(root)]
-    eq_(result, ['sub0B', 'sub0A', 'sub0', 'sub1A', 'sub1B', 'sub1Ca', 'sub1C', 'sub1', 'l0', 'sub1', 'root'])
+    eq_(result, ["sub0B", "sub0A", "sub0", "sub1A", "sub1B", "sub1Ca", "sub1C", "sub1", "l0", "sub1", "root"])

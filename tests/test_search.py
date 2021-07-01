@@ -1,17 +1,18 @@
 from enum import IntEnum
 
-from nose.tools import eq_
+from helper import assert_raises, eq_
 
-from anytree import AsciiStyle
-from anytree import CountError
-from anytree import Node
-from anytree import PreOrderIter
-from anytree import RenderTree
-from anytree import find
-from anytree import find_by_attr
-from anytree import findall
-from anytree import findall_by_attr
-from helper import assert_raises
+from anytree import (
+    AsciiStyle,
+    CountError,
+    Node,
+    PreOrderIter,
+    RenderTree,
+    find,
+    find_by_attr,
+    findall,
+    findall_by_attr,
+)
 
 
 def test_findall():
@@ -24,13 +25,15 @@ def test_findall():
 
     eq_(findall(f, filter_=lambda node: node.name in ("a", "b")), (b, a))
     eq_(findall(f, filter_=lambda node: d in node.path), (d, c, e))
-    with assert_raises(CountError, (
-            "Expecting at least 4 elements, but found 3. "
-            "(Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))")):
+    with assert_raises(
+        CountError,
+        ("Expecting at least 4 elements, but found 3. " "(Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))"),
+    ):
         findall(f, filter_=lambda node: d in node.path, mincount=4)
-    with assert_raises(CountError, (
-            "Expecting 2 elements at maximum, but found 3. "
-            "(Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))")):
+    with assert_raises(
+        CountError,
+        ("Expecting 2 elements at maximum, but found 3. " "(Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))"),
+    ):
         findall(f, filter_=lambda node: d in node.path, maxcount=2)
 
 
@@ -43,8 +46,7 @@ def test_findall_by_attr():
     Node("e", parent=d)
 
     eq_(findall_by_attr(f, "d"), (d,))
-    with assert_raises(CountError, (
-            "Expecting at least 1 elements, but found 0.")):
+    with assert_raises(CountError, ("Expecting at least 1 elements, but found 0.")):
         findall_by_attr(f, "z", mincount=1)
 
 
@@ -61,9 +63,13 @@ def test_find():
 
     eq_(find(f, lambda n: n.name == "d"), d)
     eq_(find(f, lambda n: n.name == "z"), None)
-    with assert_raises(CountError, (
+    with assert_raises(
+        CountError,
+        (
             "Expecting 1 elements at maximum, but found 5. "
-            "(Node('/f/b'), Node('/f/b/a'), Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))")):
+            "(Node('/f/b'), Node('/f/b/a'), Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))"
+        ),
+    ):
         find(f, lambda n: b in n.path)
 
 
@@ -84,7 +90,6 @@ def test_find_by_attr():
 
 
 def test_enum():
-
     class Animals(IntEnum):
         Mammal = 1
         Cat = 2
@@ -96,4 +101,4 @@ def test_enum():
     dog = Node(Animals.Dog, parent=mammal)
 
     eq_(findall(root), (root, mammal, cat, dog))
-    eq_(findall_by_attr(root, Animals.Cat), (cat, ))
+    eq_(findall_by_attr(root, Animals.Cat), (cat,))

@@ -63,8 +63,7 @@ def findall(node, filter_=None, stop=None, maxlevel=None, mincount=None, maxcoun
       ...
     anytree.search.CountError: Expecting 2 elements at maximum, but found 3. ... Node('/f/b/d/e'))
     """
-    return _findall(node, filter_=filter_, stop=stop,
-                    maxlevel=maxlevel, mincount=mincount, maxcount=maxcount)
+    return _findall(node, filter_=filter_, stop=stop, maxlevel=maxlevel, mincount=mincount, maxcount=maxcount)
 
 
 def findall_by_attr(node, value, name="name", maxlevel=None, mincount=None, maxcount=None):
@@ -109,8 +108,13 @@ def findall_by_attr(node, value, name="name", maxlevel=None, mincount=None, maxc
     >>> findall_by_attr(f, "d")
     (Node('/f/b/d'),)
     """
-    return _findall(node, filter_=lambda n: _filter_by_name(n, name, value),
-                    maxlevel=maxlevel, mincount=mincount, maxcount=maxcount)
+    return _findall(
+        node,
+        filter_=lambda n: _filter_by_name(n, name, value),
+        maxlevel=maxlevel,
+        mincount=mincount,
+        maxcount=maxcount,
+    )
 
 
 def find(node, filter_=None, stop=None, maxlevel=None):
@@ -205,8 +209,7 @@ def find_by_attr(node, value, name="name", maxlevel=None):
     Node('/f/b/d/c', foo=4)
     >>> find_by_attr(f, name="foo", value=8)
     """
-    return _find(node, filter_=lambda n: _filter_by_name(n, name, value),
-                 maxlevel=maxlevel)
+    return _find(node, filter_=lambda n: _filter_by_name(n, name, value), maxlevel=maxlevel)
 
 
 def _find(node, filter_, stop=None, maxlevel=None):
@@ -234,7 +237,6 @@ def _filter_by_name(node, name, value):
 
 
 class CountError(RuntimeError):
-
     def __init__(self, msg, result):
         """Error raised on `mincount` or `maxcount` mismatch."""
         if result:

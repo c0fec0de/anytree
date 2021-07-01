@@ -2,8 +2,7 @@
 from anytree import AnyNode
 
 
-class DictImporter(object):
-
+class DictImporter:
     def __init__(self, nodecls=AnyNode):
         u"""
         Import Tree from dictionary.

@@ -2,6 +2,7 @@ import six
 
 
 class AbstractIter(six.Iterator):
+    # pylint: disable=R0205
 
     def __init__(self, node, filter_=None, stop=None, maxlevel=None):
         """
@@ -30,10 +31,12 @@ class AbstractIter(six.Iterator):
 
     @staticmethod
     def __default_filter(node):
+        # pylint: disable=W0613
         return True
 
     @staticmethod
     def __default_stop(node):
+        # pylint: disable=W0613
         return False
 
     def __iter__(self):

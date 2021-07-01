@@ -27,7 +27,7 @@ def commonancestors(*nodes):
     common = []
     for parentnodes in zip(*ancestors):
         parentnode = parentnodes[0]
-        if all([parentnode is p for p in parentnodes[1:]]):
+        if all(parentnode is p for p in parentnodes[1:]):
             common.append(parentnode)
         else:
             break
@@ -55,10 +55,7 @@ def leftsibling(node):
         idx = pchildren.index(node)
         if idx:
             return pchildren[idx - 1]
-        else:
-            return None
-    else:
-        return None
+    return None
 
 
 def rightsibling(node):

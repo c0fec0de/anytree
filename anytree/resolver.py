@@ -8,11 +8,11 @@ import re
 _MAXCACHE = 20
 
 
-class Resolver(object):
+class Resolver:
 
     _match_cache = {}
 
-    def __init__(self, pathattr='name', ignorecase=False):
+    def __init__(self, pathattr="name", ignorecase=False):
         """
         Resolve :any:`NodeMixin` paths using attribute `pathattr`.
 
@@ -196,7 +196,7 @@ class Resolver(object):
             if not parts[0]:
                 msg = "root node missing. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, str(rootpart)))
-            elif not cmp_(rootpart, parts[0]):
+            if not cmp_(rootpart, parts[0]):
                 msg = "unknown root node '%s%s'. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, parts[0], sep, str(rootpart)))
             parts.pop(0)
@@ -262,12 +262,11 @@ class Resolver(object):
     def __cmp(self, name, pat):
         if self.ignorecase:
             return name.upper() == pat.upper()
-        else:
-            return name == pat
+        return name == pat
 
     @staticmethod
     def __translate(pat):
-        re_pat = ''
+        re_pat = ""
         for char in pat:
             if char == "*":
                 re_pat += ".*"
@@ -275,11 +274,10 @@ class Resolver(object):
                 re_pat += "."
             else:
                 re_pat += re.escape(char)
-        return r'(?ms)' + re_pat + r'\Z'
+        return r"(?ms)" + re_pat + r"\Z"
 
 
 class ResolverError(RuntimeError):
-
     def __init__(self, node, child, msg):
         """Resolve Error at `node` handling `child`."""
         super(ResolverError, self).__init__(msg)
@@ -288,21 +286,17 @@ class ResolverError(RuntimeError):
 
 
 class RootResolverError(ResolverError):
-
     def __init__(self, root):
         """Root Resolve Error, cannot go above root node."""
-        msg = "Cannot go above root node %r"
-        msg = msg % (root, )
-        super(ResolverError, self).__init__(msg)
+        msg = "Cannot go above root node %r" % (root,)
+        super(RootResolverError, self).__init__(root, None, msg)
 
 
 class ChildResolverError(ResolverError):
-
     def __init__(self, node, child, pathattr):
         """Child Resolve Error at `node` handling `child`."""
         names = [repr(_getattr(c, pathattr)) for c in node.children]
-        msg = "%r has no child %s. Children are: %s."
-        msg = msg % (node, child, ", ".join(names))
+        msg = "%r has no child %s. Children are: %s." % (node, child, ", ".join(names))
         super(ChildResolverError, self).__init__(node, child, msg)
 
 

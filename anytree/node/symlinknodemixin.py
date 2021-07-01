@@ -46,13 +46,12 @@ class SymlinkNodeMixin(NodeMixin):
     """
 
     def __getattr__(self, name):
-        if name in ('_NodeMixin__parent', '_NodeMixin__children'):
+        if name in ("_NodeMixin__parent", "_NodeMixin__children"):
             return super(SymlinkNodeMixin, self).__getattr__(name)
-        else:
-            return getattr(self.target, name)
+        return getattr(self.target, name)
 
     def __setattr__(self, name, value):
-        if name in ('_NodeMixin__parent', '_NodeMixin__children', 'parent', 'children', 'target'):
+        if name in ("_NodeMixin__parent", "_NodeMixin__children", "parent", "children", "target"):
             super(SymlinkNodeMixin, self).__setattr__(name, value)
         else:
-            return setattr(self.target, name, value)
+            setattr(self.target, name, value)

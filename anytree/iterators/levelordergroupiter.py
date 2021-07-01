@@ -45,7 +45,7 @@ class LevelOrderGroupIter(AbstractIter):
     def _iter(children, filter_, stop, maxlevel):
         level = 1
         while children:
-            yield tuple([child for child in children if filter_(child)])
+            yield tuple(child for child in children if filter_(child))
             level += 1
             if AbstractIter._abort_at_level(level, maxlevel):
                 break

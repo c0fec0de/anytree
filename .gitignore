@@ -1,11 +1,8 @@
-*.egg-info/
-*.eggs/
-*.pyc
-*.sublime-workspace
 .coverage
-.tox/
+.tox
 __pycache__
-coverage-report/
-dist/
+dist
 docs/build/
+htmlcov
+anytree.sublime-workspace
 *.dot

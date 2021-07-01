@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-class Walker(object):
+class Walker:
+    """Walk from one node to another."""
 
-    def __init__(self):
-        """Walk from one node to another."""
-        super(Walker, self).__init__()
-
-    def walk(self, start, end):
+    @staticmethod
+    def walk(start, end):
         """
         Walk from `start` node to `end` node.
 
@@ -65,30 +63,30 @@ class Walker(object):
           ...
         anytree.walker.WalkError: Node('/a') and Node('/b') are not part of the same tree.
         """
-        s = start.path
-        e = end.path
+        startpath = start.path
+        endpath = end.path
         if start.root is not end.root:
             msg = "%r and %r are not part of the same tree." % (start, end)
             raise WalkError(msg)
         # common
-        c = Walker.__calc_common(s, e)
-        assert c[0] is start.root
-        len_c = len(c)
-        # up
-        if start is c[-1]:
-            up = tuple()
+        common = Walker.__calc_common(startpath, endpath)
+        assert common[0] is start.root
+        len_common = len(common)
+        # upwards
+        if start is common[-1]:
+            upwards = tuple()
         else:
-            up = tuple(reversed(s[len_c:]))
+            upwards = tuple(reversed(startpath[len_common:]))
         # down
-        if end is c[-1]:
+        if end is common[-1]:
             down = tuple()
         else:
-            down = e[len_c:]
-        return up, c[-1], down
+            down = endpath[len_common:]
+        return upwards, common[-1], down
 
     @staticmethod
-    def __calc_common(s, e):
-        return tuple([si for si, ei in zip(s, e) if si is ei])
+    def __calc_common(start, end):
+        return tuple(si for si, ei in zip(start, end) if si is ei)
 
 
 class WalkError(RuntimeError):
