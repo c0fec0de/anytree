@@ -5,7 +5,7 @@ python:
 - "3.8"
 - "3.9"
 install:
-- apt-get install graphviz
+- sudo apt-get install graphviz
 - pip install poetry tox
 script:
 - tox
