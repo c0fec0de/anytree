@@ -134,6 +134,7 @@ def test_dict_exporter_mixin():
         ]}
         )
 
+
 def test_dict_exporter_symlink_node():
     """Dict Exporter."""
     root = Node("root")
