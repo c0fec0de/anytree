@@ -89,4 +89,10 @@ class DictExporter(object):
         for k, v in node.__dict__.items():
             if k in ('_NodeMixin__children', '_NodeMixin__parent'):
                 continue
-            yield k, v
+            elif k == "target":
+                for key, val in v.__dict__.items():
+                    if key in ('_NodeMixin__children', '_NodeMixin__parent'):
+                        continue
+                    yield key, val
+            else:
+                yield k, v
