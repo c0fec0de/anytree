@@ -145,7 +145,7 @@ def test_dict_exporter_symlink_node():
     s1a = SymlinkNode(target=s0, parent=s1)
     s1b = Node("sub1B", parent=s1)
     s1c = Node("sub1C", parent=s1)
-    s1ca = Node("sub1Ca", parent=s1c)
+    s1ca = SymlinkNode(target=s1, parent=s1c)
 
     exporter = DictExporter()
     eq_(exporter.export(root),
@@ -158,7 +158,7 @@ def test_dict_exporter_symlink_node():
                 {'name': 'sub0'},
                 {'name': 'sub1B'},
                 {'name': 'sub1C', 'children': [
-                    {'name': 'sub1Ca'}
+                    {'name': 'sub1Ca', 'foo':'bar'}
                 ]}
             ]}
         ]}
