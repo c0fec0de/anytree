@@ -5,7 +5,6 @@ from tempfile import NamedTemporaryFile
 from nose.tools import eq_
 
 from anytree import AnyNode
-from anytree import SymlinkNode
 from anytree.exporter import JsonExporter
 
 
