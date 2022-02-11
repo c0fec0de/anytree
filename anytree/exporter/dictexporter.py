@@ -89,7 +89,8 @@ class DictExporter(object):
         for k, v in node.__dict__.items():
             if k in ('_NodeMixin__children', '_NodeMixin__parent'):
                 continue
-            elif k == "target": #If SymlinkNode(Node(path))
+            elif k == "target":
+            #If SymlinkNode(Node(path))
                 yield from self._iter_attr_values(v)
             else:
                 yield k, v
