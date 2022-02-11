@@ -158,7 +158,7 @@ def test_dict_exporter_symlink_node():
                 {'name': 'sub0'},
                 {'name': 'sub1B'},
                 {'name': 'sub1C', 'children': [
-                    {'name': 'sub1Ca', 'foo': 'bar'}
+                    {'name': 'sub1', 'foo': 'bar'}
                 ]}
             ]}
         ]}
