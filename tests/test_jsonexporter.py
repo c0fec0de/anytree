@@ -139,7 +139,7 @@ def test_symlink_json_exporter():
         '            }',
         '          ],',
         '          "id": "sub1C"',
-        '        }',
+        '        },',
         '        {',
         '          "id": "sub0"',
         '        },',
