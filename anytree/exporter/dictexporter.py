@@ -90,8 +90,7 @@ class DictExporter(object):
             if k in ('_NodeMixin__children', '_NodeMixin__parent'):
                 continue
             elif k == "target":
-                #If SymlinkNode(Node(path))
-                for key, val in self._iter_attr_values(v): 
+                for key, val in self._iter_attr_values(v):
                     yield key, val
             else:
                 yield k, v
