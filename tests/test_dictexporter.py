@@ -3,6 +3,7 @@ from nose.tools import eq_
 from anytree import AnyNode
 from anytree import Node
 from anytree import NodeMixin
+from anytree import SymlinkNode
 from anytree.exporter import DictExporter
 
 
@@ -130,5 +131,35 @@ def test_dict_exporter_mixin():
                         {'foo': 's1ca'}
                     ]}
                 ]}
+        ]}
+        )
+
+
+def test_dict_exporter_symlink_node():
+    """Dict Exporter."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    s0b = Node("sub0B", parent=s0)
+    s0a = Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root, foo="bar")
+    s1a = SymlinkNode(target=s0, parent=s1)
+    s1b = Node("sub1B", parent=s1)
+    s1c = Node("sub1C", parent=s1)
+    s1ca = SymlinkNode(target=s1, parent=s1c)
+
+    exporter = DictExporter()
+    eq_(exporter.export(root),
+        {'name': 'root', 'children': [
+            {'name': 'sub0', 'children': [
+                {'name': 'sub0B'},
+                {'name': 'sub0A'}
+            ]},
+            {'name': 'sub1', 'foo': 'bar', 'children': [
+                {'name': 'sub0'},
+                {'name': 'sub1B'},
+                {'name': 'sub1C', 'children': [
+                    {'name': 'sub1', 'foo': 'bar'}
+                ]}
+            ]}
         ]}
         )
