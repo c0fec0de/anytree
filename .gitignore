@@ -9,3 +9,5 @@ coverage-report/
 dist/
 docs/build/
 *.dot
+build/
+.DS_Store

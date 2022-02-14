@@ -31,3 +31,23 @@ def test_tree1():
                 '    "{id_root}" -> "{id_s0}";'.format(id_root=id_root, id_s0=id_s0),
                 '    "{id_s0}" -> "{id_s0b}";'.format(id_s0=id_s0, id_s0b=id_s0b),
                 '}'))
+
+
+def test_tree2():
+    """Tree2."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    s0b = Node("sub0B", parent=s0)
+
+    id_root = hex(id(root))
+    id_s0 = hex(id(s0))
+    id_s0b = hex(id(s0b))
+
+    lines = tuple(UniqueDotExporter(root, nodenamefunc=lambda n: n.name.upper(), nodeattrfunc=lambda n: 'color="red"'))
+    eq_(lines, ('digraph tree {',
+                '    "{id_root}" [label="ROOT", color="red"];'.format(id_root=id_root),
+                '    "{id_s0}" [label="SUB0", color="red"];'.format(id_s0=id_s0),
+                '    "{id_s0b}" [label="SUB0B", color="red"];'.format(id_s0b=id_s0b),
+                '    "{id_root}" -> "{id_s0}";'.format(id_root=id_root, id_s0=id_s0),
+                '    "{id_s0}" -> "{id_s0b}";'.format(id_s0=id_s0, id_s0b=id_s0b),
+                '}'))

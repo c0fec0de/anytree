@@ -17,7 +17,8 @@ class DotExporter(object):
 
     def __init__(self, node, graph="digraph", name="tree", options=None,
                  indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None):
+                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None,
+                 filter_=None):
         """
         Dot Language Exporter.
 
@@ -52,6 +53,11 @@ class DotExporter(object):
                           and return the edge (i.e. '->').
 
             maxlevel (int): Limit export to this number of levels.
+
+            filter_: Function to filter nodes to include in export.
+                     The function shall accept one `node` object as
+                     argument and return True if it should be included,
+                     or False if it should not be included.
 
         >>> from anytree import Node
         >>> root = Node("root")
@@ -165,6 +171,7 @@ class DotExporter(object):
         self.edgeattrfunc = edgeattrfunc
         self.edgetypefunc = edgetypefunc
         self.maxlevel = maxlevel
+        self.filter = filter_ or (lambda n: True)
 
     def __iter__(self):
         # prepare
@@ -209,7 +216,7 @@ class DotExporter(object):
                 yield "%s%s" % (indent, option)
 
     def __iter_nodes(self, indent, nodenamefunc, nodeattrfunc):
-        for node in PreOrderIter(self.node, maxlevel=self.maxlevel):
+        for node in PreOrderIter(self.node, maxlevel=self.maxlevel, filter_=self.filter):
             nodename = nodenamefunc(node)
             nodeattr = nodeattrfunc(node)
             nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
@@ -220,12 +227,13 @@ class DotExporter(object):
         for node in PreOrderIter(self.node, maxlevel=maxlevel):
             nodename = nodenamefunc(node)
             for child in node.children:
-                childname = nodenamefunc(child)
-                edgeattr = edgeattrfunc(node, child)
-                edgetype = edgetypefunc(node, child)
-                edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
-                yield '%s"%s" %s "%s"%s;' % (indent, DotExporter.esc(nodename), edgetype,
-                                             DotExporter.esc(childname), edgeattr)
+                if self.filter(child):
+                    childname = nodenamefunc(child)
+                    edgeattr = edgeattrfunc(node, child)
+                    edgetype = edgetypefunc(node, child)
+                    edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
+                    yield '%s"%s" %s "%s"%s;' % (indent, DotExporter.esc(nodename), edgetype,
+                                                 DotExporter.esc(childname), edgeattr)
 
     def to_dotfile(self, filename):
         """
@@ -286,7 +294,8 @@ class UniqueDotExporter(DotExporter):
 
     def __init__(self, node, graph="digraph", name="tree", options=None,
                  indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None):
+                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None,
+                 filter_=None):
         """
         Unqiue Dot Language Exporter.
 
@@ -321,6 +330,13 @@ class UniqueDotExporter(DotExporter):
                           The function shall accept two `node` objects as
                           argument. The first the node and the second the child
                           and return the edge (i.e. '->').
+
+            maxlevel (int): Limit export to this number of levels.
+
+            filter_: Function to filter nodes to include in export.
+                     The function shall accept one `node` object as
+                     argument and return True if it should be included,
+                     or False if it should not be included.
 
         >>> from anytree import Node
         >>> root = Node("root")
@@ -383,7 +399,8 @@ class UniqueDotExporter(DotExporter):
         """
         super(UniqueDotExporter, self).__init__(node, graph=graph, name=name, options=options, indent=indent,
                                                 nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
-                                                edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc)
+                                                edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc,
+                                                maxlevel=maxlevel, filter_=filter_)
 
     @staticmethod
     def _default_nodenamefunc(node):
