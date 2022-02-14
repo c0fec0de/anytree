@@ -401,11 +401,18 @@ class UniqueDotExporter(DotExporter):
                                                 nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
                                                 edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc,
                                                 maxlevel=maxlevel, filter_=filter_)
+        self._user_nodenamefunc = nodenamefunc or super(UniqueDotExporter, self)._default_nodenamefunc
+        self._user_nodeattrfunc = nodeattrfunc or super(UniqueDotExporter, self)._default_nodeattrfunc
+        self.nodenamefunc = self._default_nodenamefunc
+        self.nodeattrfunc = self._default_nodeattrfunc
 
     @staticmethod
     def _default_nodenamefunc(node):
         return hex(id(node))
 
-    @staticmethod
-    def _default_nodeattrfunc(node):
-        return 'label="%s"' % (node.name, )
+    def _default_nodeattrfunc(self, node):
+        attrs = ['label="%s"' % (UniqueDotExporter.esc(self._user_nodenamefunc(node)))]
+        user_attrs = self._user_nodeattrfunc(node)
+        if user_attrs is not None:
+            attrs.append(user_attrs)
+        return ', '.join(attrs)
