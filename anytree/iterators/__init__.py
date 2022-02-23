@@ -2,6 +2,7 @@
 """
 Tree Iteration.
 
+* :any:`AscendingIter`: iterate upwards toward the root of the tree
 * :any:`PreOrderIter`: iterate over tree using pre-order strategy (self, children)
 * :any:`PostOrderIter`: iterate over tree using post-order strategy (children, self)
 * :any:`LevelOrderIter`: iterate over tree using level-order strategy
@@ -10,6 +11,7 @@ Tree Iteration.
 """
 
 from .abstractiter import AbstractIter  # noqa
+from .ascendingiter import AscendingIter  # noqa
 from .levelordergroupiter import LevelOrderGroupIter  # noqa
 from .levelorderiter import LevelOrderIter  # noqa
 from .postorderiter import PostOrderIter  # noqa

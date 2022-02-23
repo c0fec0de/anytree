@@ -1,5 +1,6 @@
 from nose.tools import eq_
 
+from anytree import AscendingIter
 from anytree import LevelGroupOrderIter
 from anytree import LevelOrderGroupIter
 from anytree import LevelOrderIter
@@ -7,6 +8,30 @@ from anytree import Node
 from anytree import PostOrderIter
 from anytree import PreOrderIter
 from anytree import ZigZagGroupIter
+
+
+def test_ascending():
+    """AscendingIter."""
+    f = Node("f")
+    b = Node("b", parent=f)
+    a = Node("a", parent=b)
+    d = Node("d", parent=b)
+    c = Node("c", parent=d)
+    e = Node("e", parent=d)
+    g = Node("g", parent=f)
+    i = Node("i", parent=g)
+    h = Node("h", parent=i)
+
+    eq_(list(AscendingIter(h)), [h, i, g, f])
+    eq_(list(AscendingIter(h, maxlevel=0)), [])
+    eq_(list(AscendingIter(h, maxlevel=3)), [h, i, g])
+    eq_(list(AscendingIter(h, filter_=lambda n: n.name not in ('e', 'g'))), [h, i, f])
+    eq_(list(AscendingIter(h, stop=lambda n: n.name == 'g')), [h, i])
+
+    it = AscendingIter(h)
+    eq_(next(it), h)
+    eq_(next(it), i)
+    eq_(list(it), [g, f])
 
 
 def test_preorder():

@@ -13,6 +13,7 @@ from .search import find  # noqa
 from .search import find_by_attr  # noqa
 from .search import findall  # noqa
 from .search import findall_by_attr  # noqa
+from .iterators import AscendingIter  # noqa
 from .iterators import LevelOrderGroupIter  # noqa
 from .iterators import LevelOrderIter  # noqa
 from .iterators import PostOrderIter  # noqa
