@@ -5,6 +5,8 @@ from __future__ import print_function
 
 import re
 
+from anytree.iterators.preorderiter import PreOrderIter
+
 _MAXCACHE = 20
 
 
@@ -204,26 +206,39 @@ class Resolver(object):
 
     def __glob(self, node, parts):
         assert node is not None
-        nodes = []
-        if parts:
-            name = parts[0]
-            remainder = parts[1:]
-            # handle relative
-            if name == "..":
-                parent = node.parent
-                if parent is None:
-                    raise RootResolverError(node)
-                nodes += self.__glob(parent, remainder)
-            elif name in ("", "."):
-                nodes += self.__glob(node, remainder)
-            else:
-                matches = self.__find(node, name, remainder)
-                if not matches and not Resolver.is_wildcard(name):
-                    raise ChildResolverError(node, name, self.pathattr)
-                nodes += matches
-        else:
-            nodes = [node]
-        return nodes
+
+        if not parts:
+            return [node]
+
+        name = parts[0]
+        remainder = parts[1:]
+
+        # handle relative
+        if name == "..":
+            parent = node.parent
+            if parent is None:
+                raise RootResolverError(node)
+            return self.__glob(parent, remainder)
+
+        if name in ("", "."):
+            return self.__glob(node, remainder)
+
+        # handle recursive
+        if name == "**":
+            matches = []
+            for n in PreOrderIter(node):
+                try:
+                    matches += self.__glob(n, remainder)
+                except ChildResolverError:
+                    pass
+            return matches
+
+        print(node, name, remainder)
+
+        matches = self.__find(node, name, remainder)
+        if not matches and not Resolver.is_wildcard(name):
+            raise ChildResolverError(node, name, self.pathattr)
+        return matches
 
     def __find(self, node, pat, remainder):
         matches = []
