@@ -1,8 +1,10 @@
+*.dot
+*.png
+*.xml
 .coverage
 .tox
 __pycache__
+anytree.sublime-workspace
 dist
 docs/build/
 htmlcov
-anytree.sublime-workspace
-*.dot

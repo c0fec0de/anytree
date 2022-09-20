@@ -5,7 +5,7 @@ from .util import _repr
 
 class SymlinkNode(SymlinkNodeMixin):
     def __init__(self, target, parent=None, children=None, **kwargs):
-        u"""
+        """
         Tree node which references to another tree node.
 
         Args:

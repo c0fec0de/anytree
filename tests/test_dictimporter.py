@@ -27,17 +27,17 @@ def test_dict_importer():
     eq_(data, refdata)
     eq_(exporter.export(root), data)
     r = RenderTree(root)
-    expected = u"\n".join(
+    expected = "\n".join(
         [
-            u"AnyNode(id='root')",
-            u"├── AnyNode(id='sub0')",
-            u"│   ├── AnyNode(id='sub0B')",
-            u"│   └── AnyNode(id='sub0A')",
-            u"└── AnyNode(id='sub1')",
-            u"    ├── AnyNode(id='sub1A')",
-            u"    ├── AnyNode(id='sub1B')",
-            u"    └── AnyNode(id='sub1C')",
-            u"        └── AnyNode(id='sub1Ca')",
+            "AnyNode(id='root')",
+            "├── AnyNode(id='sub0')",
+            "│   ├── AnyNode(id='sub0B')",
+            "│   └── AnyNode(id='sub0A')",
+            "└── AnyNode(id='sub1')",
+            "    ├── AnyNode(id='sub1A')",
+            "    ├── AnyNode(id='sub1B')",
+            "    └── AnyNode(id='sub1C')",
+            "        └── AnyNode(id='sub1Ca')",
         ]
     )
     eq_str(str(r), expected)
@@ -66,17 +66,17 @@ def test_dict_importer_node():
     eq_(data, refdata)
     eq_(exporter.export(root), data)
     r = RenderTree(root)
-    expected = u"\n".join(
+    expected = "\n".join(
         [
-            u"Node('/root')",
-            u"├── Node('/root/sub0')",
-            u"│   ├── Node('/root/sub0/sub0B')",
-            u"│   └── Node('/root/sub0/sub0A')",
-            u"└── Node('/root/sub1')",
-            u"    ├── Node('/root/sub1/sub1A')",
-            u"    ├── Node('/root/sub1/sub1B')",
-            u"    └── Node('/root/sub1/sub1C')",
-            u"        └── Node('/root/sub1/sub1C/sub1Ca')",
+            "Node('/root')",
+            "├── Node('/root/sub0')",
+            "│   ├── Node('/root/sub0/sub0B')",
+            "│   └── Node('/root/sub0/sub0A')",
+            "└── Node('/root/sub1')",
+            "    ├── Node('/root/sub1/sub1A')",
+            "    ├── Node('/root/sub1/sub1B')",
+            "    └── Node('/root/sub1/sub1C')",
+            "        └── Node('/root/sub1/sub1C/sub1Ca')",
         ]
     )
     eq_str(str(r), expected)

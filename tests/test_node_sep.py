@@ -21,13 +21,13 @@ def test_render():
     MyNode("sub1", parent=root)
     r = at.RenderTree(root)
 
-    expected = u"\n".join(
+    expected = "\n".join(
         [
-            u"MyNode('|root')",
-            u"├── MyNode('|root|sub0')",
-            u"│   ├── MyNode('|root|sub0|sub0B')",
-            u"│   └── MyNode('|root|sub0|sub0A')",
-            u"└── MyNode('|root|sub1')",
+            "MyNode('|root')",
+            "├── MyNode('|root|sub0')",
+            "│   ├── MyNode('|root|sub0|sub0B')",
+            "│   └── MyNode('|root|sub0|sub0A')",
+            "└── MyNode('|root|sub1')",
         ]
     )
     if six.PY2:

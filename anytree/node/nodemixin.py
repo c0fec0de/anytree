@@ -8,7 +8,7 @@ class NodeMixin:
 
     separator = "/"
 
-    u"""
+    """
     The :any:`NodeMixin` class extends any Python class to a tree node.
 
     The only tree relevant information is the `parent` attribute.
@@ -77,7 +77,7 @@ class NodeMixin:
 
     @property
     def parent(self):
-        u"""
+        """
         Parent Node.
 
         On set, the node is detached from any previous parent node and attached
