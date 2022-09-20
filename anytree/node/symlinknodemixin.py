@@ -3,7 +3,7 @@ from .nodemixin import NodeMixin
 
 
 class SymlinkNodeMixin(NodeMixin):
-    u"""
+    """
     The :any:`SymlinkNodeMixin` class extends any Python class to a symbolic link to a tree node.
 
     The class **MUST** have a `target` attribute refering to another tree node.

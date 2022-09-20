@@ -19,6 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          sudo apt-get install -y graphviz
           pip install tox poetry
       - name: TOX
         run: tox

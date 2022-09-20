@@ -6,7 +6,7 @@ from .util import _repr
 
 class AnyNode(NodeMixin):
     def __init__(self, parent=None, children=None, **kwargs):
-        u"""
+        """
         A generic tree node with any `kwargs`.
 
         Keyword Args:

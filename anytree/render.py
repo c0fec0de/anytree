@@ -68,12 +68,12 @@ class AsciiStyle(AbstractStyle):
         |   +-- Node('/root/sub0/sub0A')
         +-- Node('/root/sub1')
         """
-        super(AsciiStyle, self).__init__(u"|   ", u"|-- ", u"+-- ")
+        super(AsciiStyle, self).__init__("|   ", "|-- ", "+-- ")
 
 
 class ContStyle(AbstractStyle):
     def __init__(self):
-        u"""
+        """
         Continued style, without gaps.
 
         >>> from anytree import Node, RenderTree
@@ -90,12 +90,12 @@ class ContStyle(AbstractStyle):
         │   └── Node('/root/sub0/sub0A')
         └── Node('/root/sub1')
         """
-        super(ContStyle, self).__init__(u"\u2502   ", u"\u251c\u2500\u2500 ", u"\u2514\u2500\u2500 ")
+        super(ContStyle, self).__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2514\u2500\u2500 ")
 
 
 class ContRoundStyle(AbstractStyle):
     def __init__(self):
-        u"""
+        """
         Continued style, without gaps, round edges.
 
         >>> from anytree import Node, RenderTree
@@ -112,12 +112,12 @@ class ContRoundStyle(AbstractStyle):
         │   ╰── Node('/root/sub0/sub0A')
         ╰── Node('/root/sub1')
         """
-        super(ContRoundStyle, self).__init__(u"\u2502   ", u"\u251c\u2500\u2500 ", u"\u2570\u2500\u2500 ")
+        super(ContRoundStyle, self).__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2570\u2500\u2500 ")
 
 
 class DoubleStyle(AbstractStyle):
     def __init__(self):
-        u"""
+        """
         Double line style, without gaps.
 
         >>> from anytree import Node, RenderTree
@@ -135,13 +135,13 @@ class DoubleStyle(AbstractStyle):
         ╚══ Node('/root/sub1')
 
         """
-        super(DoubleStyle, self).__init__(u"\u2551   ", u"\u2560\u2550\u2550 ", u"\u255a\u2550\u2550 ")
+        super(DoubleStyle, self).__init__("\u2551   ", "\u2560\u2550\u2550 ", "\u255a\u2550\u2550 ")
 
 
 @six.python_2_unicode_compatible
 class RenderTree:
     def __init__(self, node, style=ContStyle(), childiter=list, maxlevel=None):
-        u"""
+        """
         Render tree starting at `node`.
 
         Keyword Args:
@@ -278,7 +278,7 @@ class RenderTree:
     @staticmethod
     def __item(node, continues, style):
         if not continues:
-            return Row(u"", u"", node)
+            return Row("", "", node)
         items = [style.vertical if cont else style.empty for cont in continues]
         indent = "".join(items[:-1])
         branch = style.cont if continues[-1] else style.end
@@ -296,7 +296,7 @@ class RenderTree:
         return "%s(%s)" % (classname, ", ".join(args))
 
     def by_attr(self, attrname="name"):
-        u"""
+        """
         Return rendered tree with node attribute `attrname`.
 
         >>> from anytree import AnyNode, RenderTree
@@ -329,9 +329,9 @@ class RenderTree:
                     lines = attr
                 else:
                     lines = str(attr).split("\n")
-                yield u"%s%s" % (pre, lines[0])
+                yield "%s%s" % (pre, lines[0])
                 for line in lines[1:]:
-                    yield u"%s%s" % (fill, line)
+                    yield "%s%s" % (fill, line)
 
         return "\n".join(get())
 

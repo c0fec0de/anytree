@@ -6,7 +6,7 @@ from .dictimporter import DictImporter
 
 class JsonImporter:
     def __init__(self, dictimporter=None, **kwargs):
-        u"""
+        """
         Import Tree from JSON.
 
         The JSON is read and converted to a dictionary via `dictimporter`.
