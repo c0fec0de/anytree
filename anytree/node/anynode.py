@@ -80,7 +80,7 @@ class AnyNode(NodeMixin):
         >>> print(RenderTree(root))
         AnyNode(id='root', new='a new attribute')
         ├── AnyNode(id='sub0')
-        │   ├── AnyNode(bar=109, foo=4, id='sub0B')
+        │   ├── AnyNode(bar=110, foo=4, id='sub0B')
         │   └── AnyNode(id='sub0A')
         └── AnyNode(id='sub1')
             ├── AnyNode(id='sub1A')
