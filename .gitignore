@@ -8,3 +8,4 @@ anytree.sublime-workspace
 dist
 docs/build/
 htmlcov
+poetry.lock
