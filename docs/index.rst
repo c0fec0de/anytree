@@ -8,17 +8,18 @@ Any Python Tree Data
 .. image:: https://img.shields.io/pypi/dm/anytree.svg?label=pypi%20downloads
    :target: https://pypi.python.org/pypi/anytree
 
-.. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
-    :target: https://travis-ci.org/c0fec0de/anytree
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=latest
+    :target: https://anytree.readthedocs.io/en/latest/?badge=latest
 
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.8.0
-    :target: http://anytree.readthedocs.io/en/2.8.0/?badge=2.8.0
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.9.0
+    :target: http://anytree.readthedocs.io/en/2.9.0/?badge=2.9.0
 
-.. image:: https://codeclimate.com/github/c0fec0de/anytree.png
-    :target: https://codeclimate.com/github/c0fec0de/anytree
+.. image:: https://api.codeclimate.com/v1/badges/e6d325d6fd23a93aab20/maintainability
+   :target: https://codeclimate.com/github/c0fec0de/anytree/maintainability
+   :alt: Maintainability
 
 .. image:: https://img.shields.io/pypi/pyversions/anytree.svg
    :target: https://pypi.python.org/pypi/anytree
@@ -28,6 +29,12 @@ Any Python Tree Data
 
 .. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0257/
+
+.. image:: https://img.shields.io/badge/linter-pylint-%231674b1?style=flat
+   :target: https://www.pylint.org/
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
 
 Simple, lightweight and extensible Tree_ data structure.
 
@@ -63,10 +70,10 @@ Links
 
 Feel free to share_ info about your anytree project.
 
-.. _anytree: http://anytree.readthedocs.io/en/2.8.0/
-.. _Documentation: http://anytree.readthedocs.io/en/2.8.0/
+.. _anytree: http://anytree.readthedocs.io/en/2.9.0/
+.. _Documentation: http://anytree.readthedocs.io/en/2.9.0/
 .. _GitHub: https://github.com/c0fec0de/anytree
-.. _PyPI: https://pypi.org/project/anytree/2.8.0/
+.. _PyPI: https://pypi.org/project/anytree/2.9.0/
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
