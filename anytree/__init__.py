@@ -2,7 +2,7 @@
 
 """Powerful and Lightweight Python Tree Data Structure."""
 
-__version__ = "2.8.0"
+__version__ = "3.0.0"
 __author__ = "c0fec0de"
 __author_email__ = "c0fec0de@gmail.com"
 __description__ = """Powerful and Lightweight Python Tree Data Structure.."""

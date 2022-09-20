@@ -4,11 +4,18 @@
 .. image:: https://img.shields.io/pypi/dm/anytree.svg?label=pypi%20downloads
    :target: https://pypi.python.org/pypi/anytree
 
-.. image:: https://travis-ci.com/c0fec0de/anytree.svg?branch=main
-    :target: https://travis-ci.com/github/c0fec0de/anytree
-
 .. image:: https://readthedocs.org/projects/anytree/badge/?version=latest
     :target: https://anytree.readthedocs.io/en/latest/?badge=latest
+
+.. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
+    :target: https://coveralls.io/github/c0fec0de/anytree
+
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=3.0.0
+    :target: http://anytree.readthedocs.io/en/3.0.0/?badge=3.0.0
+
+.. image:: https://api.codeclimate.com/v1/badges/e6d325d6fd23a93aab20/maintainability
+   :target: https://codeclimate.com/github/c0fec0de/anytree/maintainability
+   :alt: Maintainability
 
 .. image:: https://img.shields.io/pypi/pyversions/anytree.svg
    :target: https://pypi.python.org/pypi/anytree

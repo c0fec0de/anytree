@@ -8,8 +8,8 @@ Any Python Tree Data
 .. image:: https://img.shields.io/pypi/dm/anytree.svg?label=pypi%20downloads
    :target: https://pypi.python.org/pypi/anytree
 
-.. image:: https://travis-ci.org/c0fec0de/anytree.svg?branch=master
-    :target: https://travis-ci.org/c0fec0de/anytree
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=latest
+    :target: https://anytree.readthedocs.io/en/latest/?badge=latest
 
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
@@ -17,8 +17,9 @@ Any Python Tree Data
 .. image:: https://readthedocs.org/projects/anytree/badge/?version=3.0.0
     :target: http://anytree.readthedocs.io/en/3.0.0/?badge=3.0.0
 
-.. image:: https://codeclimate.com/github/c0fec0de/anytree.png
-    :target: https://codeclimate.com/github/c0fec0de/anytree
+.. image:: https://api.codeclimate.com/v1/badges/e6d325d6fd23a93aab20/maintainability
+   :target: https://codeclimate.com/github/c0fec0de/anytree/maintainability
+   :alt: Maintainability
 
 .. image:: https://img.shields.io/pypi/pyversions/anytree.svg
    :target: https://pypi.python.org/pypi/anytree
@@ -28,6 +29,12 @@ Any Python Tree Data
 
 .. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
    :target: https://www.python.org/dev/peps/pep-0257/
+
+.. image:: https://img.shields.io/badge/linter-pylint-%231674b1?style=flat
+   :target: https://www.pylint.org/
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
 
 Simple, lightweight and extensible Tree_ data structure.
 
@@ -81,8 +88,6 @@ Getting started
 Usage is simple.
 
 **Construction**
-
-Every node is just an instance of the class `Node`:
 
 >>> from anytree import Node, RenderTree
 >>> udo = Node("Udo")
