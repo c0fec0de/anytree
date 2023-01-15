@@ -70,10 +70,10 @@ Links
 
 Feel free to share_ info about your anytree project.
 
-.. _anytree: http://anytree.readthedocs.io/en/3.0.0/
-.. _Documentation: http://anytree.readthedocs.io/en/3.0.0/
+.. _anytree: http://anytree.readthedocs.io/en/latest/
+.. _Documentation: http://anytree.readthedocs.io/en/latest/
 .. _GitHub: https://github.com/c0fec0de/anytree
-.. _PyPI: https://pypi.org/project/anytree/3.0.0/
+.. _PyPI: https://pypi.org/project/anytree/
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors

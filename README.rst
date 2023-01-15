@@ -46,20 +46,20 @@ Links
 .. image:: https://github.com/c0fec0de/anytree/raw/devel/docs/static/buymeacoffee.png
    :target: https://www.buymeacoffee.com/1oYX0sw
 
-.. _anytree: http://anytree.readthedocs.io/en/3.0.0/
-.. _Documentation: http://anytree.readthedocs.io/en/3.0.0/
-.. _PyPI: https://pypi.org/project/anytree/3.0.0/
+.. _anytree: http://anytree.readthedocs.io/en/latest/
+.. _Documentation: http://anytree.readthedocs.io/en/latest/
+.. _PyPI: https://pypi.org/project/anytree/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
 
-.. _Node: https://anytree.readthedocs.io/en/3.0.0/api/anytree.node.html#anytree.node.node.Node
-.. _RenderTree: https://anytree.readthedocs.io/en/3.0.0/api/anytree.render.html#anytree.render.RenderTree
-.. _UniqueDotExporter: https://anytree.readthedocs.io/en/3.0.0/exporter/dotexporter.html#anytree.exporter.dotexporter.UniqueDotExporter
-.. _NodeMixin: https://anytree.readthedocs.io/en/3.0.0/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
-.. _Importers: https://anytree.readthedocs.io/en/3.0.0/importer.html
-.. _Exporters: https://anytree.readthedocs.io/en/3.0.0/exporter.html
+.. _Node: https://anytree.readthedocs.io/en/latest/api/anytree.node.html#anytree.node.node.Node
+.. _RenderTree: https://anytree.readthedocs.io/en/latest/api/anytree.render.html#anytree.render.RenderTree
+.. _UniqueDotExporter: https://anytree.readthedocs.io/en/latest/exporter/dotexporter.html#anytree.exporter.dotexporter.UniqueDotExporter
+.. _NodeMixin: https://anytree.readthedocs.io/en/latest/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
+.. _Importers: https://anytree.readthedocs.io/en/latest/importer.html
+.. _Exporters: https://anytree.readthedocs.io/en/latest/exporter.html
 
 Getting started
 ---------------
