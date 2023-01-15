@@ -24,28 +24,13 @@ class DictExporter:
         >>> s1 = AnyNode(a="sub1", parent=root)
 
         >>> exporter = DictExporter()
-        >>> pprint(exporter.export(root))  # order within dictionary might vary!
+        >>> pprint(exporter.export(root))
         {'a': 'root',
          'children': [{'a': 'sub0',
                        'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]},
                       {'a': 'sub1'}]}
 
-        Pythons dictionary `dict` does not preserve order.
-        :any:`collections.OrderedDict` does.
-        In this case attributes can be ordered via `attriter`.
-
-        >>> from collections import OrderedDict
-        >>> exporter = DictExporter(dictcls=OrderedDict, attriter=sorted)
-        >>> pprint(exporter.export(root))
-        OrderedDict([('a', 'root'),
-                     ('children',
-                      [OrderedDict([('a', 'sub0'),
-                                    ('children',
-                                     [OrderedDict([('a', 'sub0A'), ('b', 'foo')]),
-                                      OrderedDict([('a', 'sub0B')])])]),
-                       OrderedDict([('a', 'sub1')])])])
-
-        The attribute iterator `attriter` may be used for filtering too.
+        The attribute iterator `attriter` may be used for filtering and/or reordering.
         For example, just dump attributes named `a`:
 
         >>> exporter = DictExporter(attriter=lambda attrs: [(k, v) for k, v in attrs if k == "a"])
