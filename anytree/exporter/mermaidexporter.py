@@ -149,16 +149,14 @@ class MermaidExporter:
             node.key = get_key(index)
             index += 1
 
-        for node in PreOrderIter(self.node, maxlevel=self.maxlevel):
-            nodekey = node.key
             nodename = nodenamefunc(node)
             nodeattr = nodeattrfunc(node)
             nodeattr = "|%s|" % nodeattr if nodeattr is not None else ""
             if node.parent is None:
-                yield '%s%s[%s]' % (indent, nodekey, MermaidExporter.esc(nodename))
+                yield '%s%s[%s]' % (indent, node.key, MermaidExporter.esc(nodename))
             else:
                 yield '%s%s[%s] -->%s %s[%s]' % (indent, node.parent.key, MermaidExporter.esc(nodenamefunc(node.parent)),
-                                            nodeattr, nodekey, MermaidExporter.esc(nodename))
+                                            nodeattr, node.key, MermaidExporter.esc(nodename))
 
     def to_markdown_file(self, filename):
         """
