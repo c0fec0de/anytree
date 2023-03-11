@@ -47,7 +47,7 @@ Links
    :target: https://www.buymeacoffee.com/1oYX0sw
 
 .. _anytree: http://anytree.readthedocs.io/en/3.0.0/
-.. _Documentation: http://anytree.readthedocs.io/en/3.0.0/
+.. _Documentation: https://anytree.readthedocs.io/en/latest/
 .. _PyPI: https://pypi.org/project/anytree/3.0.0/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
