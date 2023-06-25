@@ -44,7 +44,8 @@ coverage = '^6.4.4'
 isort = '^5.9'
 pylint = '^2.15'
 pytest = '^6.2'
-
+sphinx = "<7.0.0"
+pyyaml = ">=6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
