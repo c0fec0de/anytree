@@ -23,11 +23,11 @@ keywords = [
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Development Status :: 5 - Production/Stable",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
 
 
@@ -35,17 +35,17 @@ classifiers = [
 ebt = "anytree.cli:main"
 
 [tool.poetry.dependencies]
-python = ">= 3.6.2, < 4"
+python = ">= 3.7.2, < 4"
 six = '*'
 
 [tool.poetry.dev-dependencies]
-black = '>=21.9b0'
-coverage = '>=5.0.0'
-isort = '>=5.9'
-pylint = '>=2.13.5'
-pytest = '>=6.2'
-pyyaml = '*'
-sphinx = '>=5.1.1'
+black = '^22.3.0'
+coverage = '^6.4.4'
+isort = '^5.9'
+pylint = '^2.15'
+pytest = '^6.2'
+sphinx = "<7.0.0"
+pyyaml = ">=6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
