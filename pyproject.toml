@@ -31,9 +31,6 @@ classifiers = [
 ]
 
 
-[tool.poetry.scripts]
-ebt = "anytree.cli:main"
-
 [tool.poetry.dependencies]
 python = ">= 3.7.2, < 4"
 six = '*'
