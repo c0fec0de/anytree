@@ -7,6 +7,8 @@ which can be imported from different formats and exported to different formats.
 Available importers:
 
 .. toctree::
+    :maxdepth: 1
+
     importer/dictimporter
     importer/jsonimporter
 

@@ -2,6 +2,8 @@ API
 ===
 
 .. toctree::
+    :maxdepth: 1
+
     api/anytree.node
     api/anytree.iterators
     api/anytree.render
