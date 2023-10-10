@@ -8,6 +8,7 @@ Node Classes
 .. automodule:: anytree.node.node
 
 .. automodule:: anytree.node.nodemixin
+    :private-members:
 
 .. automodule:: anytree.node.symlinknode
 

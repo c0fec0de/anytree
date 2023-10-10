@@ -8,3 +8,4 @@ Tricks
     tricks/yaml
     tricks/multidim
     tricks/weightededges
+    tricks/consistencychecks

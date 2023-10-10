@@ -1,3 +1,4 @@
+from ..config import ASSERTIONS
 from .abstractiter import AbstractIter
 from .levelordergroupiter import LevelOrderGroupIter
 
@@ -46,7 +47,8 @@ class ZigZagGroupIter(AbstractIter):
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
         if children:
-            assert len(children) == 1
+            if ASSERTIONS:  # pragma: no branch
+                assert len(children) == 1
             _iter = LevelOrderGroupIter(children[0], filter_, stop, maxlevel)
             while True:
                 try:

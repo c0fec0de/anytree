@@ -13,6 +13,8 @@ import collections
 
 import six
 
+from .config import ASSERTIONS
+
 Row = collections.namedtuple("Row", ("pre", "fill", "node"))
 
 
@@ -34,11 +36,12 @@ class AbstractStyle:
         self.vertical = vertical
         self.cont = cont
         self.end = end
-        assert len(cont) == len(vertical) == len(end), "'%s', '%s' and '%s' need to have equal length" % (
-            vertical,
-            cont,
-            end,
-        )
+        if ASSERTIONS:  # pragma: no branch
+            assert len(cont) == len(vertical) == len(end), "'%s', '%s' and '%s' need to have equal length" % (
+                vertical,
+                cont,
+                end,
+            )
 
     @property
     def empty(self):
