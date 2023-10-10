@@ -115,8 +115,8 @@ Detach/Attach Protocol
 ----------------------
 
 A node class implementation might implement the notification slots
-:any:`_pre_detach(parent)`, :any:`_post_detach(parent)`,
-:any:`_pre_attach(parent)`, :any:`_post_attach(parent)`.
+``_pre_detach(parent)``, ``_post_detach(parent)``,
+``_pre_attach(parent)``, ``_post_attach(parent)``.
 
 These methods are *protected* methods,
 intended to be overwritten by child classes of :any:`NodeMixin`/:any:`Node`.
@@ -163,9 +163,9 @@ _post_detach NotifiedNode('/b')
 
 
 .. important::
-    An exception raised by :any:`_pre_detach(parent)` and :any:`_pre_attach(parent)` will **prevent** the tree structure to be updated.
+    An exception raised by ``_pre_detach(parent)`` and ``_pre_attach(parent)`` will **prevent** the tree structure to be updated.
     The node keeps the old state.
-    An exception raised by :any:`_post_detach(parent)` and :any:`_post_attach(parent)` does **not rollback** the tree structure modification.
+    An exception raised by ``_post_detach(parent)`` and ``_post_attach(parent)`` does **not rollback** the tree structure modification.
 
 
 Custom Separator

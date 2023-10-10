@@ -4,6 +4,7 @@ import warnings
 
 from anytree.iterators import PreOrderIter
 
+from ..config import ASSERTIONS
 from .exceptions import LoopError, TreeError
 
 
@@ -146,7 +147,8 @@ class NodeMixin:
         if parent is not None:
             self._pre_detach(parent)
             parentchildren = parent.__children_or_empty
-            assert any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
+            if ASSERTIONS:  # pragma: no branch
+                assert any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
             # ATOMIC START
             parent.__children = [child for child in parentchildren if child is not self]
             self.__parent = None
@@ -158,7 +160,8 @@ class NodeMixin:
         if parent is not None:
             self._pre_attach(parent)
             parentchildren = parent.__children_or_empty
-            assert not any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
+            if ASSERTIONS:  # pragma: no branch
+                assert not any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
             # ATOMIC START
             parentchildren.append(self)
             self.__parent = parent
@@ -249,7 +252,8 @@ class NodeMixin:
             for child in children:
                 child.parent = self
             self._post_attach_children(children)
-            assert len(self.children) == len(children)
+            if ASSERTIONS:  # pragma: no branch
+                assert len(self.children) == len(children)
         except Exception:
             self.children = old_children
             raise
@@ -261,7 +265,8 @@ class NodeMixin:
         self._pre_detach_children(children)
         for child in self.children:
             child.parent = None
-        assert len(self.children) == 0
+        if ASSERTIONS:  # pragma: no branch
+            assert len(self.children) == 0
         self._post_detach_children(children)
 
     def _pre_detach_children(self, children):

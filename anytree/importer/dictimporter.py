@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from anytree import AnyNode
 
+from ..config import ASSERTIONS
+
 
 class DictImporter:
     """
@@ -38,8 +40,9 @@ class DictImporter:
         return self.__import(data)
 
     def __import(self, data, parent=None):
-        assert isinstance(data, dict)
-        assert "parent" not in data
+        if ASSERTIONS:  # pragma: no branch
+            assert isinstance(data, dict)
+            assert "parent" not in data
         attrs = dict(data)
         children = attrs.pop("children", [])
         node = self.nodecls(parent=parent, **attrs)

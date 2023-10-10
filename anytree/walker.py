@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from .config import ASSERTIONS
+
 
 class Walker:
     """Walk from one node to another."""
@@ -70,7 +72,8 @@ class Walker:
             raise WalkError(msg)
         # common
         common = Walker.__calc_common(startpath, endpath)
-        assert common[0] is start.root
+        if ASSERTIONS:  # pragma: no branch
+            assert common[0] is start.root
         len_common = len(common)
         # upwards
         if start is common[-1]:
