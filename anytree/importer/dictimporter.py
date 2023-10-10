@@ -3,33 +3,34 @@ from anytree import AnyNode
 
 
 class DictImporter:
+    """
+    Import Tree from dictionary.
+
+    Every dictionary is converted to an instance of `nodecls`.
+    The dictionaries listed in the children attribute are converted
+    likewise and added as children.
+
+    Keyword Args:
+        nodecls: class used for nodes.
+
+    >>> from anytree.importer import DictImporter
+    >>> from anytree import RenderTree
+    >>> importer = DictImporter()
+    >>> data = {
+    ...     'a': 'root',
+    ...     'children': [{'a': 'sub0',
+    ...                   'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]},
+    ...                  {'a': 'sub1'}]}
+    >>> root = importer.import_(data)
+    >>> print(RenderTree(root))
+    AnyNode(a='root')
+    ├── AnyNode(a='sub0')
+    │   ├── AnyNode(a='sub0A', b='foo')
+    │   └── AnyNode(a='sub0B')
+    └── AnyNode(a='sub1')
+    """
+
     def __init__(self, nodecls=AnyNode):
-        """
-        Import Tree from dictionary.
-
-        Every dictionary is converted to an instance of `nodecls`.
-        The dictionaries listed in the children attribute are converted
-        likewise and added as children.
-
-        Keyword Args:
-            nodecls: class used for nodes.
-
-        >>> from anytree.importer import DictImporter
-        >>> from anytree import RenderTree
-        >>> importer = DictImporter()
-        >>> data = {
-        ...     'a': 'root',
-        ...     'children': [{'a': 'sub0',
-        ...                   'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]},
-        ...                  {'a': 'sub1'}]}
-        >>> root = importer.import_(data)
-        >>> print(RenderTree(root))
-        AnyNode(a='root')
-        ├── AnyNode(a='sub0')
-        │   ├── AnyNode(a='sub0A', b='foo')
-        │   └── AnyNode(a='sub0B')
-        └── AnyNode(a='sub1')
-        """
         self.nodecls = nodecls
 
     def import_(self, data):

@@ -17,18 +17,19 @@ Row = collections.namedtuple("Row", ("pre", "fill", "node"))
 
 
 class AbstractStyle:
+    """
+    Tree Render Style.
+
+    Args:
+
+        vertical: Sign for vertical line.
+
+        cont: Chars for a continued branch.
+
+        end: Chars for the last branch.
+    """
+
     def __init__(self, vertical, cont, end):
-        """
-        Tree Render Style.
-
-        Args:
-
-            vertical: Sign for vertical line.
-
-            cont: Chars for a continued branch.
-
-            end: Chars for the last branch.
-        """
         super(AbstractStyle, self).__init__()
         self.vertical = vertical
         self.cont = cont
@@ -50,211 +51,216 @@ class AbstractStyle:
 
 
 class AsciiStyle(AbstractStyle):
+    """
+    Ascii style.
+
+    >>> from anytree import Node, RenderTree
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root)
+    >>> s0b = Node("sub0B", parent=s0)
+    >>> s0a = Node("sub0A", parent=s0)
+    >>> s1 = Node("sub1", parent=root)
+
+    >>> print(RenderTree(root, style=AsciiStyle()))
+    Node('/root')
+    |-- Node('/root/sub0')
+    |   |-- Node('/root/sub0/sub0B')
+    |   +-- Node('/root/sub0/sub0A')
+    +-- Node('/root/sub1')
+    """
+
     def __init__(self):
-        """
-        Ascii style.
-
-        >>> from anytree import Node, RenderTree
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root)
-        >>> s0b = Node("sub0B", parent=s0)
-        >>> s0a = Node("sub0A", parent=s0)
-        >>> s1 = Node("sub1", parent=root)
-
-        >>> print(RenderTree(root, style=AsciiStyle()))
-        Node('/root')
-        |-- Node('/root/sub0')
-        |   |-- Node('/root/sub0/sub0B')
-        |   +-- Node('/root/sub0/sub0A')
-        +-- Node('/root/sub1')
-        """
         super(AsciiStyle, self).__init__("|   ", "|-- ", "+-- ")
 
 
 class ContStyle(AbstractStyle):
+    """
+    Continued style, without gaps.
+
+    >>> from anytree import Node, RenderTree
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root)
+    >>> s0b = Node("sub0B", parent=s0)
+    >>> s0a = Node("sub0A", parent=s0)
+    >>> s1 = Node("sub1", parent=root)
+
+    >>> print(RenderTree(root, style=ContStyle()))
+    Node('/root')
+    ├── Node('/root/sub0')
+    │   ├── Node('/root/sub0/sub0B')
+    │   └── Node('/root/sub0/sub0A')
+    └── Node('/root/sub1')
+    """
+
     def __init__(self):
-        """
-        Continued style, without gaps.
-
-        >>> from anytree import Node, RenderTree
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root)
-        >>> s0b = Node("sub0B", parent=s0)
-        >>> s0a = Node("sub0A", parent=s0)
-        >>> s1 = Node("sub1", parent=root)
-
-        >>> print(RenderTree(root, style=ContStyle()))
-        Node('/root')
-        ├── Node('/root/sub0')
-        │   ├── Node('/root/sub0/sub0B')
-        │   └── Node('/root/sub0/sub0A')
-        └── Node('/root/sub1')
-        """
         super(ContStyle, self).__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2514\u2500\u2500 ")
 
 
 class ContRoundStyle(AbstractStyle):
+    """
+    Continued style, without gaps, round edges.
+
+    >>> from anytree import Node, RenderTree
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root)
+    >>> s0b = Node("sub0B", parent=s0)
+    >>> s0a = Node("sub0A", parent=s0)
+    >>> s1 = Node("sub1", parent=root)
+
+    >>> print(RenderTree(root, style=ContRoundStyle()))
+    Node('/root')
+    ├── Node('/root/sub0')
+    │   ├── Node('/root/sub0/sub0B')
+    │   ╰── Node('/root/sub0/sub0A')
+    ╰── Node('/root/sub1')
+    """
+
     def __init__(self):
-        """
-        Continued style, without gaps, round edges.
-
-        >>> from anytree import Node, RenderTree
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root)
-        >>> s0b = Node("sub0B", parent=s0)
-        >>> s0a = Node("sub0A", parent=s0)
-        >>> s1 = Node("sub1", parent=root)
-
-        >>> print(RenderTree(root, style=ContRoundStyle()))
-        Node('/root')
-        ├── Node('/root/sub0')
-        │   ├── Node('/root/sub0/sub0B')
-        │   ╰── Node('/root/sub0/sub0A')
-        ╰── Node('/root/sub1')
-        """
         super(ContRoundStyle, self).__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2570\u2500\u2500 ")
 
 
 class DoubleStyle(AbstractStyle):
+    """
+    Double line style, without gaps.
+
+    >>> from anytree import Node, RenderTree
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root)
+    >>> s0b = Node("sub0B", parent=s0)
+    >>> s0a = Node("sub0A", parent=s0)
+    >>> s1 = Node("sub1", parent=root)
+
+    >>> print(RenderTree(root, style=DoubleStyle))
+    Node('/root')
+    ╠══ Node('/root/sub0')
+    ║   ╠══ Node('/root/sub0/sub0B')
+    ║   ╚══ Node('/root/sub0/sub0A')
+    ╚══ Node('/root/sub1')
+
+    """
+
     def __init__(self):
-        """
-        Double line style, without gaps.
-
-        >>> from anytree import Node, RenderTree
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root)
-        >>> s0b = Node("sub0B", parent=s0)
-        >>> s0a = Node("sub0A", parent=s0)
-        >>> s1 = Node("sub1", parent=root)
-
-        >>> print(RenderTree(root, style=DoubleStyle))
-        Node('/root')
-        ╠══ Node('/root/sub0')
-        ║   ╠══ Node('/root/sub0/sub0B')
-        ║   ╚══ Node('/root/sub0/sub0A')
-        ╚══ Node('/root/sub1')
-
-        """
         super(DoubleStyle, self).__init__("\u2551   ", "\u2560\u2550\u2550 ", "\u255a\u2550\u2550 ")
 
 
 @six.python_2_unicode_compatible
 class RenderTree:
+    """
+    Render tree starting at `node`.
+
+    Keyword Args:
+        style (AbstractStyle): Render Style.
+        childiter: Child iterator.
+        maxlevel: Limit rendering to this depth.
+
+    :any:`RenderTree` is an iterator, returning a tuple with 3 items:
+
+    `pre`
+        tree prefix.
+
+    `fill`
+        filling for multiline entries.
+
+    `node`
+        :any:`NodeMixin` object.
+
+    It is up to the user to assemble these parts to a whole.
+
+    >>> from anytree import Node, RenderTree
+    >>> root = Node("root", lines=["c0fe", "c0de"])
+    >>> s0 = Node("sub0", parent=root, lines=["ha", "ba"])
+    >>> s0b = Node("sub0B", parent=s0, lines=["1", "2", "3"])
+    >>> s0a = Node("sub0A", parent=s0, lines=["a", "b"])
+    >>> s1 = Node("sub1", parent=root, lines=["Z"])
+
+    Simple one line:
+
+    >>> for pre, _, node in RenderTree(root):
+    ...     print("%s%s" % (pre, node.name))
+    root
+    ├── sub0
+    │   ├── sub0B
+    │   └── sub0A
+    └── sub1
+
+    Multiline:
+
+    >>> for pre, fill, node in RenderTree(root):
+    ...     print("%s%s" % (pre, node.lines[0]))
+    ...     for line in node.lines[1:]:
+    ...         print("%s%s" % (fill, line))
+    c0fe
+    c0de
+    ├── ha
+    │   ba
+    │   ├── 1
+    │   │   2
+    │   │   3
+    │   └── a
+    │       b
+    └── Z
+
+    `maxlevel` limits the depth of the tree:
+
+    >>> print(RenderTree(root, maxlevel=2))
+    Node('/root', lines=['c0fe', 'c0de'])
+    ├── Node('/root/sub0', lines=['ha', 'ba'])
+    └── Node('/root/sub1', lines=['Z'])
+
+    The `childiter` is responsible for iterating over child nodes at the
+    same level. An reversed order can be achived by using `reversed`.
+
+    >>> for row in RenderTree(root, childiter=reversed):
+    ...     print("%s%s" % (row.pre, row.node.name))
+    root
+    ├── sub1
+    └── sub0
+        ├── sub0A
+        └── sub0B
+
+    Or writing your own sort function:
+
+    >>> def mysort(items):
+    ...     return sorted(items, key=lambda item: item.name)
+    >>> for row in RenderTree(root, childiter=mysort):
+    ...     print("%s%s" % (row.pre, row.node.name))
+    root
+    ├── sub0
+    │   ├── sub0A
+    │   └── sub0B
+    └── sub1
+
+    :any:`by_attr` simplifies attribute rendering and supports multiline:
+
+    >>> print(RenderTree(root).by_attr())
+    root
+    ├── sub0
+    │   ├── sub0B
+    │   └── sub0A
+    └── sub1
+    >>> print(RenderTree(root).by_attr("lines"))
+    c0fe
+    c0de
+    ├── ha
+    │   ba
+    │   ├── 1
+    │   │   2
+    │   │   3
+    │   └── a
+    │       b
+    └── Z
+
+    And can be a function:
+
+    >>> print(RenderTree(root).by_attr(lambda n: " ".join(n.lines)))
+    c0fe c0de
+    ├── ha ba
+    │   ├── 1 2 3
+    │   └── a b
+    └── Z
+    """
+
     def __init__(self, node, style=ContStyle(), childiter=list, maxlevel=None):
-        """
-        Render tree starting at `node`.
-
-        Keyword Args:
-            style (AbstractStyle): Render Style.
-            childiter: Child iterator.
-            maxlevel: Limit rendering to this depth.
-
-        :any:`RenderTree` is an iterator, returning a tuple with 3 items:
-
-        `pre`
-            tree prefix.
-
-        `fill`
-            filling for multiline entries.
-
-        `node`
-            :any:`NodeMixin` object.
-
-        It is up to the user to assemble these parts to a whole.
-
-        >>> from anytree import Node, RenderTree
-        >>> root = Node("root", lines=["c0fe", "c0de"])
-        >>> s0 = Node("sub0", parent=root, lines=["ha", "ba"])
-        >>> s0b = Node("sub0B", parent=s0, lines=["1", "2", "3"])
-        >>> s0a = Node("sub0A", parent=s0, lines=["a", "b"])
-        >>> s1 = Node("sub1", parent=root, lines=["Z"])
-
-        Simple one line:
-
-        >>> for pre, _, node in RenderTree(root):
-        ...     print("%s%s" % (pre, node.name))
-        root
-        ├── sub0
-        │   ├── sub0B
-        │   └── sub0A
-        └── sub1
-
-        Multiline:
-
-        >>> for pre, fill, node in RenderTree(root):
-        ...     print("%s%s" % (pre, node.lines[0]))
-        ...     for line in node.lines[1:]:
-        ...         print("%s%s" % (fill, line))
-        c0fe
-        c0de
-        ├── ha
-        │   ba
-        │   ├── 1
-        │   │   2
-        │   │   3
-        │   └── a
-        │       b
-        └── Z
-
-        `maxlevel` limits the depth of the tree:
-
-        >>> print(RenderTree(root, maxlevel=2))
-        Node('/root', lines=['c0fe', 'c0de'])
-        ├── Node('/root/sub0', lines=['ha', 'ba'])
-        └── Node('/root/sub1', lines=['Z'])
-
-        The `childiter` is responsible for iterating over child nodes at the
-        same level. An reversed order can be achived by using `reversed`.
-
-        >>> for row in RenderTree(root, childiter=reversed):
-        ...     print("%s%s" % (row.pre, row.node.name))
-        root
-        ├── sub1
-        └── sub0
-            ├── sub0A
-            └── sub0B
-
-        Or writing your own sort function:
-
-        >>> def mysort(items):
-        ...     return sorted(items, key=lambda item: item.name)
-        >>> for row in RenderTree(root, childiter=mysort):
-        ...     print("%s%s" % (row.pre, row.node.name))
-        root
-        ├── sub0
-        │   ├── sub0A
-        │   └── sub0B
-        └── sub1
-
-        :any:`by_attr` simplifies attribute rendering and supports multiline:
-
-        >>> print(RenderTree(root).by_attr())
-        root
-        ├── sub0
-        │   ├── sub0B
-        │   └── sub0A
-        └── sub1
-        >>> print(RenderTree(root).by_attr("lines"))
-        c0fe
-        c0de
-        ├── ha
-        │   ba
-        │   ├── 1
-        │   │   2
-        │   │   3
-        │   └── a
-        │       b
-        └── Z
-
-        And can be a function:
-
-        >>> print(RenderTree(root).by_attr(lambda n: " ".join(n.lines)))
-        c0fe c0de
-        ├── ha ba
-        │   ├── 1 2 3
-        │   └── a b
-        └── Z
-        """
         if not isinstance(style, AbstractStyle):
             style = style()
         self.node = node

@@ -6,8 +6,6 @@ from .exceptions import LoopError, TreeError
 
 class NodeMixin:
 
-    separator = "/"
-
     """
     The :any:`NodeMixin` class extends any Python class to a tree node.
 
@@ -51,7 +49,7 @@ class NodeMixin:
     >>> my0 = MyClass('my0', 0, 0, children=[
     ...     MyClass('my1', 1, 0),
     ...     MyClass('my2', 0, 2),
-    ... ]
+    ... ])
 
     >>> for pre, _, node in RenderTree(my0):
     ...     treestr = u"%s%s" % (pre, node.name)
@@ -64,7 +62,7 @@ class NodeMixin:
 
     >>> my0 = MyClass('my0', 0, 0, children=[
     ...     MyClass('my1', 1, 0),
-    ... ]
+    ... ])
     >>> my2 = MyClass('my2', 0, 2, parent=my0)
 
     >>> for pre, _, node in RenderTree(my0):
@@ -74,6 +72,8 @@ class NodeMixin:
     ├── my1  1 0
     └── my2  0 2
     """
+
+    separator = "/"
 
     @property
     def parent(self):

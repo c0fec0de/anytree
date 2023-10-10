@@ -13,6 +13,144 @@ _RE_ESC = re.compile(r'["\\]')
 
 
 class DotExporter:
+    """
+    Dot Language Exporter.
+
+    Args:
+        node (Node): start node.
+
+    Keyword Args:
+        graph: DOT graph type.
+
+        name: DOT graph name.
+
+        options: list of options added to the graph.
+
+        indent (int): number of spaces for indent.
+
+        nodenamefunc: Function to extract node name from `node` object.
+                        The function shall accept one `node` object as
+                        argument and return the name of it.
+
+        nodeattrfunc: Function to decorate a node with attributes.
+                        The function shall accept one `node` object as
+                        argument and return the attributes.
+
+        edgeattrfunc: Function to decorate a edge with attributes.
+                        The function shall accept two `node` objects as
+                        argument. The first the node and the second the child
+                        and return the attributes.
+
+        edgetypefunc: Function to which gives the edge type.
+                        The function shall accept two `node` objects as
+                        argument. The first the node and the second the child
+                        and return the edge (i.e. '->').
+
+        maxlevel (int): Limit export to this number of levels.
+
+    >>> from anytree import Node
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root, edge=2)
+    >>> s0b = Node("sub0B", parent=s0, foo=4, edge=109)
+    >>> s0a = Node("sub0A", parent=s0, edge="")
+    >>> s1 = Node("sub1", parent=root, edge="")
+    >>> s1a = Node("sub1A", parent=s1, edge=7)
+    >>> s1b = Node("sub1B", parent=s1, edge=8)
+    >>> s1c = Node("sub1C", parent=s1, edge=22)
+    >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
+
+    .. note:: If the node names are not unqiue, see :any:`UniqueDotExporter`.
+
+    A directed graph:
+
+    >>> from anytree.exporter import DotExporter
+    >>> for line in DotExporter(root):
+    ...     print(line)
+    digraph tree {
+        "root";
+        "sub0";
+        "sub0B";
+        "sub0A";
+        "sub1";
+        "sub1A";
+        "sub1B";
+        "sub1C";
+        "sub1Ca";
+        "root" -> "sub0";
+        "root" -> "sub1";
+        "sub0" -> "sub0B";
+        "sub0" -> "sub0A";
+        "sub1" -> "sub1A";
+        "sub1" -> "sub1B";
+        "sub1" -> "sub1C";
+        "sub1C" -> "sub1Ca";
+    }
+
+    The resulting graph:
+
+    .. image:: ../static/dotexporter0.png
+
+    An undirected graph:
+
+    >>> def nodenamefunc(node):
+    ...     return '%s:%s' % (node.name, node.depth)
+    >>> def edgeattrfunc(node, child):
+    ...     return 'label="%s:%s"' % (node.name, child.name)
+    >>> def edgetypefunc(node, child):
+    ...     return '--'
+            >>> from anytree.exporter import DotExporter
+    >>> for line in DotExporter(root, graph="graph",
+    ...                             nodenamefunc=nodenamefunc,
+    ...                             nodeattrfunc=lambda node: "shape=box",
+    ...                             edgeattrfunc=edgeattrfunc,
+    ...                             edgetypefunc=edgetypefunc):
+    ...     print(line)
+    graph tree {
+        "root:0" [shape=box];
+        "sub0:1" [shape=box];
+        "sub0B:2" [shape=box];
+        "sub0A:2" [shape=box];
+        "sub1:1" [shape=box];
+        "sub1A:2" [shape=box];
+        "sub1B:2" [shape=box];
+        "sub1C:2" [shape=box];
+        "sub1Ca:3" [shape=box];
+        "root:0" -- "sub0:1" [label="root:sub0"];
+        "root:0" -- "sub1:1" [label="root:sub1"];
+        "sub0:1" -- "sub0B:2" [label="sub0:sub0B"];
+        "sub0:1" -- "sub0A:2" [label="sub0:sub0A"];
+        "sub1:1" -- "sub1A:2" [label="sub1:sub1A"];
+        "sub1:1" -- "sub1B:2" [label="sub1:sub1B"];
+        "sub1:1" -- "sub1C:2" [label="sub1:sub1C"];
+        "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
+    }
+
+    The resulting graph:
+
+    .. image:: ../static/dotexporter1.png
+
+    To export custom node implementations or :any:`AnyNode`, please provide a proper `nodenamefunc`:
+
+    >>> from anytree import AnyNode
+    >>> root = AnyNode(id="root")
+    >>> s0 = AnyNode(id="sub0", parent=root)
+    >>> s0b = AnyNode(id="s0b", parent=s0)
+    >>> s0a = AnyNode(id="s0a", parent=s0)
+
+    >>> from anytree.exporter import DotExporter
+    >>> for line in DotExporter(root, nodenamefunc=lambda n: n.id):
+    ...     print(line)
+    digraph tree {
+        "root";
+        "sub0";
+        "s0b";
+        "s0a";
+        "root" -> "sub0";
+        "sub0" -> "s0b";
+        "sub0" -> "s0a";
+    }
+    """
+
     def __init__(
         self,
         node,
@@ -26,143 +164,6 @@ class DotExporter:
         edgetypefunc=None,
         maxlevel=None,
     ):
-        """
-        Dot Language Exporter.
-
-        Args:
-            node (Node): start node.
-
-        Keyword Args:
-            graph: DOT graph type.
-
-            name: DOT graph name.
-
-            options: list of options added to the graph.
-
-            indent (int): number of spaces for indent.
-
-            nodenamefunc: Function to extract node name from `node` object.
-                          The function shall accept one `node` object as
-                          argument and return the name of it.
-
-            nodeattrfunc: Function to decorate a node with attributes.
-                          The function shall accept one `node` object as
-                          argument and return the attributes.
-
-            edgeattrfunc: Function to decorate a edge with attributes.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the attributes.
-
-            edgetypefunc: Function to which gives the edge type.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the edge (i.e. '->').
-
-            maxlevel (int): Limit export to this number of levels.
-
-        >>> from anytree import Node
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root, edge=2)
-        >>> s0b = Node("sub0B", parent=s0, foo=4, edge=109)
-        >>> s0a = Node("sub0A", parent=s0, edge="")
-        >>> s1 = Node("sub1", parent=root, edge="")
-        >>> s1a = Node("sub1A", parent=s1, edge=7)
-        >>> s1b = Node("sub1B", parent=s1, edge=8)
-        >>> s1c = Node("sub1C", parent=s1, edge=22)
-        >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
-
-        .. note:: If the node names are not unqiue, see :any:`UniqueDotExporter`.
-
-        A directed graph:
-
-        >>> from anytree.exporter import DotExporter
-        >>> for line in DotExporter(root):
-        ...     print(line)
-        digraph tree {
-            "root";
-            "sub0";
-            "sub0B";
-            "sub0A";
-            "sub1";
-            "sub1A";
-            "sub1B";
-            "sub1C";
-            "sub1Ca";
-            "root" -> "sub0";
-            "root" -> "sub1";
-            "sub0" -> "sub0B";
-            "sub0" -> "sub0A";
-            "sub1" -> "sub1A";
-            "sub1" -> "sub1B";
-            "sub1" -> "sub1C";
-            "sub1C" -> "sub1Ca";
-        }
-
-        The resulting graph:
-
-        .. image:: ../static/dotexporter0.png
-
-        An undirected graph:
-
-        >>> def nodenamefunc(node):
-        ...     return '%s:%s' % (node.name, node.depth)
-        >>> def edgeattrfunc(node, child):
-        ...     return 'label="%s:%s"' % (node.name, child.name)
-        >>> def edgetypefunc(node, child):
-        ...     return '--'
-                >>> from anytree.exporter import DotExporter
-        >>> for line in DotExporter(root, graph="graph",
-        ...                             nodenamefunc=nodenamefunc,
-        ...                             nodeattrfunc=lambda node: "shape=box",
-        ...                             edgeattrfunc=edgeattrfunc,
-        ...                             edgetypefunc=edgetypefunc):
-        ...     print(line)
-        graph tree {
-            "root:0" [shape=box];
-            "sub0:1" [shape=box];
-            "sub0B:2" [shape=box];
-            "sub0A:2" [shape=box];
-            "sub1:1" [shape=box];
-            "sub1A:2" [shape=box];
-            "sub1B:2" [shape=box];
-            "sub1C:2" [shape=box];
-            "sub1Ca:3" [shape=box];
-            "root:0" -- "sub0:1" [label="root:sub0"];
-            "root:0" -- "sub1:1" [label="root:sub1"];
-            "sub0:1" -- "sub0B:2" [label="sub0:sub0B"];
-            "sub0:1" -- "sub0A:2" [label="sub0:sub0A"];
-            "sub1:1" -- "sub1A:2" [label="sub1:sub1A"];
-            "sub1:1" -- "sub1B:2" [label="sub1:sub1B"];
-            "sub1:1" -- "sub1C:2" [label="sub1:sub1C"];
-            "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
-        }
-
-        The resulting graph:
-
-        .. image:: ../static/dotexporter1.png
-
-        To export custom node implementations or :any:`AnyNode`, please provide a proper `nodenamefunc`:
-
-        >>> from anytree import AnyNode
-        >>> root = AnyNode(id="root")
-        >>> s0 = AnyNode(id="sub0", parent=root)
-        >>> s0b = AnyNode(id="s0b", parent=s0)
-        >>> s0a = AnyNode(id="s0a", parent=s0)
-
-        >>> from anytree.exporter import DotExporter
-        >>> for line in DotExporter(root, nodenamefunc=lambda n: n.id):
-        ...     print(line)
-        digraph tree {
-            "root";
-            "sub0";
-            "s0b";
-            "s0a";
-            "root" -> "sub0";
-            "sub0" -> "s0b";
-            "sub0" -> "s0a";
-        }
-        """
         self.node = node
         self.graph = graph
         self.name = name

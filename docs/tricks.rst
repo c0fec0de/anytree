@@ -2,6 +2,8 @@ Tricks
 ======
 
 .. toctree::
+    :maxdepth: 1
+
     tricks/readonly
     tricks/yaml
     tricks/multidim
