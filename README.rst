@@ -11,7 +11,7 @@
     :target: https://coveralls.io/github/c0fec0de/anytree
 
 .. image:: https://readthedocs.org/projects/anytree/badge/?version=2.9.0
-    :target: http://anytree.readthedocs.io/en/2.9.0/?badge=2.9.0
+    :target: https://anytree.readthedocs.io/en/2.9.0/?badge=2.9.0
 
 .. image:: https://api.codeclimate.com/v1/badges/e6d325d6fd23a93aab20/maintainability
    :target: https://codeclimate.com/github/c0fec0de/anytree/maintainability
@@ -46,8 +46,8 @@ Links
 .. image:: https://github.com/c0fec0de/anytree/raw/devel/docs/static/buymeacoffee.png
    :target: https://www.buymeacoffee.com/1oYX0sw
 
-.. _anytree: http://anytree.readthedocs.io/en/2.9.0/
-.. _Documentation: http://anytree.readthedocs.io/en/2.9.0/
+.. _anytree: https://anytree.readthedocs.io/en/2.9.0/
+.. _Documentation: https://anytree.readthedocs.io/en/2.9.0/
 .. _PyPI: https://pypi.org/project/anytree/2.9.0/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
