@@ -69,6 +69,13 @@ a
 │   └── a1a
 └── a2
 
+.. note::
+
+    It is important to use the ``_pre_*`` and **not** the ``_post_*`` methods.
+    An exception raised by `_pre_detach(parent)` and `_pre_attach(parent)` will **prevent** the tree structure to be updated.
+    The node keeps the old state.
+    An exception raised by `_post_detach(parent)` and `_post_attach(parent)` does **not rollback** the tree structure modification.
+
 
 Temporary
 ---------
