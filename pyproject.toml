@@ -74,7 +74,7 @@ line_length = 120
 exclude_lines = [
     'return NotImplemented',
     'raise NotImplementedError()',
-    'pragma: no cover'
+    'pragma: no cover',
 ]
 
 
@@ -102,6 +102,9 @@ basepython = python3
 
 [testenv]
 allowlist_externals = *
+setenv =
+    ANYTREE_ASSERTIONS=1
+
 commands =
     poetry install --with=test --with=doc
     poetry run black .

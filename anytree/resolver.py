@@ -5,6 +5,8 @@ from __future__ import print_function
 
 import re
 
+from .config import ASSERTIONS
+
 _MAXCACHE = 20
 
 
@@ -203,7 +205,8 @@ class Resolver:
         return node, parts
 
     def __glob(self, node, parts):
-        assert node is not None
+        if ASSERTIONS:  # pragma: no branch
+            assert node is not None
         nodes = []
         if parts:
             name = parts[0]
