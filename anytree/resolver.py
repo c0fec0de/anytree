@@ -9,17 +9,17 @@ _MAXCACHE = 20
 
 
 class Resolver:
+    """
+    Resolve :any:`NodeMixin` paths using attribute `pathattr`.
+
+    Keyword Args:
+        name (str): Name of the node attribute to be used for resolving
+        ignorecase (bool): Enable case insensisitve handling.
+    """
 
     _match_cache = {}
 
     def __init__(self, pathattr="name", ignorecase=False):
-        """
-        Resolve :any:`NodeMixin` paths using attribute `pathattr`.
-
-        Keyword Args:
-            name (str): Name of the node attribute to be used for resolving
-            ignorecase (bool): Enable case insensisitve handling.
-        """
         super(Resolver, self).__init__()
         self.pathattr = pathattr
         self.ignorecase = ignorecase

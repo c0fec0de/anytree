@@ -4,53 +4,54 @@ from .dictexporter import DictExporter
 
 
 class JsonExporter:
-    def __init__(self, dictexporter=None, maxlevel=None, **kwargs):
-        """
-        Tree to JSON exporter.
+    """
+    Tree to JSON exporter.
 
-        The tree is converted to a dictionary via `dictexporter` and exported to JSON.
+    The tree is converted to a dictionary via `dictexporter` and exported to JSON.
 
-        Keyword Arguments:
-            dictexporter: Dictionary Exporter used (see :any:`DictExporter`).
-            maxlevel (int): Limit export to this number of levels.
-            kwargs: All other arguments are passed to
-                    :any:`json.dump`/:any:`json.dumps`.
-                    See documentation for reference.
+    Keyword Arguments:
+        dictexporter: Dictionary Exporter used (see :any:`DictExporter`).
+        maxlevel (int): Limit export to this number of levels.
+        kwargs: All other arguments are passed to
+                :any:`json.dump`/:any:`json.dumps`.
+                See documentation for reference.
 
-        >>> from anytree import AnyNode
-        >>> from anytree.exporter import JsonExporter
-        >>> root = AnyNode(a="root")
-        >>> s0 = AnyNode(a="sub0", parent=root)
-        >>> s0a = AnyNode(a="sub0A", b="foo", parent=s0)
-        >>> s0b = AnyNode(a="sub0B", parent=s0)
-        >>> s1 = AnyNode(a="sub1", parent=root)
+    >>> from anytree import AnyNode
+    >>> from anytree.exporter import JsonExporter
+    >>> root = AnyNode(a="root")
+    >>> s0 = AnyNode(a="sub0", parent=root)
+    >>> s0a = AnyNode(a="sub0A", b="foo", parent=s0)
+    >>> s0b = AnyNode(a="sub0B", parent=s0)
+    >>> s1 = AnyNode(a="sub1", parent=root)
 
-        >>> exporter = JsonExporter(indent=2, sort_keys=True)
-        >>> print(exporter.export(root))
+    >>> exporter = JsonExporter(indent=2, sort_keys=True)
+    >>> print(exporter.export(root))
+    {
+      "a": "root",
+      "children": [
         {
-          "a": "root",
+          "a": "sub0",
           "children": [
             {
-              "a": "sub0",
-              "children": [
-                {
-                  "a": "sub0A",
-                  "b": "foo"
-                },
-                {
-                  "a": "sub0B"
-                }
-              ]
+              "a": "sub0A",
+              "b": "foo"
             },
             {
-              "a": "sub1"
+              "a": "sub0B"
             }
           ]
+        },
+        {
+          "a": "sub1"
         }
+      ]
+    }
 
-        .. note:: Whenever the json output does not meet your expections, see the :any:`json` documentation.
-                  For instance, if you have unicode/ascii issues, please try `JsonExporter(..., ensure_ascii=False)`.
-        """
+    .. note:: Whenever the json output does not meet your expections, see the :any:`json` documentation.
+              For instance, if you have unicode/ascii issues, please try `JsonExporter(..., ensure_ascii=False)`.
+    """
+
+    def __init__(self, dictexporter=None, maxlevel=None, **kwargs):
         self.dictexporter = dictexporter
         self.maxlevel = maxlevel
         self.kwargs = kwargs

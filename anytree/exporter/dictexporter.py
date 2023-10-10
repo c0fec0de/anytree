@@ -1,67 +1,68 @@
 class DictExporter:
+    """
+    Tree to dictionary exporter.
+
+    Every node is converted to a dictionary with all instance
+    attributes as key-value pairs.
+    Child nodes are exported to the children attribute.
+    A list of dictionaries.
+
+    Keyword Args:
+        dictcls: class used as dictionary. :any:`dict` by default.
+        attriter: attribute iterator for sorting and/or filtering.
+        childiter: child iterator for sorting and/or filtering.
+        maxlevel (int): Limit export to this number of levels.
+
+    >>> from pprint import pprint  # just for nice printing
+    >>> from anytree import AnyNode
+    >>> from anytree.exporter import DictExporter
+    >>> root = AnyNode(a="root")
+    >>> s0 = AnyNode(a="sub0", parent=root)
+    >>> s0a = AnyNode(a="sub0A", b="foo", parent=s0)
+    >>> s0b = AnyNode(a="sub0B", parent=s0)
+    >>> s1 = AnyNode(a="sub1", parent=root)
+
+    >>> exporter = DictExporter()
+    >>> pprint(exporter.export(root))  # order within dictionary might vary!
+    {'a': 'root',
+     'children': [{'a': 'sub0',
+                   'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]},
+                  {'a': 'sub1'}]}
+
+    Pythons dictionary `dict` does not preserve order.
+    :any:`collections.OrderedDict` does.
+    In this case attributes can be ordered via `attriter`.
+
+    >>> from collections import OrderedDict
+    >>> exporter = DictExporter(dictcls=OrderedDict, attriter=sorted)
+    >>> pprint(exporter.export(root))
+    OrderedDict([('a', 'root'),
+                 ('children',
+                  [OrderedDict([('a', 'sub0'),
+                                ('children',
+                                 [OrderedDict([('a', 'sub0A'), ('b', 'foo')]),
+                                  OrderedDict([('a', 'sub0B')])])]),
+                   OrderedDict([('a', 'sub1')])])])
+
+    The attribute iterator `attriter` may be used for filtering too.
+    For example, just dump attributes named `a`:
+
+    >>> exporter = DictExporter(attriter=lambda attrs: [(k, v) for k, v in attrs if k == "a"])
+    >>> pprint(exporter.export(root))
+    {'a': 'root',
+     'children': [{'a': 'sub0', 'children': [{'a': 'sub0A'}, {'a': 'sub0B'}]},
+                  {'a': 'sub1'}]}
+
+    The child iterator `childiter` can be used for sorting and filtering likewise:
+
+    >>> exporter = DictExporter(childiter=lambda children: [child for child in children if "0" in child.a])
+    >>> pprint(exporter.export(root))
+    {'a': 'root',
+     'children': [{'a': 'sub0',
+                   'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]}]}
+    """
+
     def __init__(self, dictcls=dict, attriter=None, childiter=list, maxlevel=None):
-        """
-        Tree to dictionary exporter.
-
-        Every node is converted to a dictionary with all instance
-        attributes as key-value pairs.
-        Child nodes are exported to the children attribute.
-        A list of dictionaries.
-
-        Keyword Args:
-            dictcls: class used as dictionary. :any:`dict` by default.
-            attriter: attribute iterator for sorting and/or filtering.
-            childiter: child iterator for sorting and/or filtering.
-            maxlevel (int): Limit export to this number of levels.
-
-        >>> from pprint import pprint  # just for nice printing
-        >>> from anytree import AnyNode
-        >>> from anytree.exporter import DictExporter
-        >>> root = AnyNode(a="root")
-        >>> s0 = AnyNode(a="sub0", parent=root)
-        >>> s0a = AnyNode(a="sub0A", b="foo", parent=s0)
-        >>> s0b = AnyNode(a="sub0B", parent=s0)
-        >>> s1 = AnyNode(a="sub1", parent=root)
-
-        >>> exporter = DictExporter()
-        >>> pprint(exporter.export(root))  # order within dictionary might vary!
-        {'a': 'root',
-         'children': [{'a': 'sub0',
-                       'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]},
-                      {'a': 'sub1'}]}
-
-        Pythons dictionary `dict` does not preserve order.
-        :any:`collections.OrderedDict` does.
-        In this case attributes can be ordered via `attriter`.
-
-        >>> from collections import OrderedDict
-        >>> exporter = DictExporter(dictcls=OrderedDict, attriter=sorted)
-        >>> pprint(exporter.export(root))
-        OrderedDict([('a', 'root'),
-                     ('children',
-                      [OrderedDict([('a', 'sub0'),
-                                    ('children',
-                                     [OrderedDict([('a', 'sub0A'), ('b', 'foo')]),
-                                      OrderedDict([('a', 'sub0B')])])]),
-                       OrderedDict([('a', 'sub1')])])])
-
-        The attribute iterator `attriter` may be used for filtering too.
-        For example, just dump attributes named `a`:
-
-        >>> exporter = DictExporter(attriter=lambda attrs: [(k, v) for k, v in attrs if k == "a"])
-        >>> pprint(exporter.export(root))
-        {'a': 'root',
-         'children': [{'a': 'sub0', 'children': [{'a': 'sub0A'}, {'a': 'sub0B'}]},
-                      {'a': 'sub1'}]}
-
-        The child iterator `childiter` can be used for sorting and filtering likewise:
-
-        >>> exporter = DictExporter(childiter=lambda children: [child for child in children if "0" in child.a])
-        >>> pprint(exporter.export(root))
-        {'a': 'root',
-         'children': [{'a': 'sub0',
-                       'children': [{'a': 'sub0A', 'b': 'foo'}, {'a': 'sub0B'}]}]}
-        """
         self.dictcls = dictcls
         self.attriter = attriter
         self.childiter = childiter
