@@ -149,3 +149,21 @@ def test_by_attr():
         "│   └── s:u:b:0:A",
         "└── s:u:b:1",
     ]
+
+
+def test_repr():
+    """Repr."""
+
+    class ReprNode(anytree.Node):
+        def __repr__(self):
+            return "{name}\n{name}".format(name=self.name)
+
+    root = ReprNode("root", lines=["root"])
+    s0 = ReprNode("sub0", parent=root, lines=["su", "b0"])
+    ReprNode("sub0B", parent=s0, lines=["sub", "0B"])
+    ReprNode("sub0A", parent=s0)
+    ReprNode("sub1", parent=root, lines=["sub1"])
+
+    bystr = str(anytree.RenderTree(root)).splitlines()
+    byident = anytree.RenderTree(root).by_attr(lambda node: node).splitlines()
+    assert bystr == byident

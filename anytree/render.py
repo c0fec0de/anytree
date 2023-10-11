@@ -296,8 +296,14 @@ class RenderTree:
         return Row(pre, fill, node)
 
     def __str__(self):
-        lines = ["%s%r" % (pre, node) for pre, _, node in self]
-        return "\n".join(lines)
+        def get():
+            for row in self:
+                lines = repr(row.node).splitlines() or [""]
+                yield "%s%s" % (row.pre, lines[0])
+                for line in lines[1:]:
+                    yield "%s%s" % (row.fill, line)
+
+        return "\n".join(get())
 
     def __repr__(self):
         classname = self.__class__.__name__
@@ -332,17 +338,26 @@ class RenderTree:
         """
 
         def get():
-            for pre, fill, node in self:
-                attr = attrname(node) if callable(attrname) else getattr(node, attrname, "")
-                if isinstance(attr, (list, tuple)):
-                    lines = attr
-                else:
-                    lines = str(attr).split("\n")
-                yield "%s%s" % (pre, lines[0])
-                for line in lines[1:]:
-                    yield "%s%s" % (fill, line)
+            if callable(attrname):
+                for row in self:
+                    attr = attrname(row.node)
+                    yield from _format_row_any(row, attr)
+            else:
+                for row in self:
+                    attr = getattr(row.node, attrname, "")
+                    yield from _format_row_any(row, attr)
 
         return "\n".join(get())
+
+
+def _format_row_any(row, attr):
+    if isinstance(attr, (list, tuple)):
+        lines = attr or [""]
+    else:
+        lines = str(attr).splitlines() or [""]
+    yield "%s%s" % (row.pre, lines[0])
+    for line in lines[1:]:
+        yield "%s%s" % (row.fill, line)
 
 
 def _is_last(iterable):
