@@ -5,7 +5,7 @@ import six
 
 
 def eq_(one, other):
-    assert one == other
+    assert one == other, "{one} != {other}".format(one=one, other=other)
 
 
 # hack own assert_raises, because py26 has a different impelmentation

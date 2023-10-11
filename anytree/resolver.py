@@ -5,8 +5,9 @@ from __future__ import print_function
 
 import re
 
-from .config import ASSERTIONS
 from anytree.iterators.preorderiter import PreOrderIter
+
+from .config import ASSERTIONS
 
 _MAXCACHE = 20
 
@@ -228,9 +229,11 @@ class Resolver:
         # handle recursive
         if name == "**":
             matches = []
-            for n in PreOrderIter(node):
+            for subnode in PreOrderIter(node):
                 try:
-                    matches += self.__glob(n, remainder)
+                    for match in self.__glob(subnode, remainder):
+                        if match not in matches:
+                            matches.append(match)
                 except ChildResolverError:
                     pass
             return matches
