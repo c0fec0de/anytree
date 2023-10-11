@@ -40,11 +40,14 @@ class LevelOrderIter(AbstractIter):
         level = 1
         while children:
             next_children = []
-            for child in children:
-                if filter_(child):
-                    yield child
-                next_children += AbstractIter._get_children(child.children, stop)
-            children = next_children
             level += 1
             if AbstractIter._abort_at_level(level, maxlevel):
-                break
+                for child in children:
+                    if filter_(child):
+                        yield child
+            else:
+                for child in children:
+                    if filter_(child):
+                        yield child
+                    next_children += AbstractIter._get_children(child.children, stop)
+            children = next_children
