@@ -38,8 +38,11 @@
 .. image:: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
    :target: http://makeapullrequest.com
 
-[![GitHub pull-requests](https://img.shields.io/github/issues-pr/c0fec0de/anytree.svg)](https://github.com/c0fec0de/anytree/pulls)
-[![GitHub pull-requests closed](https://img.shields.io/github/issues-pr-closed/c0fec0de/anytree.svg)](https://github.com/c0fec0de/anytree/pulls?q=is%3Apr+is%3Aclosed)
+.. image:: https://img.shields.io/github/issues-pr/c0fec0de/anytree.svg
+   :target: https://github.com/c0fec0de/anytree/pulls
+
+.. image:: https://img.shields.io/github/issues-pr-closed/c0fec0de/anytree.svg
+   :target: https://github.com/c0fec0de/anytree/pulls?q=is%3Apr+is%3Aclosed
 
 
 Links
