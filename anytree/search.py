@@ -169,7 +169,7 @@ def find_by_attr(node, value, name="name", maxlevel=None):
     """
     Search for *single* node with attribute `name` having `value` but stop at `maxlevel`.
 
-    Return tuple with matching nodes.
+    Return matching node.
 
     Args:
         node: top node, start searching.
