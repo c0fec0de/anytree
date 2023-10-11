@@ -21,19 +21,13 @@ def test_render():
     MyNode("sub1", parent=root)
     r = at.RenderTree(root)
 
-    expected = "\n".join(
-        [
-            "MyNode('|root')",
-            "├── MyNode('|root|sub0')",
-            "│   ├── MyNode('|root|sub0|sub0B')",
-            "│   └── MyNode('|root|sub0|sub0A')",
-            "└── MyNode('|root|sub1')",
-        ]
-    )
-    if six.PY2:
-        eq_(str(r).decode("utf-8"), expected)
-    else:
-        eq_(str(r), expected)
+    assert str(r).splitlines() == [
+        "MyNode('|root')",
+        "├── MyNode('|root|sub0')",
+        "│   ├── MyNode('|root|sub0|sub0B')",
+        "│   └── MyNode('|root|sub0|sub0A')",
+        "└── MyNode('|root|sub1')",
+    ]
 
 
 def test_get():

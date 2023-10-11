@@ -20,14 +20,6 @@ def assert_raises(exccls, msg):
         eq_(str(exc), msg)
 
 
-def eq_str(value, expected):
-    """Python 2.x and 3.x compatible string compare."""
-    if six.PY2:
-        eq_(value.decode("utf-8"), expected)
-    else:
-        eq_(value, expected)
-
-
 def with_setup(setup=None, teardown=None):
     def decorate(func, setup=setup, teardown=teardown):
         if setup:
