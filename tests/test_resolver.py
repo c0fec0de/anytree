@@ -75,6 +75,14 @@ def test_glob():
     with assert_raises(at.ResolverError, "unknown root node '/z*'. root is '/top'."):
         r.glob(sub1, "/z*")
 
+    # Recursive matching
+    assert r.glob(top, "**/sub0") == [sub0, sub0sub0, sub0sub1sub0, sub1sub0]
+    assert r.glob(top, "**/sub0/sub0") == [sub0sub0]
+    assert r.glob(top, "**/**/sub0") == [sub0, sub0sub0, sub0sub1sub0, sub1sub0]
+    assert r.glob(top, "sub0/**/sub0") == [sub0sub0, sub0sub1sub0]
+    with assert_raises(at.ResolverError, "unknown root node '/sub0'. root is '/top'."):
+        r.glob(top, "/sub0/**/sub0")
+
 
 def test_glob_cache():
     """Wildcard Cache."""
