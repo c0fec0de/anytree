@@ -36,6 +36,18 @@ Any Python Tree Data
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
 
+.. image:: https://img.shields.io/github/contributors/c0fec0de/anytree.svg
+   :target: https://github.com/c0fec0de/anytree/graphs/contributors/
+
+.. image:: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+   :target: http://makeapullrequest.com
+
+.. image:: https://img.shields.io/github/issues-pr/c0fec0de/anytree.svg
+   :target: https://github.com/c0fec0de/anytree/pulls
+
+.. image:: https://img.shields.io/github/issues-pr-closed/c0fec0de/anytree.svg
+   :target: https://github.com/c0fec0de/anytree/pulls?q=is%3Apr+is%3Aclosed
+
 Simple, lightweight and extensible Tree_ data structure.
 
 Feel free to share_ info about your anytree project.
