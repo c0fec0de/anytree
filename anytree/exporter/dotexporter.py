@@ -1,4 +1,5 @@
 import codecs
+import itertools
 import logging
 import re
 from os import path, remove
@@ -361,26 +362,26 @@ class UniqueDotExporter(DotExporter):
         >>> s1ca = Node("sub1Ca", parent=s1c)
 
         >>> from anytree.exporter import UniqueDotExporter
-        >>> for line in UniqueDotExporter(root):  # doctest: +SKIP
+        >>> for line in UniqueDotExporter(root):
         ...     print(line)
         digraph tree {
-            "0x7f1bf2c9c510" [label="root"];
-            "0x7f1bf2c9c5a0" [label="sub0"];
-            "0x7f1bf2c9c630" [label="s0"];
-            "0x7f1bf2c9c6c0" [label="s0"];
-            "0x7f1bf2c9c750" [label="sub1"];
-            "0x7f1bf2c9c7e0" [label="s1"];
-            "0x7f1bf2c9c870" [label="s1"];
-            "0x7f1bf2c9c900" [label="s1"];
-            "0x7f1bf2c9c990" [label="sub1Ca"];
-            "0x7f1bf2c9c510" -> "0x7f1bf2c9c5a0";
-            "0x7f1bf2c9c510" -> "0x7f1bf2c9c750";
-            "0x7f1bf2c9c5a0" -> "0x7f1bf2c9c630";
-            "0x7f1bf2c9c5a0" -> "0x7f1bf2c9c6c0";
-            "0x7f1bf2c9c750" -> "0x7f1bf2c9c7e0";
-            "0x7f1bf2c9c750" -> "0x7f1bf2c9c870";
-            "0x7f1bf2c9c750" -> "0x7f1bf2c9c900";
-            "0x7f1bf2c9c900" -> "0x7f1bf2c9c990";
+            "0" [label="root"];
+            "1" [label="sub0"];
+            "2" [label="s0"];
+            "3" [label="s0"];
+            "4" [label="sub1"];
+            "5" [label="s1"];
+            "6" [label="s1"];
+            "7" [label="s1"];
+            "8" [label="sub1Ca"];
+            "0" -> "1";
+            "0" -> "4";
+            "1" -> "2";
+            "1" -> "3";
+            "4" -> "5";
+            "4" -> "6";
+            "4" -> "7";
+            "7" -> "8";
         }
 
         The resulting graph:
@@ -396,16 +397,16 @@ class UniqueDotExporter(DotExporter):
         >>> s0a = AnyNode(id="s0", parent=s0)
 
         >>> from anytree.exporter import UniqueDotExporter
-        >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):  # doctest: +SKIP
+        >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):
         ...     print(line)
         digraph tree {
-            "0x7f5c70449af8" [label="root"];
-            "0x7f5c70449bd0" [label="sub0"];
-            "0x7f5c70449c60" [label="s0"];
-            "0x7f5c70449cf0" [label="s0"];
-            "0x7f5c70449af8" -> "0x7f5c70449bd0";
-            "0x7f5c70449bd0" -> "0x7f5c70449c60";
-            "0x7f5c70449bd0" -> "0x7f5c70449cf0";
+            "0" [label="root"];
+            "1" [label="sub0"];
+            "2" [label="s0"];
+            "3" [label="s0"];
+            "0" -> "1";
+            "1" -> "2";
+            "1" -> "3";
         }
         """
         super(UniqueDotExporter, self).__init__(
@@ -418,12 +419,16 @@ class UniqueDotExporter(DotExporter):
             nodeattrfunc=nodeattrfunc,
             edgeattrfunc=edgeattrfunc,
             edgetypefunc=edgetypefunc,
-            maxlevel=maxlevel,
         )
+        self.node_ids = {}
+        self.node_counter = itertools.count()
 
-    @staticmethod
-    def _default_nodenamefunc(node):
-        return hex(id(node))
+    # pylint: disable=arguments-differ
+    def _default_nodenamefunc(self, node):
+        node_id = id(node)
+        if node_id not in self.node_ids:
+            self.node_ids[node_id] = next(self.node_counter)
+        return self.node_ids[id(node)]
 
     @staticmethod
     def _default_nodeattrfunc(node):
