@@ -12,7 +12,7 @@ class ZigZagGroupIter(AbstractIter):
     (children of `node`) in reversed order.
     The next level contains the children of the children in forward order, and so on.
 
-    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> from anytree import Node, RenderTree, AsciiStyle, ZigZagGroupIter
     >>> f = Node("f")
     >>> b = Node("b", parent=f)
     >>> a = Node("a", parent=b)
