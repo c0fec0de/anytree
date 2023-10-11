@@ -59,7 +59,9 @@ Every node has a :any:`children` attribute with a tuple of all children:
 >>> lian.children
 ()
 
-**Single Node Attach**
+**Add: Single Node Attach**
+
+Just set the parent attribute and the node becomes a child node:
 
 >>> marc.parent = udo
 >>> print(RenderTree(udo))
@@ -67,17 +69,25 @@ Node('/Udo')
 └── Node('/Udo/Marc')
     └── Node('/Udo/Marc/Lian')
 
-**Single Node Detach**
+**Delete: Single Node Detach**
 
-To make a node to a root node, just set this attribute to `None`.
+A node becomes a root node, if you set the parent attribute to `None`:
 
->>> marc.is_root
+>>> lian.is_root
 False
->>> marc.parent = None
->>> marc.is_root
+>>> lian.parent = None
+>>> lian.is_root
 True
 
+The node is deleted from the tree:
+
+>>> print(RenderTree(udo))
+Node('/Udo')
+└── Node('/Udo/Marc')
+
 **Modify Multiple Child Nodes**
+
+Assume the following tree:
 
 >>> n = Node("n")
 >>> a = Node("a", parent=n)
