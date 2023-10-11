@@ -365,23 +365,23 @@ class UniqueDotExporter(DotExporter):
         >>> for line in UniqueDotExporter(root):
         ...     print(line)
         digraph tree {
-            "0" [label="root"];
-            "1" [label="sub0"];
-            "2" [label="s0"];
-            "3" [label="s0"];
-            "4" [label="sub1"];
-            "5" [label="s1"];
-            "6" [label="s1"];
-            "7" [label="s1"];
-            "8" [label="sub1Ca"];
-            "0" -> "1";
-            "0" -> "4";
-            "1" -> "2";
-            "1" -> "3";
-            "4" -> "5";
-            "4" -> "6";
-            "4" -> "7";
-            "7" -> "8";
+            "0x0" [label="root"];
+            "0x1" [label="sub0"];
+            "0x2" [label="s0"];
+            "0x3" [label="s0"];
+            "0x4" [label="sub1"];
+            "0x5" [label="s1"];
+            "0x6" [label="s1"];
+            "0x7" [label="s1"];
+            "0x8" [label="sub1Ca"];
+            "0x0" -> "0x1";
+            "0x0" -> "0x4";
+            "0x1" -> "0x2";
+            "0x1" -> "0x3";
+            "0x4" -> "0x5";
+            "0x4" -> "0x6";
+            "0x4" -> "0x7";
+            "0x7" -> "0x8";
         }
 
         The resulting graph:
@@ -400,13 +400,13 @@ class UniqueDotExporter(DotExporter):
         >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):
         ...     print(line)
         digraph tree {
-            "0" [label="root"];
-            "1" [label="sub0"];
-            "2" [label="s0"];
-            "3" [label="s0"];
-            "0" -> "1";
-            "1" -> "2";
-            "1" -> "3";
+            "0x0" [label="root"];
+            "0x1" [label="sub0"];
+            "0x2" [label="s0"];
+            "0x3" [label="s0"];
+            "0x0" -> "0x1";
+            "0x1" -> "0x2";
+            "0x1" -> "0x3";
         }
         """
         super(UniqueDotExporter, self).__init__(
@@ -428,7 +428,7 @@ class UniqueDotExporter(DotExporter):
         node_id = id(node)
         if node_id not in self.node_ids:
             self.node_ids[node_id] = next(self.node_counter)
-        return self.node_ids[id(node)]
+        return hex(self.node_ids[id(node)])
 
     @staticmethod
     def _default_nodeattrfunc(node):

@@ -21,11 +21,11 @@ def test_tree1():
         lines,
         (
             "digraph tree {",
-            '    "0" [label="root"];',
-            '    "1" [label="sub0"];',
-            '    "2" [label="sub0B"];',
-            '    "0" -> "1";',
-            '    "1" -> "2";',
+            '    "0x0" [label="root"];',
+            '    "0x1" [label="sub0"];',
+            '    "0x2" [label="sub0B"];',
+            '    "0x0" -> "0x1";',
+            '    "0x1" -> "0x2";',
             "}",
         ),
     )
