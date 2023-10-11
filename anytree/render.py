@@ -276,13 +276,14 @@ class RenderTree:
 
     def __next(self, node, continues, level=0):
         yield RenderTree.__item(node, continues, self.style)
-        children = node.children
         level += 1
-        if children and (self.maxlevel is None or level < self.maxlevel):
-            children = self.childiter(children)
-            for child, is_last in _is_last(children):
-                for grandchild in self.__next(child, continues + (not is_last,), level=level):
-                    yield grandchild
+        if self.maxlevel is None or level < self.maxlevel:
+            children = node.children
+            if children:
+                children = self.childiter(children)
+                for child, is_last in _is_last(children):
+                    for grandchild in self.__next(child, continues + (not is_last,), level=level):
+                        yield grandchild
 
     @staticmethod
     def __item(node, continues, style):
