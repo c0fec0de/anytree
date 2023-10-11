@@ -172,7 +172,7 @@ Subtree rendering:
 Node('/Mary/Udo/Marc')
 └── Node('/Mary/Udo/Marc/Lian')
 
-Cut:
+Cut/Delete:
 
 >>> dan.parent = None
 >>> print(RenderTree(dan))
@@ -180,6 +180,15 @@ Node('/Dan')
 ├── Node('/Dan/Jet')
 ├── Node('/Dan/Jan')
 └── Node('/Dan/Joe')
+
+>>> print(RenderTree(mary))
+Node('/Mary')
+├── Node('/Mary/Urs')
+├── Node('/Mary/Chris')
+├── Node('/Mary/Marta')
+└── Node('/Mary/Udo')
+    └── Node('/Mary/Udo/Marc')
+        └── Node('/Mary/Udo/Marc/Lian')
 
 **Extending any python class to become a tree node**
 
