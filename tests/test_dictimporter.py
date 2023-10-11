@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
 
-from helper import eq_, eq_str
+from helper import eq_
 
 from anytree import Node, RenderTree
 from anytree.exporter import DictExporter
@@ -27,20 +27,17 @@ def test_dict_importer():
     eq_(data, refdata)
     eq_(exporter.export(root), data)
     r = RenderTree(root)
-    expected = "\n".join(
-        [
-            "AnyNode(id='root')",
-            "├── AnyNode(id='sub0')",
-            "│   ├── AnyNode(id='sub0B')",
-            "│   └── AnyNode(id='sub0A')",
-            "└── AnyNode(id='sub1')",
-            "    ├── AnyNode(id='sub1A')",
-            "    ├── AnyNode(id='sub1B')",
-            "    └── AnyNode(id='sub1C')",
-            "        └── AnyNode(id='sub1Ca')",
-        ]
-    )
-    eq_str(str(r), expected)
+    assert str(r).splitlines() == [
+        "AnyNode(id='root')",
+        "├── AnyNode(id='sub0')",
+        "│   ├── AnyNode(id='sub0B')",
+        "│   └── AnyNode(id='sub0A')",
+        "└── AnyNode(id='sub1')",
+        "    ├── AnyNode(id='sub1A')",
+        "    ├── AnyNode(id='sub1B')",
+        "    └── AnyNode(id='sub1C')",
+        "        └── AnyNode(id='sub1Ca')",
+    ]
 
 
 def test_dict_importer_node():
@@ -66,17 +63,14 @@ def test_dict_importer_node():
     eq_(data, refdata)
     eq_(exporter.export(root), data)
     r = RenderTree(root)
-    expected = "\n".join(
-        [
-            "Node('/root')",
-            "├── Node('/root/sub0')",
-            "│   ├── Node('/root/sub0/sub0B')",
-            "│   └── Node('/root/sub0/sub0A')",
-            "└── Node('/root/sub1')",
-            "    ├── Node('/root/sub1/sub1A')",
-            "    ├── Node('/root/sub1/sub1B')",
-            "    └── Node('/root/sub1/sub1C')",
-            "        └── Node('/root/sub1/sub1C/sub1Ca')",
-        ]
-    )
-    eq_str(str(r), expected)
+    assert str(r).splitlines() == [
+        "Node('/root')",
+        "├── Node('/root/sub0')",
+        "│   ├── Node('/root/sub0/sub0B')",
+        "│   └── Node('/root/sub0/sub0A')",
+        "└── Node('/root/sub1')",
+        "    ├── Node('/root/sub1/sub1A')",
+        "    ├── Node('/root/sub1/sub1B')",
+        "    └── Node('/root/sub1/sub1C')",
+        "        └── Node('/root/sub1/sub1C/sub1Ca')",
+    ]

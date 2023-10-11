@@ -5,7 +5,7 @@ import six
 
 
 def eq_(one, other):
-    assert one == other
+    assert one == other, "{one} != {other}".format(one=one, other=other)
 
 
 # hack own assert_raises, because py26 has a different impelmentation
@@ -18,14 +18,6 @@ def assert_raises(exccls, msg):
     except Exception as exc:
         assert isinstance(exc, exccls), "%r is not a %r" % (exc, exccls)
         eq_(str(exc), msg)
-
-
-def eq_str(value, expected):
-    """Python 2.x and 3.x compatible string compare."""
-    if six.PY2:
-        eq_(value.decode("utf-8"), expected)
-    else:
-        eq_(value, expected)
 
 
 def with_setup(setup=None, teardown=None):

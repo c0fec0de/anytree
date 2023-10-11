@@ -21,7 +21,7 @@ def test_json_exporter():
     AnyNode(id="sub1Ca", parent=s1c)
 
     exporter = JsonExporter(indent=2, sort_keys=True)
-    exported = exporter.export(root).split("\n")
+    exported = exporter.export(root).splitlines()
     exported = [e.rstrip() for e in exported]  # just a fix for a strange py2x behavior.
     lines = [
         "{",
@@ -63,7 +63,7 @@ def test_json_exporter():
     eq_(exported, lines)
 
     exporter = JsonExporter(indent=2, sort_keys=True, maxlevel=2)
-    exported = exporter.export(root).split("\n")
+    exported = exporter.export(root).splitlines()
     exported = [e.rstrip() for e in exported]  # just a fix for a strange py2x behavior.
     limitedlines = [
         "{",
