@@ -420,15 +420,17 @@ class UniqueDotExporter(DotExporter):
             edgeattrfunc=edgeattrfunc,
             edgetypefunc=edgetypefunc,
         )
-        self.node_ids = {}
-        self.node_counter = itertools.count()
+        self.__node_ids = {}
+        self.__node_counter = itertools.count()
 
     # pylint: disable=arguments-differ
     def _default_nodenamefunc(self, node):
         node_id = id(node)
-        if node_id not in self.node_ids:
-            self.node_ids[node_id] = next(self.node_counter)
-        return hex(self.node_ids[id(node)])
+        try:
+            num = self.__node_ids[node_id]
+        except KeyError:
+            num = self.__node_ids[node_id] = next(self.__node_counter)
+        return hex(num)
 
     @staticmethod
     def _default_nodeattrfunc(node):

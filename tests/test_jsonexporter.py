@@ -2,10 +2,10 @@ import filecmp
 import os
 from tempfile import NamedTemporaryFile
 
-from helper import eq_
-
 from anytree import AnyNode
 from anytree.exporter import JsonExporter
+
+from .helper import eq_
 
 
 def test_json_exporter():

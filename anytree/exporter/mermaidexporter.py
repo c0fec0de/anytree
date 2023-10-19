@@ -1,18 +1,114 @@
 import codecs
-import logging
-import re
-from os import path, remove
-from subprocess import check_call
-from tempfile import NamedTemporaryFile
-
-import six
+import itertools
 
 from anytree import PreOrderIter
 
-_RE_ESC = re.compile(r'["\\]')
-
 
 class MermaidExporter:
+
+    """
+    Mermaid Exporter.
+
+    Args:
+        node (Node): start node.
+
+    Keyword Args:
+        graph: Mermaid graph type.
+
+        name: Mermaid graph name.
+
+        options: list of options added to the graph.
+
+        indent (int): number of spaces for indent.
+
+        nodenamefunc: Function to extract node name from `node` object.
+                      The function shall accept one `node` object as
+                      argument and return the name of it.
+                      Returns a unique identifier by default.
+
+        nodefunc: Function to decorate a node with attributes.
+                      The function shall accept one `node` object as
+                      argument and return the attributes.
+                      Returns ``[{node.name}]`` and creates therefore a
+                      rectangular node by default.
+
+        edgefunc: Function to decorate a edge with attributes.
+                  The function shall accept two `node` objects as
+                  argument. The first the node and the second the child
+                  and return edge.
+                  Returns ``-->`` by default.
+
+        maxlevel (int): Limit export to this number of levels.
+
+    >>> from anytree import Node
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root, edge=2)
+    >>> s0b = Node("sub0B", parent=s0, foo=4, edge=109)
+    >>> s0a = Node("sub0A", parent=s0, edge="")
+    >>> s1 = Node("sub1", parent=root, edge="")
+    >>> s1a = Node("sub1A", parent=s1, edge=7)
+    >>> s1b = Node("sub1B", parent=s1, edge=8)
+    >>> s1c = Node("sub1C", parent=s1, edge=22)
+    >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
+
+    A top-down graph:
+
+    >>> from anytree.exporter import MermaidExporter
+    >>> for line in MermaidExporter(root):
+    ...     print(line)
+    graph TD
+    N0["root"]
+    N1["sub0"]
+    N2["sub0B"]
+    N3["sub0A"]
+    N4["sub1"]
+    N5["sub1A"]
+    N6["sub1B"]
+    N7["sub1C"]
+    N8["sub1Ca"]
+    N0-->N1
+    N0-->N4
+    N1-->N2
+    N1-->N3
+    N4-->N5
+    N4-->N6
+    N4-->N7
+    N7-->N8
+
+    A customized graph with round boxes and named arrows:
+
+    >>> def nodefunc(node):
+    ...     return '("%s")' % (node.name)
+    >>> def edgefunc(node, child):
+    ...     return f"--{child.edge}-->"
+    >>> options = [
+    ...     "%% just an example comment",
+    ...     "%% could be an option too",
+    ... ]
+    >>> for line in MermaidExporter(root, options=options, nodefunc=nodefunc, edgefunc=edgefunc):
+    ...     print(line)
+    graph TD
+    %% just an example comment
+    %% could be an option too
+    N0("root")
+    N1("sub0")
+    N2("sub0B")
+    N3("sub0A")
+    N4("sub1")
+    N5("sub1A")
+    N6("sub1B")
+    N7("sub1C")
+    N8("sub1Ca")
+    N0--2-->N1
+    N0---->N4
+    N1--109-->N2
+    N1---->N3
+    N4--7-->N5
+    N4--8-->N6
+    N4--22-->N7
+    N7--42-->N8
+    """
+
     def __init__(
         self,
         node,
@@ -21,118 +117,57 @@ class MermaidExporter:
         options=None,
         indent=0,
         nodenamefunc=None,
-        nodeattrfunc=None,
-        edgeattrfunc=None,
-        edgetypefunc=None,
+        nodefunc=None,
+        edgefunc=None,
         maxlevel=None,
     ):
-        """
-        Mermaid Exporter.
-
-        Args:
-            node (Node): start node.
-
-        Keyword Args:
-            graph: Mermaid graph type.
-
-            name: Mermaid graph name.
-
-            options: list of options added to the graph.
-
-            indent (int): number of spaces for indent.
-
-            nodenamefunc: Function to extract node name from `node` object.
-                          The function shall accept one `node` object as
-                          argument and return the name of it.
-
-            nodeattrfunc: Function to decorate a node with attributes.
-                          The function shall accept one `node` object as
-                          argument and return the attributes.
-
-            edgeattrfunc: Function to decorate a edge with attributes.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the attributes.
-
-            edgetypefunc: Function to which gives the edge type.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the edge (i.e. '->').
-
-            maxlevel (int): Limit export to this number of levels.
-
-        >>> from anytree import Node
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root, edge=2)
-        >>> s0b = Node("sub0B", parent=s0, foo=4, edge=109)
-        >>> s0a = Node("sub0A", parent=s0, edge="")
-        >>> s1 = Node("sub1", parent=root, edge="")
-        >>> s1a = Node("sub1A", parent=s1, edge=7)
-        >>> s1b = Node("sub1B", parent=s1, edge=8)
-        >>> s1c = Node("sub1C", parent=s1, edge=22)
-        >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
-
-        A directed graph:
-
-        >>> from anytree.exporter import MermaidExporter
-        >>> for line in MermaidExporter(root):
-        ...     print(line)
-        graph TD
-        A[root] --> B[sub0]
-        A[root] --> C[sub1]
-        B[sub0] --> D[sub0B]
-        B[sub0] --> E[sub0A]
-        C[sub1] --> F[sub1A]
-        C[sub1] --> G[sub1B]
-        C[sub1] --> H[sub1C]
-        H[sub1C] --> I[sub1Ca]
-        """
         self.node = node
         self.graph = graph
         self.name = name
         self.options = options
         self.indent = indent
         self.nodenamefunc = nodenamefunc
-        self.nodeattrfunc = nodeattrfunc
-        self.edgeattrfunc = edgeattrfunc
-        self.edgetypefunc = edgetypefunc
+        self.nodefunc = nodefunc
+        self.edgefunc = edgefunc
         self.maxlevel = maxlevel
+        self.__node_ids = {}
+        self.__node_counter = itertools.count()
 
     def __iter__(self):
         # prepare
         indent = " " * self.indent
         nodenamefunc = self.nodenamefunc or self._default_nodenamefunc
-        nodeattrfunc = self.nodeattrfunc or self._default_nodeattrfunc
-        edgeattrfunc = self.edgeattrfunc or self._default_edgeattrfunc
-        edgetypefunc = self.edgetypefunc or self._default_edgetypefunc
-        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc)
+        nodefunc = self.nodefunc or self._default_nodefunc
+        edgefunc = self.edgefunc or self._default_edgefunc
+        return self.__iter(indent, nodenamefunc, nodefunc, edgefunc)
+
+    # pylint: disable=arguments-differ
+    def _default_nodenamefunc(self, node):
+        node_id = id(node)
+        try:
+            num = self.__node_ids[node_id]
+        except KeyError:
+            num = self.__node_ids[node_id] = next(self.__node_counter)
+        return "N%d" % (num,)
 
     @staticmethod
-    def _default_nodenamefunc(node):
-        return node.name
-
-    @staticmethod
-    def _default_nodeattrfunc(node):
+    def _default_nodefunc(node):
         # pylint: disable=W0613
-        return None
+        return '["%s"]' % (node.name)
 
     @staticmethod
-    def _default_edgeattrfunc(node, child):
+    def _default_edgefunc(node, child):
         # pylint: disable=W0613
-        return None
+        return "-->"
 
-    @staticmethod
-    def _default_edgetypefunc(node, child):
-        # pylint: disable=W0613
-        return "->"
-
-    def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc):
+    def __iter(self, indent, nodenamefunc, nodefunc, edgefunc):
         yield "{self.graph} {self.name}".format(self=self)
         for option in self.__iter_options(indent):
             yield option
-        for node in self.__iter_nodes(indent, nodenamefunc, nodeattrfunc):
+        for node in self.__iter_nodes(indent, nodenamefunc, nodefunc):
             yield node
-        yield ""
+        for edge in self.__iter_edges(indent, nodenamefunc, edgefunc):
+            yield edge
 
     def __iter_options(self, indent):
         options = self.options
@@ -140,23 +175,25 @@ class MermaidExporter:
             for option in options:
                 yield "%s%s" % (indent, option)
 
-    def __iter_nodes(self, indent, nodenamefunc, nodeattrfunc):
-        def get_key(letter_index):
-            return chr(65 + letter_index)
-
-        index = 0
+    def __iter_nodes(self, indent, nodenamefunc, nodefunc):
         for node in PreOrderIter(self.node, maxlevel=self.maxlevel):
-            node.key = get_key(index)
-            index += 1
-
             nodename = nodenamefunc(node)
-            nodeattr = nodeattrfunc(node)
-            nodeattr = "|%s|" % nodeattr if nodeattr is not None else ""
-            if node.parent is None:
-                yield '%s%s[%s]' % (indent, node.key, MermaidExporter.esc(nodename))
-            else:
-                yield '%s%s[%s] -->%s %s[%s]' % (indent, node.parent.key, MermaidExporter.esc(nodenamefunc(node.parent)),
-                                            nodeattr, node.key, MermaidExporter.esc(nodename))
+            node = nodefunc(node)
+            yield "%s%s%s" % (indent, nodename, node)
+
+    def __iter_edges(self, indent, nodenamefunc, edgefunc):
+        maxlevel = self.maxlevel - 1 if self.maxlevel else None
+        for node in PreOrderIter(self.node, maxlevel=maxlevel):
+            nodename = nodenamefunc(node)
+            for child in node.children:
+                childname = nodenamefunc(child)
+                edge = edgefunc(node, child)
+                yield "%s%s%s%s" % (
+                    indent,
+                    nodename,
+                    edge,
+                    childname,
+                )
 
     def to_markdown_file(self, filename):
         """
@@ -181,10 +218,3 @@ class MermaidExporter:
             for line in self:
                 file.write("%s\n" % line)
             file.write("```")
-            x = 1
-
-    @staticmethod
-    def esc(value):
-        """Escape Strings."""
-        return _RE_ESC.sub(lambda m: r"\%s" % m.group(0), six.text_type(value))
-

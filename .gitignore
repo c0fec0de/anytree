@@ -1,6 +1,7 @@
 *.dot
 *.png
 *.xml
+tree.md
 .coverage
 .tox
 __pycache__

@@ -1,5 +1,3 @@
-from helper import eq_
-
 from anytree import (
     LevelGroupOrderIter,
     LevelOrderGroupIter,
@@ -9,6 +7,8 @@ from anytree import (
     PreOrderIter,
     ZigZagGroupIter,
 )
+
+from .helper import eq_
 
 
 def test_preorder():

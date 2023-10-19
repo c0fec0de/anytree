@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from helper import assert_raises, eq_
-
 from anytree import AnyNode, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, RenderTree, TreeError
+
+from .helper import assert_raises, eq_
 
 
 def test_node_parent_error():
@@ -256,6 +256,8 @@ def test_ancestors():
     eq_(s0b.ancestors, tuple([root, s0]))
     eq_(s0a.ancestors, tuple([root, s0]))
     eq_(s1ca.ancestors, tuple([root, s1, s1c]))
+    # deprecated typo
+    eq_(s1ca.anchestors, tuple([root, s1, s1c]))
 
 
 def test_node_children_init():

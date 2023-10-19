@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from helper import assert_raises, eq_
-
 from anytree import LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, TreeError
+
+from .helper import assert_raises, eq_
 
 
 def test_readonly_pre():

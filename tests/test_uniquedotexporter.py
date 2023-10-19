@@ -4,10 +4,10 @@ from os import makedirs
 from os.path import dirname, exists, join
 from shutil import rmtree
 
-from helper import eq_, with_setup
-
 from anytree import Node
 from anytree.exporter import UniqueDotExporter
+
+from .helper import eq_, with_setup
 
 
 def test_tree1():

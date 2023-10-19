@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from enum import IntEnum
 
-from helper import assert_raises
 from pytest import raises
 
 import anytree as at
 from anytree import Node, Resolver
+
+from .helper import assert_raises
 
 
 def test_get():

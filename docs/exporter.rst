@@ -12,6 +12,7 @@ Available exporters:
     exporter/dictexporter
     exporter/jsonexporter
     exporter/dotexporter
+    exporter/mermaidexporter
 
 Exporter missing? File a request here: Issues_.
 

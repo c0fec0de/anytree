@@ -1,9 +1,9 @@
 from tempfile import NamedTemporaryFile
 
-from helper import eq_
-
 from anytree.exporter import DictExporter
 from anytree.importer import JsonImporter
+
+from .helper import eq_
 
 
 def test_json_importer():

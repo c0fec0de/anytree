@@ -1,6 +1,6 @@
-from helper import assert_raises, eq_
-
 from anytree import Node, Walker, WalkError
+
+from .helper import assert_raises, eq_
 
 
 def test_walker():

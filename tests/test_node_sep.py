@@ -2,9 +2,10 @@
 """Test custom node separator."""
 
 import six
-from helper import assert_raises, eq_
 
 import anytree as at
+
+from .helper import assert_raises, eq_
 
 
 class MyNode(at.Node):
