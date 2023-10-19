@@ -23,4 +23,4 @@ def assert_gen(genpath, refpath):
     for gen, ref in zip(gens, refs):
         reftext = ref.read_text(encoding="utf-8")
         gentext = gen.read_text(encoding="utf-8")
-        assert reftext == gentext
+        assert reftext == gentext, f"{reftext} != {gentext}"

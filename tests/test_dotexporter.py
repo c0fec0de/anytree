@@ -28,7 +28,7 @@ def root():
 
 def test_tree(tmp_path, root):
     """Tree."""
-    DotExporter(root).to_dotfile(tmp_path / "tree.md")
+    DotExporter(root).to_dotfile(tmp_path / "tree.dot")
     assert_gen(tmp_path, REFDATA / "tree")
 
 
@@ -53,25 +53,25 @@ def test_tree_custom(tmp_path, root):
         nodenamefunc=nodenamefunc,
         nodeattrfunc=lambda node: "shape=box",
         edgeattrfunc=edgeattrfunc,
-    ).to_dotfile(tmp_path / "tree_custom.md")
+    ).to_dotfile(tmp_path / "tree_custom.dot")
     assert_gen(tmp_path, REFDATA / "tree_custom")
 
 
 def test_tree_filter(tmp_path, root):
     """Tree with Filter."""
-    DotExporter(root, filter_=lambda node: node.name.startswith("sub")).to_dotfile(tmp_path / "tree_filter.md")
+    DotExporter(root, filter_=lambda node: node.name.startswith("sub")).to_dotfile(tmp_path / "tree_filter.dot")
     assert_gen(tmp_path, REFDATA / "tree_filter")
 
 
 def test_tree_stop(tmp_path, root):
     """Tree with stop."""
-    DotExporter(root, stop=lambda node: node.name == "sub1").to_dotfile(tmp_path / "tree_stop.md")
+    DotExporter(root, stop=lambda node: node.name == "sub1").to_dotfile(tmp_path / "tree_stop.dot")
     assert_gen(tmp_path, REFDATA / "tree_stop")
 
 
 def test_tree_maxlevel(tmp_path, root):
     """Tree with maxlevel."""
-    DotExporter(root, maxlevel=2).to_dotfile(tmp_path / "tree_maxlevel.md")
+    DotExporter(root, maxlevel=2).to_dotfile(tmp_path / "tree_maxlevel.dot")
     assert_gen(tmp_path, REFDATA / "tree_maxlevel")
 
 
