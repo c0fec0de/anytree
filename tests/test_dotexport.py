@@ -3,10 +3,10 @@ from os import makedirs
 from os.path import dirname, exists, join
 from shutil import rmtree
 
-from helper import with_setup
-
 from anytree import Node
 from anytree.dotexport import RenderTreeGraph
+
+from .helper import with_setup
 
 TESTPATH = dirname(__file__)
 GENPATH = join(TESTPATH, "dotexport")

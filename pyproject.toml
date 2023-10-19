@@ -81,10 +81,11 @@ exclude_lines = [
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
 disable = [
-    'redundant-u-string-prefix',
     'consider-using-f-string',
-    'missing-module-docstring',
+    'duplicate-code',
     'missing-class-docstring',
+    'missing-module-docstring',
+    'redundant-u-string-prefix',
     'too-few-public-methods',
     'too-many-arguments',
     'too-many-instance-attributes',

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from helper import eq_
-
 from anytree import AnyNode, Node, NodeMixin, PostOrderIter, PreOrderIter, SymlinkNode
+
+from .helper import eq_
 
 
 def test_symlink():

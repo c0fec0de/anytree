@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from helper import assert_raises, eq_
-
 from anytree import AnyNode, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, RenderTree, TreeError
+
+from .helper import assert_raises, eq_
 
 
 class TNode(Node):

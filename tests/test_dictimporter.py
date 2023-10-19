@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
 
-from helper import eq_
-
 from anytree import Node, RenderTree
 from anytree.exporter import DictExporter
 from anytree.importer import DictImporter
+
+from .helper import eq_
 
 
 def test_dict_importer():

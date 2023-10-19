@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from helper import eq_
-
 from anytree import Node, RenderTree
+
+from .helper import eq_
 
 
 def test_stackoverflow():

@@ -1,8 +1,8 @@
 from enum import IntEnum
 
-from helper import assert_raises, eq_
-
 from anytree import AsciiStyle, CountError, Node, PreOrderIter, RenderTree, find, find_by_attr, findall, findall_by_attr
+
+from .helper import assert_raises, eq_
 
 
 def test_findall():

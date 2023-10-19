@@ -1,7 +1,7 @@
-from helper import eq_
-
 from anytree import AnyNode, Node, NodeMixin
 from anytree.exporter import DictExporter
+
+from .helper import eq_
 
 
 def test_dict_exporter():
