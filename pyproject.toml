@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anytree"
-version = "2.11.0"
+version = "2.11.1"
 description = "Powerful and Lightweight Python Tree Data Structure with various plugins"
 authors = [
     "c0fec0de <c0fec0de@gmail.com>"
