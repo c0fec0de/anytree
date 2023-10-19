@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import warnings
-
 from anytree.iterators import PreOrderIter
 
 from ..config import ASSERTIONS
@@ -348,17 +345,6 @@ class NodeMixin:
         if self.parent is None:
             return tuple()
         return self.parent.path
-
-    @property
-    def anchestors(self):
-        """
-        All parent nodes and their parent nodes - see :any:`ancestors`.
-
-        The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
-        This attribute will be removed in the 3.0.0 release.
-        """
-        warnings.warn(".anchestors was a typo and will be removed in version 3.0.0", DeprecationWarning)
-        return self.ancestors
 
     @property
     def descendants(self):
