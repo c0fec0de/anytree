@@ -18,7 +18,7 @@ def assert_gen(genpath, refpath):
 
     genfiles = [path.relative_to(genpath) for path in gens]
     reffiles = [path.relative_to(refpath) for path in refs]
-    assert reffiles == genfiles
+    assert reffiles == genfiles, f"{reffiles} != {genfiles}"
 
     for gen, ref in zip(gens, refs):
         reftext = ref.read_text(encoding="utf-8")
