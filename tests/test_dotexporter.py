@@ -121,6 +121,27 @@ def test_tree4():
 
 
 @with_setup(setup, teardown)
+def test_tree5():
+    """Filter."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    Node("sub0B", parent=s0)
+    Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root)
+    Node("sub1A", parent=s1)
+    Node("sub1B", parent=s1)
+    s1c = Node("sub1C", parent=s1)
+    Node(99, parent=s1c)
+
+    def filter_func(n):
+        """Filter branches as far as 'A' in their or childrens' name."""
+        return "A" in str(n.name) or any(["A" in str(c.name) for c in n.descendants])
+
+    DotExporter(root, filter_=filter_func).to_dotfile(join(GENPATH, "tree5.dot"))
+    assert cmp(join(GENPATH, "tree5.dot"), join(REFPATH, "tree5.dot"))
+
+
+@with_setup(setup, teardown)
 def test_tree_png():
     """Tree to png."""
     root = Node("root")

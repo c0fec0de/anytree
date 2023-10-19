@@ -30,22 +30,29 @@ class DotExporter:
         indent (int): number of spaces for indent.
 
         nodenamefunc: Function to extract node name from `node` object.
-                        The function shall accept one `node` object as
-                        argument and return the name of it.
+                      The function shall accept one `node` object as
+                      argument and return the name of it.
 
         nodeattrfunc: Function to decorate a node with attributes.
-                        The function shall accept one `node` object as
-                        argument and return the attributes.
+                      The function shall accept one `node` object as
+                      argument and return the attributes.
 
         edgeattrfunc: Function to decorate a edge with attributes.
-                        The function shall accept two `node` objects as
-                        argument. The first the node and the second the child
-                        and return the attributes.
+                      The function shall accept two `node` objects as
+                      argument. The first the node and the second the child
+                      and return the attributes.
 
         edgetypefunc: Function to which gives the edge type.
-                        The function shall accept two `node` objects as
-                        argument. The first the node and the second the child
-                        and return the edge (i.e. '->').
+                      The function shall accept two `node` objects as
+                      argument. The first the node and the second the child
+                      and return the edge (i.e. '->').
+
+        filter_: Function to filter nodes to include in export.
+                 The function shall accept one `node` object as
+                 argument and return True if it should be included,
+                 or False if it should not be included.
+
+        stop: stop iteration at `node` if `stop` function returns `True` for `node`.
 
         maxlevel (int): Limit export to this number of levels.
 
@@ -163,7 +170,9 @@ class DotExporter:
         nodeattrfunc=None,
         edgeattrfunc=None,
         edgetypefunc=None,
+        filter_=None,
         maxlevel=None,
+        stop=None,
     ):
         self.node = node
         self.graph = graph
@@ -174,7 +183,9 @@ class DotExporter:
         self.nodeattrfunc = nodeattrfunc
         self.edgeattrfunc = edgeattrfunc
         self.edgetypefunc = edgetypefunc
+        self.filter_ = filter_
         self.maxlevel = maxlevel
+        self.stop = stop
 
     def __iter__(self):
         # prepare
@@ -183,7 +194,8 @@ class DotExporter:
         nodeattrfunc = self.nodeattrfunc or self._default_nodeattrfunc
         edgeattrfunc = self.edgeattrfunc or self._default_edgeattrfunc
         edgetypefunc = self.edgetypefunc or self._default_edgetypefunc
-        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc)
+        filter_ = self.filter_ or self._default_filter
+        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc, filter_)
 
     @staticmethod
     def _default_nodenamefunc(node):
@@ -191,26 +203,31 @@ class DotExporter:
 
     @staticmethod
     def _default_nodeattrfunc(node):
-        # pylint: disable=W0613
+        # pylint: disable=unused-argument
         return None
 
     @staticmethod
     def _default_edgeattrfunc(node, child):
-        # pylint: disable=W0613
+        # pylint: disable=unused-argument
         return None
 
     @staticmethod
     def _default_edgetypefunc(node, child):
-        # pylint: disable=W0613
+        # pylint: disable=unused-argument
         return "->"
 
-    def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc):
+    @staticmethod
+    def _default_filter(node):
+        # pylint: disable=unused-argument
+        return True
+
+    def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc, filter_):
         yield "{self.graph} {self.name} {{".format(self=self)
         for option in self.__iter_options(indent):
             yield option
-        for node in self.__iter_nodes(indent, nodenamefunc, nodeattrfunc):
+        for node in self.__iter_nodes(indent, nodenamefunc, nodeattrfunc, filter_):
             yield node
-        for edge in self.__iter_edges(indent, nodenamefunc, edgeattrfunc, edgetypefunc):
+        for edge in self.__iter_edges(indent, nodenamefunc, edgeattrfunc, edgetypefunc, filter_):
             yield edge
         yield "}"
 
@@ -220,18 +237,20 @@ class DotExporter:
             for option in options:
                 yield "%s%s" % (indent, option)
 
-    def __iter_nodes(self, indent, nodenamefunc, nodeattrfunc):
-        for node in PreOrderIter(self.node, maxlevel=self.maxlevel):
+    def __iter_nodes(self, indent, nodenamefunc, nodeattrfunc, filter_):
+        for node in PreOrderIter(self.node, filter_=filter_, stop=self.stop, maxlevel=self.maxlevel):
             nodename = nodenamefunc(node)
             nodeattr = nodeattrfunc(node)
             nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
             yield '%s"%s"%s;' % (indent, DotExporter.esc(nodename), nodeattr)
 
-    def __iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc):
+    def __iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc, filter_):
         maxlevel = self.maxlevel - 1 if self.maxlevel else None
-        for node in PreOrderIter(self.node, maxlevel=maxlevel):
+        for node in PreOrderIter(self.node, filter_=filter_, stop=self.stop, maxlevel=maxlevel):
             nodename = nodenamefunc(node)
             for child in node.children:
+                if not filter_(child):
+                    continue
                 childname = nodenamefunc(child)
                 edgeattr = edgeattrfunc(node, child)
                 edgetype = edgetypefunc(node, child)
@@ -279,7 +298,6 @@ class DotExporter:
 
         *`graphviz` needs to be installed, before usage of this method.*
         """
-        # pylint: disable=W0703
         fileformat = path.splitext(filename)[1][1:]
         with NamedTemporaryFile("wb", delete=False) as dotfile:
             dotfilename = dotfile.name
@@ -290,6 +308,7 @@ class DotExporter:
             check_call(cmd)
         try:
             remove(dotfilename)
+        # pylint: disable=broad-exception-caught
         except Exception:  # pragma: no cover
             logging.getLogger(__name__).warning("Could not remove temporary file %s", dotfilename)
 
@@ -300,6 +319,110 @@ class DotExporter:
 
 
 class UniqueDotExporter(DotExporter):
+    """
+    Unqiue Dot Language Exporter.
+
+    Handle trees with random or conflicting node names gracefully.
+
+    Args:
+        node (Node): start node.
+
+    Keyword Args:
+        graph: DOT graph type.
+
+        name: DOT graph name.
+
+        options: list of options added to the graph.
+
+        indent (int): number of spaces for indent.
+
+        nodenamefunc: Function to extract node name from `node` object.
+                        The function shall accept one `node` object as
+                        argument and return the name of it.
+
+        nodeattrfunc: Function to decorate a node with attributes.
+                        The function shall accept one `node` object as
+                        argument and return the attributes.
+
+        edgeattrfunc: Function to decorate a edge with attributes.
+                        The function shall accept two `node` objects as
+                        argument. The first the node and the second the child
+                        and return the attributes.
+
+        edgetypefunc: Function to which gives the edge type.
+                        The function shall accept two `node` objects as
+                        argument. The first the node and the second the child
+                        and return the edge (i.e. '->').
+
+        filter_: Function to filter nodes to include in export.
+                 The function shall accept one `node` object as
+                 argument and return True if it should be included,
+                 or False if it should not be included.
+
+        stop: stop iteration at `node` if `stop` function returns `True` for `node`.
+
+        maxlevel (int): Limit export to this number of levels.
+
+    >>> from anytree import Node
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root)
+    >>> s0b = Node("s0", parent=s0)
+    >>> s0a = Node("s0", parent=s0)
+    >>> s1 = Node("sub1", parent=root)
+    >>> s1a = Node("s1", parent=s1)
+    >>> s1b = Node("s1", parent=s1)
+    >>> s1c = Node("s1", parent=s1)
+    >>> s1ca = Node("sub1Ca", parent=s1c)
+
+    >>> from anytree.exporter import UniqueDotExporter
+    >>> for line in UniqueDotExporter(root):
+    ...     print(line)
+    digraph tree {
+        "0x0" [label="root"];
+        "0x1" [label="sub0"];
+        "0x2" [label="s0"];
+        "0x3" [label="s0"];
+        "0x4" [label="sub1"];
+        "0x5" [label="s1"];
+        "0x6" [label="s1"];
+        "0x7" [label="s1"];
+        "0x8" [label="sub1Ca"];
+        "0x0" -> "0x1";
+        "0x0" -> "0x4";
+        "0x1" -> "0x2";
+        "0x1" -> "0x3";
+        "0x4" -> "0x5";
+        "0x4" -> "0x6";
+        "0x4" -> "0x7";
+        "0x7" -> "0x8";
+    }
+
+    The resulting graph:
+
+    .. image:: ../static/uniquedotexporter2.png
+
+    To export custom node implementations or :any:`AnyNode`, please provide a proper `nodeattrfunc`:
+
+    >>> from anytree import AnyNode
+    >>> root = AnyNode(id="root")
+    >>> s0 = AnyNode(id="sub0", parent=root)
+    >>> s0b = AnyNode(id="s0", parent=s0)
+    >>> s0a = AnyNode(id="s0", parent=s0)
+
+    >>> from anytree.exporter import UniqueDotExporter
+    >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):
+    ...     print(line)
+    digraph tree {
+        "0x0" [label="root"];
+        "0x1" [label="sub0"];
+        "0x2" [label="s0"];
+        "0x3" [label="s0"];
+        "0x0" -> "0x1";
+        "0x1" -> "0x2";
+        "0x1" -> "0x3";
+    }
+    """
+
     def __init__(
         self,
         node,
@@ -311,104 +434,10 @@ class UniqueDotExporter(DotExporter):
         nodeattrfunc=None,
         edgeattrfunc=None,
         edgetypefunc=None,
+        filter_=None,
+        stop=None,
         maxlevel=None,
     ):
-        """
-        Unqiue Dot Language Exporter.
-
-        Handle trees with random or conflicting node names gracefully.
-
-        Args:
-            node (Node): start node.
-
-        Keyword Args:
-            graph: DOT graph type.
-
-            name: DOT graph name.
-
-            options: list of options added to the graph.
-
-            indent (int): number of spaces for indent.
-
-            nodenamefunc: Function to extract node name from `node` object.
-                          The function shall accept one `node` object as
-                          argument and return the name of it.
-
-            nodeattrfunc: Function to decorate a node with attributes.
-                          The function shall accept one `node` object as
-                          argument and return the attributes.
-
-            edgeattrfunc: Function to decorate a edge with attributes.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the attributes.
-
-            edgetypefunc: Function to which gives the edge type.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the edge (i.e. '->').
-
-            maxlevel (int): Limit export to this number of levels.
-
-        >>> from anytree import Node
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root)
-        >>> s0b = Node("s0", parent=s0)
-        >>> s0a = Node("s0", parent=s0)
-        >>> s1 = Node("sub1", parent=root)
-        >>> s1a = Node("s1", parent=s1)
-        >>> s1b = Node("s1", parent=s1)
-        >>> s1c = Node("s1", parent=s1)
-        >>> s1ca = Node("sub1Ca", parent=s1c)
-
-        >>> from anytree.exporter import UniqueDotExporter
-        >>> for line in UniqueDotExporter(root):
-        ...     print(line)
-        digraph tree {
-            "0x0" [label="root"];
-            "0x1" [label="sub0"];
-            "0x2" [label="s0"];
-            "0x3" [label="s0"];
-            "0x4" [label="sub1"];
-            "0x5" [label="s1"];
-            "0x6" [label="s1"];
-            "0x7" [label="s1"];
-            "0x8" [label="sub1Ca"];
-            "0x0" -> "0x1";
-            "0x0" -> "0x4";
-            "0x1" -> "0x2";
-            "0x1" -> "0x3";
-            "0x4" -> "0x5";
-            "0x4" -> "0x6";
-            "0x4" -> "0x7";
-            "0x7" -> "0x8";
-        }
-
-        The resulting graph:
-
-        .. image:: ../static/uniquedotexporter2.png
-
-        To export custom node implementations or :any:`AnyNode`, please provide a proper `nodeattrfunc`:
-
-        >>> from anytree import AnyNode
-        >>> root = AnyNode(id="root")
-        >>> s0 = AnyNode(id="sub0", parent=root)
-        >>> s0b = AnyNode(id="s0", parent=s0)
-        >>> s0a = AnyNode(id="s0", parent=s0)
-
-        >>> from anytree.exporter import UniqueDotExporter
-        >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):
-        ...     print(line)
-        digraph tree {
-            "0x0" [label="root"];
-            "0x1" [label="sub0"];
-            "0x2" [label="s0"];
-            "0x3" [label="s0"];
-            "0x0" -> "0x1";
-            "0x1" -> "0x2";
-            "0x1" -> "0x3";
-        }
-        """
         super(UniqueDotExporter, self).__init__(
             node,
             graph=graph,
@@ -419,6 +448,9 @@ class UniqueDotExporter(DotExporter):
             nodeattrfunc=nodeattrfunc,
             edgeattrfunc=edgeattrfunc,
             edgetypefunc=edgetypefunc,
+            filter_=filter_,
+            stop=stop,
+            maxlevel=maxlevel,
         )
         self.__node_ids = {}
         self.__node_counter = itertools.count()
