@@ -1,0 +1,20 @@
+digraph tree {
+    rankdir=LR;
+    "root:0" [shape=box];
+    "sub0:1" [shape=box];
+    "sub0B:2" [shape=box];
+    "sub0A:2" [shape=box];
+    "sub1:1" [shape=box];
+    "sub1A:2" [shape=box];
+    "sub1\"B:2" [shape=box];
+    "su\\b1C:2" [shape=box];
+    "sub1Ca:3" [shape=box];
+    "root:0" -> "sub0:1" [label="root:sub0"];
+    "root:0" -> "sub1:1" [label="root:sub1"];
+    "sub0:1" -> "sub0B:2" [label="sub0:sub0B"];
+    "sub0:1" -> "sub0A:2" [label="sub0:sub0A"];
+    "sub1:1" -> "sub1A:2" [label="sub1:sub1A"];
+    "sub1:1" -> "sub1\"B:2" [label="sub1:sub1"B"];
+    "sub1:1" -> "su\\b1C:2" [label="sub1:su\b1C"];
+    "su\\b1C:2" -> "sub1Ca:3" [label="su\b1C:sub1Ca"];
+}

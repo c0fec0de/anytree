@@ -1,0 +1,7 @@
+digraph tree {
+    "0x0" [label="root"];
+    "0x1" [label="sub0"];
+    "0x2" [label="sub1"];
+    "0x0" -> "0x1";
+    "0x0" -> "0x2";
+}

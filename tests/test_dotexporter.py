@@ -1,58 +1,39 @@
 # -*- coding: utf-8 -*-
-from filecmp import cmp
-from os import makedirs
-from os.path import dirname, exists, join
-from shutil import rmtree
+import pathlib
+
+from pytest import fixture
 
 from anytree import Node
 from anytree.exporter import DotExporter
 
-from .helper import eq_, with_setup
-
-TESTPATH = dirname(__file__)
-GENPATH = join(TESTPATH, "dotexport")
-REFPATH = join(TESTPATH, "refdata")
+REFDATA = pathlib.Path(__file__).parent / "refdata" / "test_dotexporter"
 
 
-def setup():
-    if not exists(GENPATH):
-        makedirs(GENPATH)
+from .util import assert_gen
 
 
-def teardown():
-    if exists(GENPATH):
-        rmtree(GENPATH)
-
-
-@with_setup(setup, teardown)
-def test_tree1():
-    """Tree1."""
-    root = Node("root")
-    s0 = Node("sub0", parent=root)
-    Node("sub0B", parent=s0)
-    Node("sub0A", parent=s0)
-    s1 = Node("sub1", parent=root)
-    Node("sub1A", parent=s1)
-    Node("sub1B", parent=s1)
-    s1c = Node("sub1C", parent=s1)
-    Node(99, parent=s1c)
-
-    DotExporter(root).to_dotfile(join(GENPATH, "tree1.dot"))
-    assert cmp(join(GENPATH, "tree1.dot"), join(REFPATH, "tree1.dot"))
-
-
-@with_setup(setup, teardown)
-def test_tree2():
-    """Tree2."""
+@fixture
+def root():
     root = Node("root")
     s0 = Node("sub0", parent=root, edge=2)
     Node("sub0B", parent=s0, foo=4, edge=109)
     Node("sub0A", parent=s0, edge="")
     s1 = Node("sub1", parent=root, edge="")
     Node("sub1A", parent=s1, edge=7)
-    Node("sub1B", parent=s1, edge=8)
-    s1c = Node("sub1C", parent=s1, edge=22)
+    Node('sub1"B', parent=s1, edge=8)
+    s1c = Node("su\\b1C", parent=s1, edge=22)
     Node("sub1Ca", parent=s1c, edge=42)
+    yield root
+
+
+def test_tree(tmp_path, root):
+    """Tree."""
+    DotExporter(root).to_dotfile(tmp_path / "tree.md")
+    assert_gen(tmp_path, REFDATA / "tree")
+
+
+def test_tree_custom(tmp_path, root):
+    """Tree Custom."""
 
     def nodenamefunc(node):
         return "%s:%s" % (node.name, node.depth)
@@ -60,104 +41,45 @@ def test_tree2():
     def edgeattrfunc(node, child):
         return 'label="%s:%s"' % (node.name, child.name)
 
-    r = DotExporter(
+    def nodefunc(node):
+        return '("%s")' % (node.name)
+
+    def edgefunc(node, child):
+        return f"--{child.edge}-->"
+
+    DotExporter(
         root,
         options=["rankdir=LR;"],
         nodenamefunc=nodenamefunc,
         nodeattrfunc=lambda node: "shape=box",
         edgeattrfunc=edgeattrfunc,
-    )
-
-    r.to_dotfile(join(GENPATH, "tree2.dot"))
-    assert cmp(join(GENPATH, "tree2.dot"), join(REFPATH, "tree2.dot"))
+    ).to_dotfile(tmp_path / "tree_custom.md")
+    assert_gen(tmp_path, REFDATA / "tree_custom")
 
 
-@with_setup(setup, teardown)
-def test_tree3():
-    """Escape."""
-    root = Node("root")
-    s0 = Node("sub0", parent=root, edge=2)
-    Node('sub"0"B', parent=s0, foo=4, edge=109)
-    Node("sub'0'A", parent=s0, edge="")
-    s1 = Node('sub"1', parent=root, edge="")
-    Node("sub1A", parent=s1, edge=7)
-    Node("sub1B", parent=s1, edge=8)
-    s1c = Node("sub1C", parent=s1, edge=22)
-    Node("sub1Cä", parent=s1c, edge=42)
-
-    def nodenamefunc(node):
-        return "%s:%s" % (node.name, node.depth)
-
-    def edgeattrfunc(node, child):
-        return 'label="%s:%s"' % (DotExporter.esc(node.name), DotExporter.esc(child.name))
-
-    r = DotExporter(
-        root,
-        options=["rankdir=LR;"],
-        nodenamefunc=nodenamefunc,
-        nodeattrfunc=lambda node: "shape=box",
-        edgeattrfunc=edgeattrfunc,
-    )
-
-    r.to_dotfile(join(GENPATH, "tree3.dot"))
-    assert cmp(join(GENPATH, "tree3.dot"), join(REFPATH, "tree3.dot"))
+def test_tree_filter(tmp_path, root):
+    """Tree with Filter."""
+    DotExporter(root, filter_=lambda node: node.name.startswith("sub")).to_dotfile(tmp_path / "tree_filter.md")
+    assert_gen(tmp_path, REFDATA / "tree_filter")
 
 
-@with_setup(setup, teardown)
-def test_tree4():
-    """Maxlevel."""
-    root = Node("root")
-    s0 = Node("sub0", parent=root)
-    Node("sub0B", parent=s0)
-    Node("sub0A", parent=s0)
-    s1 = Node("sub1", parent=root)
-    Node("sub1A", parent=s1)
-    Node("sub1B", parent=s1)
-    s1c = Node("sub1C", parent=s1)
-    Node(99, parent=s1c)
-
-    DotExporter(root, maxlevel=2).to_dotfile(join(GENPATH, "tree4.dot"))
-    assert cmp(join(GENPATH, "tree4.dot"), join(REFPATH, "tree4.dot"))
+def test_tree_stop(tmp_path, root):
+    """Tree with stop."""
+    DotExporter(root, stop=lambda node: node.name == "sub1").to_dotfile(tmp_path / "tree_stop.md")
+    assert_gen(tmp_path, REFDATA / "tree_stop")
 
 
-@with_setup(setup, teardown)
-def test_tree5():
-    """Filter."""
-    root = Node("root")
-    s0 = Node("sub0", parent=root)
-    Node("sub0B", parent=s0)
-    Node("sub0A", parent=s0)
-    s1 = Node("sub1", parent=root)
-    Node("sub1A", parent=s1)
-    Node("sub1B", parent=s1)
-    s1c = Node("sub1C", parent=s1)
-    Node(99, parent=s1c)
-
-    def filter_func(n):
-        """Filter branches as far as 'A' in their or childrens' name."""
-        return "A" in str(n.name) or any(["A" in str(c.name) for c in n.descendants])
-
-    DotExporter(root, filter_=filter_func).to_dotfile(join(GENPATH, "tree5.dot"))
-    assert cmp(join(GENPATH, "tree5.dot"), join(REFPATH, "tree5.dot"))
-
-
-@with_setup(setup, teardown)
-def test_tree_png():
-    """Tree to png."""
-    root = Node("root")
-    s0 = Node("sub0", parent=root)
-    Node("sub0B", parent=s0)
-    Node("sub0A", parent=s0)
-    s1 = Node("sub1", parent=root)
-    Node("sub1A", parent=s1)
-    Node("sub1B", parent=s1)
-    s1c = Node("sub1C", parent=s1)
-    Node("sub1Ca", parent=s1c)
-
-    DotExporter(root).to_picture(join(GENPATH, "tree1.png"))
+def test_tree_maxlevel(tmp_path, root):
+    """Tree with maxlevel."""
+    DotExporter(root, maxlevel=2).to_dotfile(tmp_path / "tree_maxlevel.md")
+    assert_gen(tmp_path, REFDATA / "tree_maxlevel")
 
 
 def test_esc():
     """Test proper escape of quotes."""
     n = Node(r'6"-6\"')
-    eq_(tuple(DotExporter(n)), (r"digraph tree {", r'    "6\"-6\\\"";', r"}"))
+    assert tuple(DotExporter(n)) == (
+        r"digraph tree {",
+        r'    "6\"-6\\\"";',
+        r"}",
+    )

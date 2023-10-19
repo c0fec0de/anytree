@@ -21,4 +21,6 @@ def assert_gen(genpath, refpath):
     assert reffiles == genfiles
 
     for gen, ref in zip(gens, refs):
-        assert ref.read_text(encoding="utf-8") == gen.read_text(encoding="utf-8")
+        reftext = ref.read_text(encoding="utf-8")
+        gentext = gen.read_text(encoding="utf-8")
+        assert reftext == gentext

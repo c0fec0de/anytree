@@ -8,7 +8,7 @@ N2("sub0B")
 N3("sub0A")
 N4("sub1")
 N5("sub1A")
-N6("su"b"1B")
+N6("sub1"B")
 N7("su\b1C")
 N8("sub1Ca")
 N0--2-->N1
