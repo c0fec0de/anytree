@@ -77,6 +77,8 @@ class NodeMixin:
     └── my2  0 2
     """
 
+    __slots__ = ["__parent", "__children"]
+
     separator = "/"
 
     @property
