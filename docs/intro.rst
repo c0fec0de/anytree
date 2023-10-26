@@ -59,7 +59,9 @@ Every node has a :any:`children` attribute with a tuple of all children:
 >>> lian.children
 ()
 
-**Single Node Attach**
+**Add: Single Node Attach**
+
+Just set the parent attribute and the node becomes a child node:
 
 >>> marc.parent = udo
 >>> print(RenderTree(udo))
@@ -67,17 +69,25 @@ Node('/Udo')
 └── Node('/Udo/Marc')
     └── Node('/Udo/Marc/Lian')
 
-**Single Node Detach**
+**Delete: Single Node Detach**
 
-To make a node to a root node, just set this attribute to `None`.
+A node becomes a root node, if you set the parent attribute to `None`:
 
->>> marc.is_root
+>>> lian.is_root
 False
->>> marc.parent = None
->>> marc.is_root
+>>> lian.parent = None
+>>> lian.is_root
 True
 
+The node is deleted from the tree:
+
+>>> print(RenderTree(udo))
+Node('/Udo')
+└── Node('/Udo/Marc')
+
 **Modify Multiple Child Nodes**
+
+Assume the following tree:
 
 >>> n = Node("n")
 >>> a = Node("a", parent=n)
@@ -115,8 +125,8 @@ Detach/Attach Protocol
 ----------------------
 
 A node class implementation might implement the notification slots
-:any:`_pre_detach(parent)`, :any:`_post_detach(parent)`,
-:any:`_pre_attach(parent)`, :any:`_post_attach(parent)`.
+``_pre_detach(parent)``, ``_post_detach(parent)``,
+``_pre_attach(parent)``, ``_post_attach(parent)``.
 
 These methods are *protected* methods,
 intended to be overwritten by child classes of :any:`NodeMixin`/:any:`Node`.
@@ -163,9 +173,9 @@ _post_detach NotifiedNode('/b')
 
 
 .. important::
-    An exception raised by :any:`_pre_detach(parent)` and :any:`_pre_attach(parent)` will **prevent** the tree structure to be updated.
+    An exception raised by ``_pre_detach(parent)`` and ``_pre_attach(parent)`` will **prevent** the tree structure to be updated.
     The node keeps the old state.
-    An exception raised by :any:`_post_detach(parent)` and :any:`_post_attach(parent)` does **not rollback** the tree structure modification.
+    An exception raised by ``_post_detach(parent)`` and ``_post_attach(parent)`` does **not rollback** the tree structure modification.
 
 
 Custom Separator

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from nose.tools import eq_
+from anytree import Node, RenderTree
 
-from anytree import Node
-from anytree import RenderTree
+from .helper import eq_
 
 
 def test_stackoverflow():
@@ -19,14 +18,16 @@ def test_stackoverflow():
     eq_(str(udo), "Node('/Udo')")
     eq_(str(joe), "Node('/Udo/Dan/Joe')")
 
-    eq_(["%s%s" % (pre, node.name) for pre, fill, node in RenderTree(udo)], [
-        u"Udo",
-        u"├── Marc",
-        u"│   └── Lian",
-        u"└── Dan",
-        u"    ├── Jet",
-        u"    ├── Jan",
-        u"    └── Joe",
-    ])
-    eq_(str(dan.children),
-        "(Node('/Udo/Dan/Jet'), Node('/Udo/Dan/Jan'), Node('/Udo/Dan/Joe'))")
+    eq_(
+        ["%s%s" % (pre, node.name) for pre, fill, node in RenderTree(udo)],
+        [
+            "Udo",
+            "├── Marc",
+            "│   └── Lian",
+            "└── Dan",
+            "    ├── Jet",
+            "    ├── Jan",
+            "    └── Joe",
+        ],
+    )
+    eq_(str(dan.children), "(Node('/Udo/Dan/Jet'), Node('/Udo/Dan/Jan'), Node('/Udo/Dan/Joe'))")

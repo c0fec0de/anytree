@@ -1,8 +1,8 @@
 import codecs
+import itertools
 import logging
 import re
-from os import path
-from os import remove
+from os import path, remove
 from subprocess import check_call
 from tempfile import NamedTemporaryFile
 
@@ -13,148 +13,158 @@ from anytree import PreOrderIter
 _RE_ESC = re.compile(r'["\\]')
 
 
-class DotExporter(object):
+class DotExporter:
+    """
+    Dot Language Exporter.
 
-    def __init__(self, node, graph="digraph", name="tree", options=None,
-                 indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None, maxlevel=None):
-        """
-        Dot Language Exporter.
+    Args:
+        node (Node): start node.
 
-        Args:
-            node (Node): start node.
+    Keyword Args:
+        graph: DOT graph type.
 
-        Keyword Args:
-            graph: DOT graph type.
+        name: DOT graph name.
 
-            name: DOT graph name.
+        options: list of options added to the graph.
 
-            options: list of options added to the graph.
+        indent (int): number of spaces for indent.
 
-            indent (int): number of spaces for indent.
+        nodenamefunc: Function to extract node name from `node` object.
+                        The function shall accept one `node` object as
+                        argument and return the name of it.
 
-            nodenamefunc: Function to extract node name from `node` object.
-                          The function shall accept one `node` object as
-                          argument and return the name of it.
+        nodeattrfunc: Function to decorate a node with attributes.
+                        The function shall accept one `node` object as
+                        argument and return the attributes.
 
-            nodeattrfunc: Function to decorate a node with attributes.
-                          The function shall accept one `node` object as
-                          argument and return the attributes.
+        edgeattrfunc: Function to decorate a edge with attributes.
+                        The function shall accept two `node` objects as
+                        argument. The first the node and the second the child
+                        and return the attributes.
 
-            edgeattrfunc: Function to decorate a edge with attributes.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the attributes.
+        edgetypefunc: Function to which gives the edge type.
+                        The function shall accept two `node` objects as
+                        argument. The first the node and the second the child
+                        and return the edge (i.e. '->').
 
-            edgetypefunc: Function to which gives the edge type.
-                          The function shall accept two `node` objects as
-                          argument. The first the node and the second the child
-                          and return the edge (i.e. '->').
+        maxlevel (int): Limit export to this number of levels.
 
-            maxlevel (int): Limit export to this number of levels.
+    >>> from anytree import Node
+    >>> root = Node("root")
+    >>> s0 = Node("sub0", parent=root, edge=2)
+    >>> s0b = Node("sub0B", parent=s0, foo=4, edge=109)
+    >>> s0a = Node("sub0A", parent=s0, edge="")
+    >>> s1 = Node("sub1", parent=root, edge="")
+    >>> s1a = Node("sub1A", parent=s1, edge=7)
+    >>> s1b = Node("sub1B", parent=s1, edge=8)
+    >>> s1c = Node("sub1C", parent=s1, edge=22)
+    >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
 
-        >>> from anytree import Node
-        >>> root = Node("root")
-        >>> s0 = Node("sub0", parent=root, edge=2)
-        >>> s0b = Node("sub0B", parent=s0, foo=4, edge=109)
-        >>> s0a = Node("sub0A", parent=s0, edge="")
-        >>> s1 = Node("sub1", parent=root, edge="")
-        >>> s1a = Node("sub1A", parent=s1, edge=7)
-        >>> s1b = Node("sub1B", parent=s1, edge=8)
-        >>> s1c = Node("sub1C", parent=s1, edge=22)
-        >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
+    .. note:: If the node names are not unqiue, see :any:`UniqueDotExporter`.
 
-        .. note:: If the node names are not unqiue, see :any:`UniqueDotExporter`.
+    A directed graph:
 
-        A directed graph:
+    >>> from anytree.exporter import DotExporter
+    >>> for line in DotExporter(root):
+    ...     print(line)
+    digraph tree {
+        "root";
+        "sub0";
+        "sub0B";
+        "sub0A";
+        "sub1";
+        "sub1A";
+        "sub1B";
+        "sub1C";
+        "sub1Ca";
+        "root" -> "sub0";
+        "root" -> "sub1";
+        "sub0" -> "sub0B";
+        "sub0" -> "sub0A";
+        "sub1" -> "sub1A";
+        "sub1" -> "sub1B";
+        "sub1" -> "sub1C";
+        "sub1C" -> "sub1Ca";
+    }
 
-        >>> from anytree.exporter import DotExporter
-        >>> for line in DotExporter(root):
-        ...     print(line)
-        digraph tree {
-            "root";
-            "sub0";
-            "sub0B";
-            "sub0A";
-            "sub1";
-            "sub1A";
-            "sub1B";
-            "sub1C";
-            "sub1Ca";
-            "root" -> "sub0";
-            "root" -> "sub1";
-            "sub0" -> "sub0B";
-            "sub0" -> "sub0A";
-            "sub1" -> "sub1A";
-            "sub1" -> "sub1B";
-            "sub1" -> "sub1C";
-            "sub1C" -> "sub1Ca";
-        }
+    The resulting graph:
 
-        The resulting graph:
+    .. image:: ../static/dotexporter0.png
 
-        .. image:: ../static/dotexporter0.png
+    An undirected graph:
 
-        An undirected graph:
+    >>> def nodenamefunc(node):
+    ...     return '%s:%s' % (node.name, node.depth)
+    >>> def edgeattrfunc(node, child):
+    ...     return 'label="%s:%s"' % (node.name, child.name)
+    >>> def edgetypefunc(node, child):
+    ...     return '--'
+            >>> from anytree.exporter import DotExporter
+    >>> for line in DotExporter(root, graph="graph",
+    ...                             nodenamefunc=nodenamefunc,
+    ...                             nodeattrfunc=lambda node: "shape=box",
+    ...                             edgeattrfunc=edgeattrfunc,
+    ...                             edgetypefunc=edgetypefunc):
+    ...     print(line)
+    graph tree {
+        "root:0" [shape=box];
+        "sub0:1" [shape=box];
+        "sub0B:2" [shape=box];
+        "sub0A:2" [shape=box];
+        "sub1:1" [shape=box];
+        "sub1A:2" [shape=box];
+        "sub1B:2" [shape=box];
+        "sub1C:2" [shape=box];
+        "sub1Ca:3" [shape=box];
+        "root:0" -- "sub0:1" [label="root:sub0"];
+        "root:0" -- "sub1:1" [label="root:sub1"];
+        "sub0:1" -- "sub0B:2" [label="sub0:sub0B"];
+        "sub0:1" -- "sub0A:2" [label="sub0:sub0A"];
+        "sub1:1" -- "sub1A:2" [label="sub1:sub1A"];
+        "sub1:1" -- "sub1B:2" [label="sub1:sub1B"];
+        "sub1:1" -- "sub1C:2" [label="sub1:sub1C"];
+        "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
+    }
 
-        >>> def nodenamefunc(node):
-        ...     return '%s:%s' % (node.name, node.depth)
-        >>> def edgeattrfunc(node, child):
-        ...     return 'label="%s:%s"' % (node.name, child.name)
-        >>> def edgetypefunc(node, child):
-        ...     return '--'
-                >>> from anytree.exporter import DotExporter
-        >>> for line in DotExporter(root, graph="graph",
-        ...                             nodenamefunc=nodenamefunc,
-        ...                             nodeattrfunc=lambda node: "shape=box",
-        ...                             edgeattrfunc=edgeattrfunc,
-        ...                             edgetypefunc=edgetypefunc):
-        ...     print(line)
-        graph tree {
-            "root:0" [shape=box];
-            "sub0:1" [shape=box];
-            "sub0B:2" [shape=box];
-            "sub0A:2" [shape=box];
-            "sub1:1" [shape=box];
-            "sub1A:2" [shape=box];
-            "sub1B:2" [shape=box];
-            "sub1C:2" [shape=box];
-            "sub1Ca:3" [shape=box];
-            "root:0" -- "sub0:1" [label="root:sub0"];
-            "root:0" -- "sub1:1" [label="root:sub1"];
-            "sub0:1" -- "sub0B:2" [label="sub0:sub0B"];
-            "sub0:1" -- "sub0A:2" [label="sub0:sub0A"];
-            "sub1:1" -- "sub1A:2" [label="sub1:sub1A"];
-            "sub1:1" -- "sub1B:2" [label="sub1:sub1B"];
-            "sub1:1" -- "sub1C:2" [label="sub1:sub1C"];
-            "sub1C:2" -- "sub1Ca:3" [label="sub1C:sub1Ca"];
-        }
+    The resulting graph:
 
-        The resulting graph:
+    .. image:: ../static/dotexporter1.png
 
-        .. image:: ../static/dotexporter1.png
+    To export custom node implementations or :any:`AnyNode`, please provide a proper `nodenamefunc`:
 
-        To export custom node implementations or :any:`AnyNode`, please provide a proper `nodenamefunc`:
+    >>> from anytree import AnyNode
+    >>> root = AnyNode(id="root")
+    >>> s0 = AnyNode(id="sub0", parent=root)
+    >>> s0b = AnyNode(id="s0b", parent=s0)
+    >>> s0a = AnyNode(id="s0a", parent=s0)
 
-        >>> from anytree import AnyNode
-        >>> root = AnyNode(id="root")
-        >>> s0 = AnyNode(id="sub0", parent=root)
-        >>> s0b = AnyNode(id="s0b", parent=s0)
-        >>> s0a = AnyNode(id="s0a", parent=s0)
+    >>> from anytree.exporter import DotExporter
+    >>> for line in DotExporter(root, nodenamefunc=lambda n: n.id):
+    ...     print(line)
+    digraph tree {
+        "root";
+        "sub0";
+        "s0b";
+        "s0a";
+        "root" -> "sub0";
+        "sub0" -> "s0b";
+        "sub0" -> "s0a";
+    }
+    """
 
-        >>> from anytree.exporter import DotExporter
-        >>> for line in DotExporter(root, nodenamefunc=lambda n: n.id):
-        ...     print(line)
-        digraph tree {
-            "root";
-            "sub0";
-            "s0b";
-            "s0a";
-            "root" -> "sub0";
-            "sub0" -> "s0b";
-            "sub0" -> "s0a";
-        }
-        """
+    def __init__(
+        self,
+        node,
+        graph="digraph",
+        name="tree",
+        options=None,
+        indent=4,
+        nodenamefunc=None,
+        nodeattrfunc=None,
+        edgeattrfunc=None,
+        edgetypefunc=None,
+        maxlevel=None,
+    ):
         self.node = node
         self.graph = graph
         self.name = name
@@ -173,8 +183,7 @@ class DotExporter(object):
         nodeattrfunc = self.nodeattrfunc or self._default_nodeattrfunc
         edgeattrfunc = self.edgeattrfunc or self._default_edgeattrfunc
         edgetypefunc = self.edgetypefunc or self._default_edgetypefunc
-        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc,
-                           edgetypefunc)
+        return self.__iter(indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc)
 
     @staticmethod
     def _default_nodenamefunc(node):
@@ -182,14 +191,17 @@ class DotExporter(object):
 
     @staticmethod
     def _default_nodeattrfunc(node):
+        # pylint: disable=W0613
         return None
 
     @staticmethod
     def _default_edgeattrfunc(node, child):
+        # pylint: disable=W0613
         return None
 
     @staticmethod
     def _default_edgetypefunc(node, child):
+        # pylint: disable=W0613
         return "->"
 
     def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc):
@@ -224,8 +236,13 @@ class DotExporter(object):
                 edgeattr = edgeattrfunc(node, child)
                 edgetype = edgetypefunc(node, child)
                 edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
-                yield '%s"%s" %s "%s"%s;' % (indent, DotExporter.esc(nodename), edgetype,
-                                             DotExporter.esc(childname), edgeattr)
+                yield '%s"%s" %s "%s"%s;' % (
+                    indent,
+                    DotExporter.esc(nodename),
+                    edgetype,
+                    DotExporter.esc(childname),
+                    edgeattr,
+                )
 
     def to_dotfile(self, filename):
         """
@@ -262,6 +279,7 @@ class DotExporter(object):
 
         *`graphviz` needs to be installed, before usage of this method.*
         """
+        # pylint: disable=W0703
         fileformat = path.splitext(filename)[1][1:]
         with NamedTemporaryFile("wb", delete=False) as dotfile:
             dotfilename = dotfile.name
@@ -273,8 +291,7 @@ class DotExporter(object):
         try:
             remove(dotfilename)
         except Exception:  # pragma: no cover
-            msg = 'Could not remove temporary file %s' % dotfilename
-            logging.getLogger(__name__).warn(msg)
+            logging.getLogger(__name__).warning("Could not remove temporary file %s", dotfilename)
 
     @staticmethod
     def esc(value):
@@ -283,10 +300,19 @@ class DotExporter(object):
 
 
 class UniqueDotExporter(DotExporter):
-
-    def __init__(self, node, graph="digraph", name="tree", options=None,
-                 indent=4, nodenamefunc=None, nodeattrfunc=None,
-                 edgeattrfunc=None, edgetypefunc=None):
+    def __init__(
+        self,
+        node,
+        graph="digraph",
+        name="tree",
+        options=None,
+        indent=4,
+        nodenamefunc=None,
+        nodeattrfunc=None,
+        edgeattrfunc=None,
+        edgetypefunc=None,
+        maxlevel=None,
+    ):
         """
         Unqiue Dot Language Exporter.
 
@@ -322,6 +348,8 @@ class UniqueDotExporter(DotExporter):
                           argument. The first the node and the second the child
                           and return the edge (i.e. '->').
 
+            maxlevel (int): Limit export to this number of levels.
+
         >>> from anytree import Node
         >>> root = Node("root")
         >>> s0 = Node("sub0", parent=root)
@@ -334,26 +362,26 @@ class UniqueDotExporter(DotExporter):
         >>> s1ca = Node("sub1Ca", parent=s1c)
 
         >>> from anytree.exporter import UniqueDotExporter
-        >>> for line in UniqueDotExporter(root):  # doctest: +SKIP
+        >>> for line in UniqueDotExporter(root):
         ...     print(line)
         digraph tree {
-            "0x7f1bf2c9c510" [label="root"];
-            "0x7f1bf2c9c5a0" [label="sub0"];
-            "0x7f1bf2c9c630" [label="s0"];
-            "0x7f1bf2c9c6c0" [label="s0"];
-            "0x7f1bf2c9c750" [label="sub1"];
-            "0x7f1bf2c9c7e0" [label="s1"];
-            "0x7f1bf2c9c870" [label="s1"];
-            "0x7f1bf2c9c900" [label="s1"];
-            "0x7f1bf2c9c990" [label="sub1Ca"];
-            "0x7f1bf2c9c510" -> "0x7f1bf2c9c5a0";
-            "0x7f1bf2c9c510" -> "0x7f1bf2c9c750";
-            "0x7f1bf2c9c5a0" -> "0x7f1bf2c9c630";
-            "0x7f1bf2c9c5a0" -> "0x7f1bf2c9c6c0";
-            "0x7f1bf2c9c750" -> "0x7f1bf2c9c7e0";
-            "0x7f1bf2c9c750" -> "0x7f1bf2c9c870";
-            "0x7f1bf2c9c750" -> "0x7f1bf2c9c900";
-            "0x7f1bf2c9c900" -> "0x7f1bf2c9c990";
+            "0x0" [label="root"];
+            "0x1" [label="sub0"];
+            "0x2" [label="s0"];
+            "0x3" [label="s0"];
+            "0x4" [label="sub1"];
+            "0x5" [label="s1"];
+            "0x6" [label="s1"];
+            "0x7" [label="s1"];
+            "0x8" [label="sub1Ca"];
+            "0x0" -> "0x1";
+            "0x0" -> "0x4";
+            "0x1" -> "0x2";
+            "0x1" -> "0x3";
+            "0x4" -> "0x5";
+            "0x4" -> "0x6";
+            "0x4" -> "0x7";
+            "0x7" -> "0x8";
         }
 
         The resulting graph:
@@ -369,26 +397,41 @@ class UniqueDotExporter(DotExporter):
         >>> s0a = AnyNode(id="s0", parent=s0)
 
         >>> from anytree.exporter import UniqueDotExporter
-        >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):  # doctest: +SKIP
+        >>> for line in UniqueDotExporter(root, nodeattrfunc=lambda n: 'label="%s"' % (n.id)):
         ...     print(line)
         digraph tree {
-            "0x7f5c70449af8" [label="root"];
-            "0x7f5c70449bd0" [label="sub0"];
-            "0x7f5c70449c60" [label="s0"];
-            "0x7f5c70449cf0" [label="s0"];
-            "0x7f5c70449af8" -> "0x7f5c70449bd0";
-            "0x7f5c70449bd0" -> "0x7f5c70449c60";
-            "0x7f5c70449bd0" -> "0x7f5c70449cf0";
+            "0x0" [label="root"];
+            "0x1" [label="sub0"];
+            "0x2" [label="s0"];
+            "0x3" [label="s0"];
+            "0x0" -> "0x1";
+            "0x1" -> "0x2";
+            "0x1" -> "0x3";
         }
         """
-        super(UniqueDotExporter, self).__init__(node, graph=graph, name=name, options=options, indent=indent,
-                                                nodenamefunc=nodenamefunc, nodeattrfunc=nodeattrfunc,
-                                                edgeattrfunc=edgeattrfunc, edgetypefunc=edgetypefunc)
+        super(UniqueDotExporter, self).__init__(
+            node,
+            graph=graph,
+            name=name,
+            options=options,
+            indent=indent,
+            nodenamefunc=nodenamefunc,
+            nodeattrfunc=nodeattrfunc,
+            edgeattrfunc=edgeattrfunc,
+            edgetypefunc=edgetypefunc,
+        )
+        self.__node_ids = {}
+        self.__node_counter = itertools.count()
 
-    @staticmethod
-    def _default_nodenamefunc(node):
-        return hex(id(node))
+    # pylint: disable=arguments-differ
+    def _default_nodenamefunc(self, node):
+        node_id = id(node)
+        try:
+            num = self.__node_ids[node_id]
+        except KeyError:
+            num = self.__node_ids[node_id] = next(self.__node_counter)
+        return hex(num)
 
     @staticmethod
     def _default_nodeattrfunc(node):
-        return 'label="%s"' % (node.name, )
+        return 'label="%s"' % (node.name,)

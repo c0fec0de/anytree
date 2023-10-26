@@ -1,0 +1,54 @@
+name: test
+
+on: [push, pull_request, release]
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          sudo apt-get install -y graphviz
+          pip install tox "poetry>=1.4" coveralls
+      - name: TOX
+        run: tox
+      - name: Upload coverage data to coveralls.io
+        run: coveralls --service=github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
+          COVERALLS_PARALLEL: true
+
+  coveralls:
+    name: Indicate completion to coveralls.io
+    needs: build
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+    - name: Finished
+      run: |
+        pip3 install --upgrade coveralls
+        coveralls --service=github --finish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: coveralls
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v1.17
+        with:
+          pypi_token: ${{ secrets.PYPI_TOKEN }}

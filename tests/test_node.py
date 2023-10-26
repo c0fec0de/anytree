@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
-from nose.tools import eq_
+from anytree import AnyNode, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, RenderTree, TreeError
 
-from anytree import AnyNode
-from anytree import LoopError
-from anytree import Node
-from anytree import NodeMixin
-from anytree import PostOrderIter
-from anytree import PreOrderIter
-from anytree import RenderTree
-from anytree import TreeError
-from helper import assert_raises
+from .helper import assert_raises, eq_
 
 
 def test_node_parent_error():
@@ -270,26 +262,14 @@ def test_ancestors():
 
 def test_node_children_init():
     """Node With Children Attribute."""
-    root = Node("root", children=[
-        Node("a", children=[
-            Node("aa")
-        ]),
-        Node("b")
-    ])
-    eq_(repr(root.descendants),
-        "(Node('/root/a'), Node('/root/a/aa'), Node('/root/b'))")
+    root = Node("root", children=[Node("a", children=[Node("aa")]), Node("b")])
+    eq_(repr(root.descendants), "(Node('/root/a'), Node('/root/a/aa'), Node('/root/b'))")
 
 
 def test_anynode_children_init():
     """Anynode With Children Attribute."""
-    root = AnyNode(foo="root", children=[
-        AnyNode(foo="a", children=[
-            AnyNode(foo="aa")
-        ]),
-        AnyNode(foo="b")
-    ])
-    eq_(repr(root.descendants),
-        "(AnyNode(foo='a'), AnyNode(foo='aa'), AnyNode(foo='b'))")
+    root = AnyNode(foo="root", children=[AnyNode(foo="a", children=[AnyNode(foo="aa")]), AnyNode(foo="b")])
+    eq_(repr(root.descendants), "(AnyNode(foo='a'), AnyNode(foo='aa'), AnyNode(foo='b'))")
 
 
 def test_descendants():
@@ -422,6 +402,44 @@ def test_height():
     eq_(s1ca.height, 0)
 
 
+def test_size():
+    """Node.size."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    s0b = Node("sub0B", parent=s0)
+    s0a = Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root)
+    s1c = Node("sub1C", parent=s1)
+    s1ca = Node("sub1Ca", parent=s1c)
+
+    eq_(root.size, 7)
+    eq_(s0.size, 3)
+    eq_(s0b.size, 1)
+    eq_(s0a.size, 1)
+    eq_(s1.size, 3)
+    eq_(s1c.size, 2)
+    eq_(s1ca.size, 1)
+
+
+def test_size():
+    """Node.size."""
+    root = Node("root")
+    s0 = Node("sub0", parent=root)
+    s0b = Node("sub0B", parent=s0)
+    s0a = Node("sub0A", parent=s0)
+    s1 = Node("sub1", parent=root)
+    s1c = Node("sub1C", parent=s1)
+    s1ca = Node("sub1Ca", parent=s1c)
+
+    eq_(root.size, 7)
+    eq_(s0.size, 3)
+    eq_(s0b.size, 1)
+    eq_(s0a.size, 1)
+    eq_(s1.size, 3)
+    eq_(s1c.size, 2)
+    eq_(s1ca.size, 1)
+
+
 def test_depth():
     """Node.depth."""
     root = Node("root")
@@ -460,7 +478,7 @@ def test_pre_order_iter():
     h = Node("h", parent=i)
 
     result = [node.name for node in PreOrderIter(f)]
-    expected = ['f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h']
+    expected = ["f", "b", "a", "d", "c", "e", "g", "i", "h"]
     eq_(result, expected)
 
 
@@ -477,14 +495,14 @@ def test_post_order_iter():
     h = Node("h", parent=i)
 
     result = [node.name for node in PostOrderIter(f)]
-    expected = ['a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f']
+    expected = ["a", "c", "e", "d", "b", "h", "i", "g", "f"]
     eq_(result, expected)
 
 
 def test_anyname():
     """Support any type as name."""
     myroot = Node([1, 2, 3])
-    Node('/foo', parent=myroot)
+    Node("/foo", parent=myroot)
     eq_(str(myroot), "Node('/[1, 2, 3]')")
 
 
@@ -492,15 +510,14 @@ def test_node_kwargs():
     """Ticket #24."""
 
     class MyNode(Node):
-
         def __init__(self, name, parent=None, **kwargs):
             super(MyNode, self).__init__(name, parent, **kwargs)
 
         def _post_attach(self, parent):
             print(self.my_attribute)
 
-    node_a = MyNode('A')
-    node_b = MyNode('B', node_a, my_attribute=True)
+    node_a = MyNode("A")
+    node_b = MyNode("B", node_a, my_attribute=True)
     eq_(repr(node_b), "MyNode('/A/B', my_attribute=True)")
 
 
@@ -508,7 +525,6 @@ def test_hookups():
     """Hookup attributes #29."""
 
     class MyNode(Node):
-
         def _pre_attach(self, parent):
             eq_(str(self.parent), "None")
             eq_(self.children, tuple())
@@ -529,8 +545,8 @@ def test_hookups():
             eq_(self.children, tuple())
             eq_(str(self.path), "(MyNode('/B'),)")
 
-    node_a = MyNode('A')
-    node_b = MyNode('B', node_a)  # attach B on A
+    node_a = MyNode("A")
+    node_b = MyNode("B", node_a)  # attach B on A
     node_b.parent = None  # detach B from A
 
 
@@ -559,8 +575,8 @@ def test_any_node():
 
 def test_eq_overwrite():
     """Node with overwritten __eq__."""
-    class EqOverwrittingNode(NodeMixin):
 
+    class EqOverwrittingNode(NodeMixin):
         def __init__(self, a, b, parent=None):
             super(EqOverwrittingNode, self).__init__()
             self.a = a
@@ -592,6 +608,6 @@ def test_tuple():
 
 def test_tuple_as_children():
     """Tuple as children."""
-    n = Node('foo')
+    n = Node("foo")
     with assert_raises(TreeError, "Cannot add non-node object (0, 1, 2). It is not a subclass of 'NodeMixin'."):
         n.children = [(0, 1, 2)]

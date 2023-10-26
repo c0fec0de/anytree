@@ -1,3 +1,4 @@
+from ..config import ASSERTIONS
 from .abstractiter import AbstractIter
 from .levelordergroupiter import LevelOrderGroupIter
 
@@ -11,7 +12,7 @@ class ZigZagGroupIter(AbstractIter):
     (children of `node`) in reversed order.
     The next level contains the children of the children in forward order, and so on.
 
-    >>> from anytree import Node, RenderTree, AsciiStyle
+    >>> from anytree import Node, RenderTree, AsciiStyle, ZigZagGroupIter
     >>> f = Node("f")
     >>> b = Node("b", parent=f)
     >>> a = Node("a", parent=b)
@@ -46,7 +47,8 @@ class ZigZagGroupIter(AbstractIter):
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
         if children:
-            assert len(children) == 1
+            if ASSERTIONS:  # pragma: no branch
+                assert len(children) == 1
             _iter = LevelOrderGroupIter(children[0], filter_, stop, maxlevel)
             while True:
                 try:

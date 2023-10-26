@@ -1,14 +1,12 @@
 from filecmp import cmp
 from os import makedirs
-from os.path import dirname
-from os.path import exists
-from os.path import join
+from os.path import dirname, exists, join
 from shutil import rmtree
-
-from nose.tools import with_setup
 
 from anytree import Node
 from anytree.dotexport import RenderTreeGraph
+
+from .helper import with_setup
 
 TESTPATH = dirname(__file__)
 GENPATH = join(TESTPATH, "dotexport")
@@ -56,14 +54,18 @@ def test_tree2():
     Node("sub1Ca", parent=s1c, edge=42)
 
     def nodenamefunc(node):
-        return '%s:%s' % (node.name, node.depth)
+        return "%s:%s" % (node.name, node.depth)
 
     def edgeattrfunc(node, child):
         return 'label="%s:%s"' % (node.name, child.name)
-    r = RenderTreeGraph(root, options=["rankdir=LR;"],
-                        nodenamefunc=nodenamefunc,
-                        nodeattrfunc=lambda node: "shape=box",
-                        edgeattrfunc=edgeattrfunc)
+
+    r = RenderTreeGraph(
+        root,
+        options=["rankdir=LR;"],
+        nodenamefunc=nodenamefunc,
+        nodeattrfunc=lambda node: "shape=box",
+        edgeattrfunc=edgeattrfunc,
+    )
 
     r.to_dotfile(join(GENPATH, "tree2.dot"))
     assert cmp(join(GENPATH, "tree2.dot"), join(REFPATH, "tree2.dot"))

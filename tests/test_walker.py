@@ -1,9 +1,6 @@
-from nose.tools import eq_
+from anytree import Node, Walker, WalkError
 
-from anytree import Node
-from anytree import Walker
-from anytree import WalkError
-from helper import assert_raises
+from .helper import assert_raises, eq_
 
 
 def test_walker():

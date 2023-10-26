@@ -5,24 +5,30 @@ from __future__ import print_function
 
 import re
 
+from anytree.iterators.preorderiter import PreOrderIter
+
+from .config import ASSERTIONS
+
 _MAXCACHE = 20
 
 
-class Resolver(object):
+class Resolver:
+    """
+    Resolve :any:`NodeMixin` paths using attribute `pathattr`.
+
+    Keyword Args:
+        name (str): Name of the node attribute to be used for resolving
+        ignorecase (bool): Enable case insensisitve handling.
+        relax (bool): Do not raise an exception.
+    """
 
     _match_cache = {}
 
-    def __init__(self, pathattr='name', ignorecase=False):
-        """
-        Resolve :any:`NodeMixin` paths using attribute `pathattr`.
-
-        Keyword Args:
-            name (str): Name of the node attribute to be used for resolving
-            ignorecase (bool): Enable case insensisitve handling.
-        """
+    def __init__(self, pathattr="name", ignorecase=False, relax=False):
         super(Resolver, self).__init__()
         self.pathattr = pathattr
         self.ignorecase = ignorecase
+        self.relax = relax
 
     def get(self, node, path):
         """
@@ -39,43 +45,50 @@ class Resolver(object):
 
         A resolver using the `name` attribute:
 
-        >>> r = Resolver('name')
+        >>> resolver = Resolver('name')
+        >>> relaxedresolver = Resolver('name', relax=True)  # never generate exceptions
 
         Relative paths:
 
-        >>> r.get(top, "sub0/sub0sub0")
+        >>> resolver.get(top, "sub0/sub0sub0")
         Node('/top/sub0/sub0sub0')
-        >>> r.get(sub1, "..")
+        >>> resolver.get(sub1, "..")
         Node('/top')
-        >>> r.get(sub1, "../sub0/sub0sub1")
+        >>> resolver.get(sub1, "../sub0/sub0sub1")
         Node('/top/sub0/sub0sub1')
-        >>> r.get(sub1, ".")
+        >>> resolver.get(sub1, ".")
         Node('/top/sub1')
-        >>> r.get(sub1, "")
+        >>> resolver.get(sub1, "")
         Node('/top/sub1')
-        >>> r.get(top, "sub2")
+        >>> resolver.get(top, "sub2")
         Traceback (most recent call last):
           ...
         anytree.resolver.ChildResolverError: Node('/top') has no child sub2. Children are: 'sub0', 'sub1'.
+        >>> print(relaxedresolver.get(top, "sub2"))
+        None
 
         Absolute paths:
 
-        >>> r.get(sub0sub0, "/top")
+        >>> resolver.get(sub0sub0, "/top")
         Node('/top')
-        >>> r.get(sub0sub0, "/top/sub0")
+        >>> resolver.get(sub0sub0, "/top/sub0")
         Node('/top/sub0')
-        >>> r.get(sub0sub0, "/")
+        >>> resolver.get(sub0sub0, "/")
         Traceback (most recent call last):
           ...
         anytree.resolver.ResolverError: root node missing. root is '/top'.
-        >>> r.get(sub0sub0, "/bar")
+        >>> print(relaxedresolver.get(sub0sub0, "/"))
+        None
+        >>> resolver.get(sub0sub0, "/bar")
         Traceback (most recent call last):
           ...
         anytree.resolver.ResolverError: unknown root node '/bar'. root is '/top'.
+        >>> print(relaxedresolver.get(sub0sub0, "/bar"))
+        None
 
         Going above the root node raises a :any:`RootResolverError`:
 
-        >>> r.get(top, "..")
+        >>> resolver.get(top, "..")
         Traceback (most recent call last):
             ...
         anytree.resolver.RootResolverError: Cannot go above root node Node('/top')
@@ -85,20 +98,24 @@ class Resolver(object):
 
         Case insensitive matching:
 
-        >>> r.get(top, '/TOP')
+        >>> resolver.get(top, '/TOP')
         Traceback (most recent call last):
             ...
         anytree.resolver.ResolverError: unknown root node '/TOP'. root is '/top'.
 
-        >>> r = Resolver('name', ignorecase=True)
-        >>> r.get(top, '/TOp')
+        >>> ignorecaseresolver = Resolver('name', ignorecase=True)
+        >>> ignorecaseresolver.get(top, '/TOp')
         Node('/top')
         """
         node, parts = self.__start(node, path, self.__cmp)
+        if node is None and self.relax:
+            return None
         for part in parts:
             if part == "..":
                 parent = node.parent
                 if parent is None:
+                    if self.relax:
+                        return None
                     raise RootResolverError(node)
                 node = parent
             elif part in ("", "."):
@@ -112,6 +129,8 @@ class Resolver(object):
         for child in node.children:
             if self.__cmp(_getattr(child, self.pathattr), namestr):
                 return child
+        if self.relax:
+            return None
         raise ChildResolverError(node, name, self.pathattr)
 
     def glob(self, node, path):
@@ -136,53 +155,64 @@ class Resolver(object):
 
         A resolver using the `name` attribute:
 
-        >>> r = Resolver('name')
+        >>> resolver = Resolver('name')
+        >>> relaxedresolver = Resolver('name', relax=True)  # never generate exceptions
 
         Relative paths:
 
-        >>> r.glob(top, "sub0/sub?")
+        >>> resolver.glob(top, "sub0/sub?")
         [Node('/top/sub0/sub0'), Node('/top/sub0/sub1')]
-        >>> r.glob(sub1, ".././*")
+        >>> resolver.glob(sub1, ".././*")
         [Node('/top/sub0'), Node('/top/sub1')]
-        >>> r.glob(top, "*/*")
+        >>> resolver.glob(top, "*/*")
         [Node('/top/sub0/sub0'), Node('/top/sub0/sub1'), Node('/top/sub1/sub0')]
-        >>> r.glob(top, "*/sub0")
+        >>> resolver.glob(top, "*/sub0")
         [Node('/top/sub0/sub0'), Node('/top/sub1/sub0')]
-        >>> r.glob(top, "sub1/sub1")
+        >>> resolver.glob(top, "sub1/sub1")
         Traceback (most recent call last):
             ...
         anytree.resolver.ChildResolverError: Node('/top/sub1') has no child sub1. Children are: 'sub0'.
+        >>> relaxedresolver.glob(top, "sub1/sub1")
+        []
 
         Non-matching wildcards are no error:
 
-        >>> r.glob(top, "bar*")
+        >>> resolver.glob(top, "bar*")
         []
-        >>> r.glob(top, "sub2")
+        >>> resolver.glob(top, "sub2")
         Traceback (most recent call last):
           ...
         anytree.resolver.ChildResolverError: Node('/top') has no child sub2. Children are: 'sub0', 'sub1'.
+        >>> relaxedresolver.glob(top, "sub2")
+        []
 
         Absolute paths:
 
-        >>> r.glob(sub0sub0, "/top/*")
+        >>> resolver.glob(sub0sub0, "/top/*")
         [Node('/top/sub0'), Node('/top/sub1')]
-        >>> r.glob(sub0sub0, "/")
+        >>> resolver.glob(sub0sub0, "/")
         Traceback (most recent call last):
           ...
         anytree.resolver.ResolverError: root node missing. root is '/top'.
-        >>> r.glob(sub0sub0, "/bar")
+        >>> relaxedresolver.glob(sub0sub0, "/")
+        []
+        >>> resolver.glob(sub0sub0, "/bar")
         Traceback (most recent call last):
           ...
         anytree.resolver.ResolverError: unknown root node '/bar'. root is '/top'.
 
         Going above the root node raises a :any:`RootResolverError`:
 
-        >>> r.glob(top, "..")
+        >>> resolver.glob(top, "..")
         Traceback (most recent call last):
             ...
         anytree.resolver.RootResolverError: Cannot go above root node Node('/top')
+        >>> relaxedresolver.glob(top, "..")
+        []
         """
         node, parts = self.__start(node, path, self.__match)
+        if node is None and self.relax:
+            return []
         return self.__glob(node, parts)
 
     def __start(self, node, path, cmp_):
@@ -194,36 +224,56 @@ class Resolver(object):
             rootpart = _getattr(node, self.pathattr)
             parts.pop(0)
             if not parts[0]:
+                if self.relax:
+                    return None, None
                 msg = "root node missing. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, str(rootpart)))
-            elif not cmp_(rootpart, parts[0]):
+            if not cmp_(rootpart, parts[0]):
+                if self.relax:
+                    return None, None
                 msg = "unknown root node '%s%s'. root is '%s%s'."
                 raise ResolverError(node, "", msg % (sep, parts[0], sep, str(rootpart)))
             parts.pop(0)
         return node, parts
 
     def __glob(self, node, parts):
-        assert node is not None
-        nodes = []
-        if parts:
-            name = parts[0]
-            remainder = parts[1:]
-            # handle relative
-            if name == "..":
-                parent = node.parent
-                if parent is None:
-                    raise RootResolverError(node)
-                nodes += self.__glob(parent, remainder)
-            elif name in ("", "."):
-                nodes += self.__glob(node, remainder)
-            else:
-                matches = self.__find(node, name, remainder)
-                if not matches and not Resolver.is_wildcard(name):
-                    raise ChildResolverError(node, name, self.pathattr)
-                nodes += matches
-        else:
-            nodes = [node]
-        return nodes
+        if ASSERTIONS:  # pragma: no branch
+            assert node is not None
+
+        if not parts:
+            return [node]
+
+        name = parts[0]
+        remainder = parts[1:]
+
+        # handle relative
+        if name == "..":
+            parent = node.parent
+            if parent is None:
+                if self.relax:
+                    return []
+                raise RootResolverError(node)
+            return self.__glob(parent, remainder)
+
+        if name in ("", "."):
+            return self.__glob(node, remainder)
+
+        # handle recursive
+        if name == "**":
+            matches = []
+            for subnode in PreOrderIter(node):
+                try:
+                    for match in self.__glob(subnode, remainder):
+                        if match not in matches:
+                            matches.append(match)
+                except ChildResolverError:
+                    pass
+            return matches
+
+        matches = self.__find(node, name, remainder)
+        if not matches and not Resolver.is_wildcard(name) and not self.relax:
+            raise ChildResolverError(node, name, self.pathattr)
+        return matches
 
     def __find(self, node, pat, remainder):
         matches = []
@@ -262,12 +312,11 @@ class Resolver(object):
     def __cmp(self, name, pat):
         if self.ignorecase:
             return name.upper() == pat.upper()
-        else:
-            return name == pat
+        return name == pat
 
     @staticmethod
     def __translate(pat):
-        re_pat = ''
+        re_pat = ""
         for char in pat:
             if char == "*":
                 re_pat += ".*"
@@ -275,11 +324,10 @@ class Resolver(object):
                 re_pat += "."
             else:
                 re_pat += re.escape(char)
-        return r'(?ms)' + re_pat + r'\Z'
+        return r"(?ms)" + re_pat + r"\Z"
 
 
 class ResolverError(RuntimeError):
-
     def __init__(self, node, child, msg):
         """Resolve Error at `node` handling `child`."""
         super(ResolverError, self).__init__(msg)
@@ -288,21 +336,17 @@ class ResolverError(RuntimeError):
 
 
 class RootResolverError(ResolverError):
-
     def __init__(self, root):
         """Root Resolve Error, cannot go above root node."""
-        msg = "Cannot go above root node %r"
-        msg = msg % (root, )
-        super(ResolverError, self).__init__(msg)
+        msg = "Cannot go above root node %r" % (root,)
+        super(RootResolverError, self).__init__(root, None, msg)
 
 
 class ChildResolverError(ResolverError):
-
     def __init__(self, node, child, pathattr):
         """Child Resolve Error at `node` handling `child`."""
         names = [repr(_getattr(c, pathattr)) for c in node.children]
-        msg = "%r has no child %s. Children are: %s."
-        msg = msg % (node, child, ", ".join(names))
+        msg = "%r has no child %s. Children are: %s." % (node, child, ", ".join(names))
         super(ChildResolverError, self).__init__(node, child, msg)
 
 

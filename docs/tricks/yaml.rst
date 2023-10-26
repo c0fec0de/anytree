@@ -81,7 +81,7 @@ Example data:
 
 Import to dictionary and convert to tree:
 
->>> dct = yaml.load(data)
+>>> dct = yaml.load(data, Loader=yaml.Loader)
 >>> pprint(dct)
 {'a': 'root',
  'children': [{'a': 'sub0',

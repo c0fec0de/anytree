@@ -209,7 +209,7 @@ class MyNode(NodeMixin):
 
 
 class TestConsistency(unittest.TestCase):
-    """ Control the access to special methods """
+    """Control the access to special methods"""
 
     def setUp(self):
         super(TestConsistency, self).setUp()
@@ -326,14 +326,14 @@ class MyMapping(NodeMixin, Mapping):
             self.children = children
 
     def __iter__(self):
-        """ Iterate over all children recursively. """
+        """Iterate over all children recursively."""
         for child in self.children:
             yield child
             for item in child:
                 yield item
 
     def __len__(self):
-        """ Total number of children. """
+        """Total number of children."""
         return len(list(iter(self)))
 
     def __getitem__(self, name):
