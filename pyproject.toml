@@ -6,7 +6,7 @@ authors = [
     "c0fec0de <c0fec0de@gmail.com>"
 ]
 readme = "README.rst"
-license = "Apache 2.0"
+license = "Apache-2.0"
 keywords = [
     "tree",
     "tree data",
