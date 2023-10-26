@@ -10,8 +10,8 @@
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.11.2
-    :target: https://anytree.readthedocs.io/en/2.11.2/?badge=2.11.2
+.. image:: https://readthedocs.org/projects/anytree/badge/?version=2.12.0
+    :target: https://anytree.readthedocs.io/en/2.12.0/?badge=2.12.0
 
 .. image:: https://api.codeclimate.com/v1/badges/e6d325d6fd23a93aab20/maintainability
    :target: https://codeclimate.com/github/c0fec0de/anytree/maintainability
@@ -59,20 +59,20 @@ Links
 .. image:: https://github.com/c0fec0de/anytree/raw/devel/docs/static/buymeacoffee.png
    :target: https://www.buymeacoffee.com/1oYX0sw
 
-.. _anytree: https://anytree.readthedocs.io/en/2.11.2/
-.. _Documentation: https://anytree.readthedocs.io/en/2.11.2/
-.. _PyPI: https://pypi.org/project/anytree/2.11.2/
+.. _anytree: https://anytree.readthedocs.io/en/2.12.0/
+.. _Documentation: https://anytree.readthedocs.io/en/2.12.0/
+.. _PyPI: https://pypi.org/project/anytree/2.12.0/
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
 
-.. _Node: https://anytree.readthedocs.io/en/2.11.2/api/anytree.node.html#anytree.node.node.Node
-.. _RenderTree: https://anytree.readthedocs.io/en/2.11.2/api/anytree.render.html#anytree.render.RenderTree
-.. _UniqueDotExporter: https://anytree.readthedocs.io/en/2.11.2/exporter/dotexporter.html#anytree.exporter.dotexporter.UniqueDotExporter
-.. _NodeMixin: https://anytree.readthedocs.io/en/2.11.2/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
-.. _Importers: https://anytree.readthedocs.io/en/2.11.2/importer.html
-.. _Exporters: https://anytree.readthedocs.io/en/2.11.2/exporter.html
+.. _Node: https://anytree.readthedocs.io/en/2.12.0/api/anytree.node.html#anytree.node.node.Node
+.. _RenderTree: https://anytree.readthedocs.io/en/2.12.0/api/anytree.render.html#anytree.render.RenderTree
+.. _UniqueDotExporter: https://anytree.readthedocs.io/en/2.12.0/exporter/dotexporter.html#anytree.exporter.dotexporter.UniqueDotExporter
+.. _NodeMixin: https://anytree.readthedocs.io/en/2.12.0/api/anytree.node.html#anytree.node.nodemixin.NodeMixin
+.. _Importers: https://anytree.readthedocs.io/en/2.12.0/importer.html
+.. _Exporters: https://anytree.readthedocs.io/en/2.12.0/exporter.html
 
 Getting started
 ---------------
