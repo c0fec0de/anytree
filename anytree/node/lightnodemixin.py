@@ -1,34 +1,37 @@
 # -*- coding: utf-8 -*-
 
-import warnings
-
 from anytree.iterators import PreOrderIter
 
 from ..config import ASSERTIONS
 from .exceptions import LoopError, TreeError
-from .lightnodemixin import LightNodeMixin
 
 
-class NodeMixin:
+class LightNodeMixin:
 
     """
-    The :any:`NodeMixin` class extends any Python class to a tree node.
+    The :any:`LightNodeMixin` behaves identical to :any:`NodeMixin`, but uses `__slots__`.
+
+    There are some minor differences in the object behaviour.
+    See slots_ for any details.
+
+    .. _slots: https://docs.python.org/3/reference/datamodel.html#slots
 
     The only tree relevant information is the `parent` attribute.
-    If `None` the :any:`NodeMixin` is root node.
-    If set to another node, the :any:`NodeMixin` becomes the child of it.
+    If `None` the :any:`LightNodeMixin` is root node.
+    If set to another node, the :any:`LightNodeMixin` becomes the child of it.
 
     The `children` attribute can be used likewise.
-    If `None` the :any:`NodeMixin` has no children.
-    The `children` attribute can be set to any iterable of :any:`NodeMixin` instances.
+    If `None` the :any:`LightNodeMixin` has no children.
+    The `children` attribute can be set to any iterable of :any:`LightNodeMixin` instances.
     These instances become children of the node.
 
-    >>> from anytree import NodeMixin, RenderTree
-    >>> class MyBaseClass(object):  # Just an example of a base class
-    ...     foo = 4
-    >>> class MyClass(MyBaseClass, NodeMixin):  # Add Node feature
+    >>> from anytree import LightNodeMixin, RenderTree
+    >>> class MyBaseClass():  # Just an example of a base class
+    ...     __slots__ = []
+    >>> class MyClass(MyBaseClass, LightNodeMixin):  # Add Node feature
+    ...     __slots__ = ['name', 'length', 'width']
     ...     def __init__(self, name, length, width, parent=None, children=None):
-    ...         super(MyClass, self).__init__()
+    ...         super().__init__()
     ...         self.name = name
     ...         self.length = length
     ...         self.width = width
@@ -78,6 +81,8 @@ class NodeMixin:
     └── my2  0 2
     """
 
+    __slots__ = ["__parent", "__children"]
+
     separator = "/"
 
     @property
@@ -116,16 +121,13 @@ class NodeMixin:
         >>> marc.is_root
         True
         """
-        if hasattr(self, "_NodeMixin__parent"):
+        if hasattr(self, "_LightNodeMixin__parent"):
             return self.__parent
         return None
 
     @parent.setter
     def parent(self, value):
-        if value is not None and not isinstance(value, (NodeMixin, LightNodeMixin)):
-            msg = "Parent node %r is not of type 'NodeMixin'." % (value,)
-            raise TreeError(msg)
-        if hasattr(self, "_NodeMixin__parent"):
+        if hasattr(self, "_LightNodeMixin__parent"):
             parent = self.__parent
         else:
             parent = None
@@ -171,7 +173,7 @@ class NodeMixin:
 
     @property
     def __children_or_empty(self):
-        if not hasattr(self, "_NodeMixin__children"):
+        if not hasattr(self, "_LightNodeMixin__children"):
             self.__children = []
         return self.__children
 
@@ -230,9 +232,6 @@ class NodeMixin:
     def __check_children(children):
         seen = set()
         for child in children:
-            if not isinstance(child, (NodeMixin, LightNodeMixin)):
-                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % (child,)
-                raise TreeError(msg)
             childid = id(child)
             if childid not in seen:
                 seen.add(childid)
@@ -244,7 +243,7 @@ class NodeMixin:
     def children(self, children):
         # convert iterable to tuple
         children = tuple(children)
-        NodeMixin.__check_children(children)
+        LightNodeMixin.__check_children(children)
         # ATOMIC start
         old_children = self.children
         del self.children
@@ -349,17 +348,6 @@ class NodeMixin:
         if self.parent is None:
             return tuple()
         return self.parent.path
-
-    @property
-    def anchestors(self):
-        """
-        All parent nodes and their parent nodes - see :any:`ancestors`.
-
-        The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
-        This attribute will be removed in the 3.0.0 release.
-        """
-        warnings.warn(".anchestors was a typo and will be removed in version 3.0.0", DeprecationWarning)
-        return self.ancestors
 
     @property
     def descendants(self):

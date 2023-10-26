@@ -6,11 +6,13 @@ Node Classes.
 * :any:`NodeMixin`: extends any python class to a tree node.
 * :any:`SymlinkNode`: Tree node which references to another tree node.
 * :any:`SymlinkNodeMixin`: extends any Python class to a symbolic link to a tree node.
+* :any:`LightNodeMixin`: A :any:`NodeMixin` using slots.
 """
 
 from .anynode import AnyNode  # noqa
 from .exceptions import LoopError  # noqa
 from .exceptions import TreeError  # noqa
+from .lightnodemixin import LightNodeMixin  # noqa
 from .node import Node  # noqa
 from .nodemixin import NodeMixin  # noqa
 from .symlinknode import SymlinkNode  # noqa
