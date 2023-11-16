@@ -61,7 +61,7 @@ Links
 
 .. _anytree: https://anytree.readthedocs.io/en/stable/
 .. _Documentation: https://anytree.readthedocs.io/en/stable/
-.. _PyPI: https://pypi.org/project/anytree/stable/
+.. _PyPI: https://pypi.org/project/anytree
 .. _GitHub: https://github.com/c0fec0de/anytree
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues

@@ -85,7 +85,7 @@ Feel free to share_ info about your anytree project.
 .. _anytree: https://anytree.readthedocs.io/en/stable/
 .. _Documentation: https://anytree.readthedocs.io/en/stable/
 .. _GitHub: https://github.com/c0fec0de/anytree
-.. _PyPI: https://pypi.org/project/anytree/stable/
+.. _PyPI: https://pypi.org/project/anytree/
 .. _Changelog: https://github.com/c0fec0de/anytree/releases
 .. _Issues: https://github.com/c0fec0de/anytree/issues
 .. _Contributors: https://github.com/c0fec0de/anytree/graphs/contributors
