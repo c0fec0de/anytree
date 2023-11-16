@@ -55,11 +55,9 @@ poetry version patch
 # Commit, Tag and Push
 version=$(poetry version -s)
 
-sed "s/$prev_version/$version/g" -i README.rst
-sed "s/$prev_version/$version/g" -i docs/index.rst
 sed "s/$prev_version/$version/g" -i anytree/__init__.py
 
-git commit -m"version bump to ${version}" pyproject.toml README.rst docs/index.rst anytree/__init__.py
+git commit -m"version bump to ${version}" pyproject.toml anytree/__init__.py
 git tag "${version}" -m "Release ${version}"
 git push
 git push --tags

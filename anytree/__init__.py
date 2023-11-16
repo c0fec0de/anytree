@@ -5,7 +5,7 @@
 __version__ = "2.12.0"
 __author__ = "c0fec0de"
 __author_email__ = "c0fec0de@gmail.com"
-__description__ = """Powerful and Lightweight Python Tree Data Structure.."""
+__description__ = """Powerful and Lightweight Python Tree Data Structure."""
 __url__ = "https://github.com/c0fec0de/anytree"
 
 from . import cachedsearch  # noqa
