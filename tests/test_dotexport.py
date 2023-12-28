@@ -1,7 +1,9 @@
 from filecmp import cmp
 from os import makedirs
 from os.path import dirname, exists, join
-from shutil import rmtree
+from shutil import rmtree, which
+
+import pytest
 
 from anytree import Node
 from anytree.dotexport import RenderTreeGraph
@@ -71,6 +73,7 @@ def test_tree2():
     assert cmp(join(GENPATH, "tree2.dot"), join(REFPATH, "tree2.dot"))
 
 
+@pytest.mark.skipif(which("dot") is None, reason="requires graphviz`s `dot` command")
 @with_setup(setup, teardown)
 def test_tree_png():
     """Tree to png."""

@@ -11,8 +11,6 @@ Tree Rendering.
 
 import collections
 
-import six
-
 from .config import ASSERTIONS
 
 Row = collections.namedtuple("Row", ("pre", "fill", "node"))
@@ -146,7 +144,6 @@ class DoubleStyle(AbstractStyle):
         super(DoubleStyle, self).__init__("\u2551   ", "\u2560\u2550\u2550 ", "\u255a\u2550\u2550 ")
 
 
-@six.python_2_unicode_compatible
 class RenderTree:
     """
     Render tree starting at `node`.
