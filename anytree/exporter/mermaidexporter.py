@@ -2,8 +2,6 @@ import codecs
 import itertools
 import re
 
-import six
-
 from anytree import PreOrderIter
 
 _RE_ESC = re.compile(r'["\\]')
@@ -242,4 +240,4 @@ class MermaidExporter:
     @staticmethod
     def esc(value):
         """Escape Strings."""
-        return _RE_ESC.sub(lambda m: r"\%s" % m.group(0), six.text_type(value))
+        return _RE_ESC.sub(lambda m: r"\%s" % m.group(0), str(value))

@@ -33,7 +33,6 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">= 3.7.2, < 4"
-six = '*'
 
 [tool.poetry.group.test.dependencies]
 black = '^22.3.0'

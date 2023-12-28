@@ -1,8 +1,6 @@
 """Helper Methods for testing."""
 from contextlib import contextmanager
 
-import six
-
 
 def eq_(one, other):
     assert one == other, "{one} != {other}".format(one=one, other=other)
