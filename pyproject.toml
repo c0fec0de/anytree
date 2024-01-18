@@ -38,8 +38,7 @@ six = '*'
 [tool.poetry.group.test.dependencies]
 black = '^22.3.0'
 coverage = '^6.4.4'
-isort = '^5.9'
-pylint = '^2.15'
+ruff = '^0.1.13'
 pytest = '^6.2'
 pyyaml = ">=6.0"
 
@@ -49,6 +48,10 @@ sphinx = '*'
 [build-system]
 requires = ["poetry_core>=1.0"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff.isort]
+combine-as-imports = true
 
 
 [tool.black]
@@ -67,10 +70,6 @@ exclude = '''
 )/
 '''
 
-[tool.isort]
-profile = "black"
-line_length = 120
-
 [tool.coverage.report]
 exclude_lines = [
     'return NotImplemented',
@@ -79,18 +78,23 @@ exclude_lines = [
 ]
 
 
-[tool.pylint.'MESSAGES CONTROL']
-max-line-length = 120
-disable = [
-    'consider-using-f-string',
-    'duplicate-code',
-    'missing-class-docstring',
-    'missing-module-docstring',
-    'redundant-u-string-prefix',
-    'too-few-public-methods',
-    'too-many-arguments',
-    'too-many-instance-attributes',
-    'super-with-arguments', # TBD
+[tool.ruff]
+line-length = 120
+fix = true
+
+include = ["*.py", "*.pyi", "**/pyproject.toml"]
+select = [
+    "PL",  # Pylint
+    "I",   # isort
+]
+extend-ignore = [
+    "UP031",   # printf-string-formatting
+    "UP032",   # f-string
+    "D101",    # undocumented-public-class
+    "D100",    # undocumented-public-module
+    "PLR0912", # too-many-branches
+    "PLR0913", # too-many-arguments
+    "UP008",   # super-call-with-parameters  # TBD
 ]
 
 [tool.tox]
@@ -110,11 +114,10 @@ setenv =
 commands =
     poetry install --with=test --with=doc
     poetry run black .
-    poetry run isort .
+    poetry run ruff check anytree
     poetry run coverage run --source=anytree --branch -m pytest --doctest-glob=docs/*.rst --doctest-modules --ignore-glob=tests/testdata* --ignore=docs/conf.py --log-level=DEBUG -vv --junitxml=report.xml
     poetry run coverage report
     poetry run coverage html
     poetry run coverage xml
-    poetry run pylint anytree
     poetry run make html -C docs
 """
