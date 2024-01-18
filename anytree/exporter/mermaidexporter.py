@@ -197,8 +197,7 @@ class MermaidExporter:
     def __iter_nodes(self, indent, nodenamefunc, nodefunc, filter_, stop):
         for node in PreOrderIter(self.node, filter_=filter_, stop=stop, maxlevel=self.maxlevel):
             nodename = nodenamefunc(node)
-            node = nodefunc(node)
-            yield "%s%s%s" % (indent, nodename, node)
+            yield "%s%s%s" % (indent, nodename, nodefunc(node))
 
     def __iter_edges(self, indent, nodenamefunc, edgefunc, filter_, stop):
         maxlevel = self.maxlevel - 1 if self.maxlevel else None

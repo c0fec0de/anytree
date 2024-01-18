@@ -39,7 +39,7 @@ six = '*'
 black = '^22.3.0'
 coverage = '^6.4.4'
 isort = '^5.9'
-pylint = '^2.15'
+ruff = '^0.1.13'
 pytest = '^6.2'
 pyyaml = ">=6.0"
 
@@ -79,18 +79,22 @@ exclude_lines = [
 ]
 
 
-[tool.pylint.'MESSAGES CONTROL']
-max-line-length = 120
-disable = [
-    'consider-using-f-string',
-    'duplicate-code',
-    'missing-class-docstring',
-    'missing-module-docstring',
-    'redundant-u-string-prefix',
-    'too-few-public-methods',
-    'too-many-arguments',
-    'too-many-instance-attributes',
-    'super-with-arguments', # TBD
+[tool.ruff]
+line-length = 120
+fix = true
+
+include = ["*.py", "*.pyi", "**/pyproject.toml"]
+select = [
+    "PL",  # Pylint
+]
+extend-ignore = [
+    "UP031",   # printf-string-formatting
+    "UP032",   # f-string
+    "D101",    # undocumented-public-class
+    "D100",    # undocumented-public-module
+    "PLR0912", # too-many-branches
+    "PLR0913", # too-many-arguments
+    "UP008",   # super-call-with-parameters  # TBD
 ]
 
 [tool.tox]
@@ -115,6 +119,6 @@ commands =
     poetry run coverage report
     poetry run coverage html
     poetry run coverage xml
-    poetry run pylint anytree
+    poetry run ruff check anytree
     poetry run make html -C docs
 """
