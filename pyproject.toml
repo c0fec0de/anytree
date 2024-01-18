@@ -71,6 +71,26 @@ exclude = '''
 profile = "black"
 line_length = 120
 
+[tool.mypy]
+mypy_path = "anytree"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+no_implicit_optional = true
+no_implicit_reexport = true
+show_column_numbers = true
+show_error_codes = true
+show_traceback = true
+strict = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
 [tool.coverage.report]
 exclude_lines = [
     'return NotImplemented',

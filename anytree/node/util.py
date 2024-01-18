@@ -1,4 +1,14 @@
-def _repr(node, args=None, nameblacklist=None):
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from .nodemixin import NodeMixin
+
+
+def _repr(node: NodeMixin[Any], args: list[str] | None = None, nameblacklist: Sequence[str] | None = None) -> str:
     classname = node.__class__.__name__
     args = args or []
     nameblacklist = nameblacklist or []
