@@ -5,7 +5,6 @@ from .helper import eq_
 
 
 def test_symlink():
-
     root = Node("root")
     s0 = Node("sub0", parent=root)
     s0b = Node("sub0B", parent=s0)

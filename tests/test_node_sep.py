@@ -9,7 +9,6 @@ from .helper import assert_raises, eq_
 
 
 class MyNode(at.Node):
-
     separator = "|"
 
 

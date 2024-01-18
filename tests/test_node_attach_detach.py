@@ -5,7 +5,6 @@ from .helper import assert_raises, eq_
 
 
 class TNode(Node):
-
     TRACKING = []
 
     def _pre_detach(self, parent):
@@ -94,7 +93,6 @@ def test_parent_child():
 
 
 def test_detach_children():
-
     root = TNode("root")
     s0 = TNode("sub0", parent=root)
     s0b = TNode("sub0B", parent=s0)
@@ -153,7 +151,6 @@ def test_detach_children():
 
 
 def test_children_setter():
-
     root = TNode("root")
     s0 = TNode("sub0")
     s1 = TNode("sub0A")

@@ -109,7 +109,6 @@ def test_parent_child():
 
 
 def test_detach_children():
-
     root = Node("root")
     s0 = Node("sub0", parent=root)
     s0b = Node("sub0B", parent=s0)
@@ -128,7 +127,6 @@ def test_detach_children():
 
 
 def test_children_setter():
-
     root = Node("root")
     s0 = Node("sub0")
     s1 = Node("sub0A")
@@ -157,7 +155,6 @@ def test_children_setter():
 
 
 def test_children_setter_large():
-
     root = Node("root")
     s0 = Node("sub0")
     s0b = Node("sub0B")
@@ -180,14 +177,12 @@ def test_children_setter_large():
 
 
 def test_node_children_type():
-
     root = Node("root")
     with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
         root.children = ["string"]
 
 
 def test_node_children_multiple():
-
     root = Node("root")
     sub = Node("sub")
     with assert_raises(TreeError, "Cannot add node Node('/sub') multiple times as child."):
