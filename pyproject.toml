@@ -114,10 +114,10 @@ setenv =
 commands =
     poetry install --with=test --with=doc
     poetry run black .
+    poetry run ruff check anytree
     poetry run coverage run --source=anytree --branch -m pytest --doctest-glob=docs/*.rst --doctest-modules --ignore-glob=tests/testdata* --ignore=docs/conf.py --log-level=DEBUG -vv --junitxml=report.xml
     poetry run coverage report
     poetry run coverage html
     poetry run coverage xml
-    poetry run ruff check anytree
     poetry run make html -C docs
 """
