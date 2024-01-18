@@ -38,7 +38,6 @@ six = '*'
 [tool.poetry.group.test.dependencies]
 black = '^22.3.0'
 coverage = '^6.4.4'
-isort = '^5.9'
 ruff = '^0.1.13'
 pytest = '^6.2'
 pyyaml = ">=6.0"
@@ -49,6 +48,10 @@ sphinx = '*'
 [build-system]
 requires = ["poetry_core>=1.0"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff.isort]
+combine-as-imports = true
 
 
 [tool.black]
@@ -67,10 +70,6 @@ exclude = '''
 )/
 '''
 
-[tool.isort]
-profile = "black"
-line_length = 120
-
 [tool.coverage.report]
 exclude_lines = [
     'return NotImplemented',
@@ -86,6 +85,7 @@ fix = true
 include = ["*.py", "*.pyi", "**/pyproject.toml"]
 select = [
     "PL",  # Pylint
+    "I",   # isort
 ]
 extend-ignore = [
     "UP031",   # printf-string-formatting
@@ -114,7 +114,6 @@ setenv =
 commands =
     poetry install --with=test --with=doc
     poetry run black .
-    poetry run isort .
     poetry run coverage run --source=anytree --branch -m pytest --doctest-glob=docs/*.rst --doctest-modules --ignore-glob=tests/testdata* --ignore=docs/conf.py --log-level=DEBUG -vv --junitxml=report.xml
     poetry run coverage report
     poetry run coverage html
