@@ -11,7 +11,6 @@ def test_readonly_pre():
         pass
 
     class ReadonlyNode(Node):
-
         _is_readonly = False
 
         def _pre_attach(self, parent):

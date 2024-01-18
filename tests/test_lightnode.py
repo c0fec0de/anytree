@@ -6,7 +6,6 @@ from .helper import assert_raises
 
 
 class LightNode(LightNodeMixin):
-
     __slots__ = ["name"]
 
     def __init__(self, name, parent=None, children=None):
@@ -119,7 +118,6 @@ def test_parent_child():
 
 
 def test_detach_children():
-
     root = LightNode("root")
     s0 = LightNode("sub0", parent=root)
     s0b = LightNode("sub0B", parent=s0)
@@ -138,7 +136,6 @@ def test_detach_children():
 
 
 def test_children_setter():
-
     root = LightNode("root")
     s0 = LightNode("sub0")
     s1 = LightNode("sub0A")
@@ -169,7 +166,6 @@ def test_children_setter():
 
 
 def test_children_setter_large():
-
     root = LightNode("root")
     s0 = LightNode("sub0")
     s0b = LightNode("sub0B")
@@ -192,7 +188,6 @@ def test_children_setter_large():
 
 
 def test_node_children_multiple():
-
     root = LightNode("root")
     sub = LightNode("sub")
     with assert_raises(TreeError, "Cannot add node LightNode('/sub') multiple times as child."):
