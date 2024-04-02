@@ -9,22 +9,10 @@ from anytree.dotexport import RenderTreeGraph
 from .helper import with_setup
 
 TESTPATH = dirname(__file__)
-GENPATH = join(TESTPATH, "dotexport")
 REFPATH = join(TESTPATH, "refdata")
 
 
-def setup():
-    if not exists(GENPATH):
-        makedirs(GENPATH)
-
-
-def teardown():
-    if exists(GENPATH):
-        rmtree(GENPATH)
-
-
-@with_setup(setup, teardown)
-def test_tree1():
+def test_tree1(tmpdir):
     """Tree1."""
     root = Node("root")
     s0 = Node("sub0", parent=root)
@@ -36,12 +24,11 @@ def test_tree1():
     s1c = Node("sub1C", parent=s1)
     Node(99, parent=s1c)
 
-    RenderTreeGraph(root).to_dotfile(join(GENPATH, "tree1.dot"))
-    assert cmp(join(GENPATH, "tree1.dot"), join(REFPATH, "tree1.dot"))
+    RenderTreeGraph(root).to_dotfile(join(tmpdir, "tree1.dot"))
+    assert cmp(join(tmpdir, "tree1.dot"), join(REFPATH, "tree1.dot"))
 
 
-@with_setup(setup, teardown)
-def test_tree2():
+def test_tree2(tmpdir):
     """Tree2."""
     root = Node("root")
     s0 = Node("sub0", parent=root, edge=2)
@@ -67,12 +54,11 @@ def test_tree2():
         edgeattrfunc=edgeattrfunc,
     )
 
-    r.to_dotfile(join(GENPATH, "tree2.dot"))
-    assert cmp(join(GENPATH, "tree2.dot"), join(REFPATH, "tree2.dot"))
+    r.to_dotfile(join(tmpdir, "tree2.dot"))
+    assert cmp(join(tmpdir, "tree2.dot"), join(REFPATH, "tree2.dot"))
 
 
-@with_setup(setup, teardown)
-def test_tree_png():
+def test_tree_png(tmpdir):
     """Tree to png."""
     root = Node("root")
     s0 = Node("sub0", parent=root)
@@ -84,4 +70,4 @@ def test_tree_png():
     s1c = Node("sub1C", parent=s1)
     Node("sub1Ca", parent=s1c)
 
-    RenderTreeGraph(root).to_picture(join(GENPATH, "tree1.png"))
+    RenderTreeGraph(root).to_picture(join(tmpdir, "tree1.png"))
