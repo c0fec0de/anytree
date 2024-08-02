@@ -5,7 +5,7 @@ from __future__ import annotations
 from .nodemixin import NodeMixin
 
 
-class SymlinkNodeMixin(NodeMixin[SymlinkNodeMixin]):
+class SymlinkNodeMixin(NodeMixin["SymlinkNodeMixin"]):
     """
     The :any:`SymlinkNodeMixin` class extends any Python class to a symbolic link to a tree node.
 

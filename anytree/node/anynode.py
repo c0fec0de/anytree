@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
 
-class AnyNode(NodeMixin[AnyNode]):
+class AnyNode(NodeMixin["AnyNode"]):
     """
     A generic tree node with any `kwargs`.
 

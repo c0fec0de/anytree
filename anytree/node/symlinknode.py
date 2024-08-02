@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from .nodemixin import NodeMixin
 
 
-NodeT = TypeVar("NodeT", bound=NodeMixin[Any] | LightNodeMixin[Any], covariant=True)
+NodeT = TypeVar("NodeT", bound="NodeMixin[Any] | LightNodeMixin[Any]", covariant=True)
 
 
 class SymlinkNode(SymlinkNodeMixin, Generic[NodeT]):

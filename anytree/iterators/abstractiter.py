@@ -13,10 +13,10 @@ if TYPE_CHECKING:
     from ..node.nodemixin import NodeMixin
 
 
-NodeT = TypeVar("NodeT", bound=NodeMixin[Any] | LightNodeMixin[Any], covariant=True)
+NodeT = TypeVar("NodeT", bound="NodeMixin[Any] | LightNodeMixin[Any]", covariant=True)
 
 
-class AbstractIter(six.Iterator, Generic[NodeT]):
+class AbstractIter(Generic[NodeT], six.Iterator):
     # pylint: disable=R0205
     """
     Iterate over tree starting at `node`.

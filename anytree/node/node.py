@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
 
-class Node(NodeMixin[Node]):
+class Node(NodeMixin["Node"]):
     """
     A simple tree node with a `name` and any `kwargs`.
 
