@@ -9,6 +9,7 @@ Node Classes.
 * :any:`LightNodeMixin`: A :any:`NodeMixin` using slots.
 """
 
+# pylint: disable=useless-import-alias
 from .anynode import AnyNode as AnyNode  # noqa
 from .exceptions import LoopError as LoopError  # noqa
 from .exceptions import TreeError as TreeError  # noqa

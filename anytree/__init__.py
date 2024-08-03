@@ -8,6 +8,7 @@ __author_email__ = "c0fec0de@gmail.com"
 __description__ = """Powerful and Lightweight Python Tree Data Structure."""
 __url__ = "https://github.com/c0fec0de/anytree"
 
+# pylint: disable=useless-import-alias
 from . import cachedsearch as cachedsearch  # noqa
 from . import util as util  # noqa
 from .iterators import LevelOrderGroupIter as LevelOrderGroupIter  # noqa

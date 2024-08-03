@@ -14,15 +14,15 @@ if TYPE_CHECKING:
     from .nodemixin import NodeMixin
 
 
-NodeT = TypeVar("NodeT", bound="NodeMixin[Any] | LightNodeMixin[Any]", covariant=True)
+NodeT_co = TypeVar("NodeT_co", bound="NodeMixin[Any] | LightNodeMixin[Any]", covariant=True)
 
 
-class SymlinkNode(SymlinkNodeMixin, Generic[NodeT]):
+class SymlinkNode(SymlinkNodeMixin, Generic[NodeT_co]):
     """
     Tree node which references to another tree node.
 
     Args:
-        target: Symbolic Link Target. Another tree node, which is refered to.
+        target: Symbolic Link Target. Another tree node, which is referred to.
 
     Keyword Args:
         parent: Reference to parent node.
@@ -59,9 +59,9 @@ class SymlinkNode(SymlinkNodeMixin, Generic[NodeT]):
 
     def __init__(
         self,
-        target: NodeT,
-        parent: SymlinkNode[NodeT] | None = None,
-        children: Iterable[SymlinkNode[NodeT]] | None = None,
+        target: NodeT_co,
+        parent: SymlinkNode[NodeT_co] | None = None,
+        children: Iterable[SymlinkNode[NodeT_co]] | None = None,
         **kwargs: Any,
     ) -> None:
         self.target = target

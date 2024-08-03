@@ -13,10 +13,10 @@ if TYPE_CHECKING:
     from ..node.nodemixin import NodeMixin
 
 
-NodeT = TypeVar("NodeT", bound="NodeMixin[Any] | LightNodeMixin[Any]", covariant=True)
+NodeT_co = TypeVar("NodeT_co", bound="NodeMixin[Any] | LightNodeMixin[Any]", covariant=True)
 
 
-class AbstractIter(Generic[NodeT], six.Iterator):
+class AbstractIter(Generic[NodeT_co], six.Iterator):
     # pylint: disable=R0205
     """
     Iterate over tree starting at `node`.
@@ -31,18 +31,18 @@ class AbstractIter(Generic[NodeT], six.Iterator):
 
     def __init__(
         self,
-        node: NodeT,
-        filter_: Callable[[NodeT], bool] | None = None,
-        stop: Callable[[NodeT], bool] | None = None,
+        node: NodeT_co,
+        filter_: Callable[[NodeT_co], bool] | None = None,
+        stop: Callable[[NodeT_co], bool] | None = None,
         maxlevel: int | None = None,
     ) -> None:
         self.node = node
         self.filter_ = filter_
         self.stop = stop
         self.maxlevel = maxlevel
-        self.__iter: Iterator[NodeT] | None = None
+        self.__iter: Iterator[NodeT_co] | None = None
 
-    def __init(self) -> Iterator[NodeT]:
+    def __init(self) -> Iterator[NodeT_co]:
         node = self.node
         maxlevel = self.maxlevel
         filter_ = self.filter_ or AbstractIter.__default_filter
@@ -51,27 +51,30 @@ class AbstractIter(Generic[NodeT], six.Iterator):
         return self._iter(children, filter_, stop, maxlevel)
 
     @staticmethod
-    def __default_filter(node: NodeT) -> bool:
+    def __default_filter(node: NodeT_co) -> bool:
         # pylint: disable=W0613
         return True
 
     @staticmethod
-    def __default_stop(node: NodeT) -> bool:
+    def __default_stop(node: NodeT_co) -> bool:
         # pylint: disable=W0613
         return False
 
     def __iter__(self) -> Self:
         return self
 
-    def __next__(self) -> NodeT:
+    def __next__(self) -> NodeT_co:
         if self.__iter is None:
             self.__iter = self.__init()
         return next(self.__iter)
 
     @staticmethod
     def _iter(
-        children: Iterable[NodeT], filter_: Callable[[NodeT], bool], stop: Callable[[NodeT], bool], maxlevel: int | None
-    ) -> Iterator[NodeT]:
+        children: Iterable[NodeT_co],
+        filter_: Callable[[NodeT_co], bool],
+        stop: Callable[[NodeT_co], bool],
+        maxlevel: int | None,
+    ) -> Iterator[NodeT_co]:
         raise NotImplementedError()  # pragma: no cover
 
     @staticmethod
@@ -79,5 +82,5 @@ class AbstractIter(Generic[NodeT], six.Iterator):
         return maxlevel is not None and level > maxlevel
 
     @staticmethod
-    def _get_children(children: Iterable[NodeT], stop: Callable[[NodeT], bool]) -> list[Any]:
+    def _get_children(children: Iterable[NodeT_co], stop: Callable[[NodeT_co], bool]) -> list[Any]:
         return [child for child in children if not stop(child)]

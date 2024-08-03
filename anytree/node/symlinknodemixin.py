@@ -9,10 +9,10 @@ class SymlinkNodeMixin(NodeMixin["SymlinkNodeMixin"]):
     """
     The :any:`SymlinkNodeMixin` class extends any Python class to a symbolic link to a tree node.
 
-    The class **MUST** have a `target` attribute refering to another tree node.
+    The class **MUST** have a `target` attribute referring to another tree node.
     The :any:`SymlinkNodeMixin` class has its own parent and its own child nodes.
     All other attribute accesses are just forwarded to the target node.
-    A minimal implementation looks like (see :any:`SymlinkNode` for a full implemenation):
+    A minimal implementation looks like (see :any:`SymlinkNode` for a full implementation):
 
     >>> from anytree import SymlinkNodeMixin, Node, RenderTree
     >>> class SymlinkNode(SymlinkNodeMixin):
