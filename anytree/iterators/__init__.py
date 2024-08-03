@@ -9,9 +9,10 @@ Tree Iteration.
 * :any:`ZigZagGroupIter`: iterate over tree using level-order strategy returning group for every level
 """
 
-from .abstractiter import AbstractIter  # noqa
-from .levelordergroupiter import LevelOrderGroupIter  # noqa
-from .levelorderiter import LevelOrderIter  # noqa
-from .postorderiter import PostOrderIter  # noqa
-from .preorderiter import PreOrderIter  # noqa
-from .zigzaggroupiter import ZigZagGroupIter  # noqa
+# pylint: disable=useless-import-alias
+from .abstractiter import AbstractIter as AbstractIter  # noqa
+from .levelordergroupiter import LevelOrderGroupIter as LevelOrderGroupIter  # noqa
+from .levelorderiter import LevelOrderIter as LevelOrderIter  # noqa
+from .postorderiter import PostOrderIter as PostOrderIter  # noqa
+from .preorderiter import PreOrderIter as PreOrderIter  # noqa
+from .zigzaggroupiter import ZigZagGroupIter as ZigZagGroupIter  # noqa

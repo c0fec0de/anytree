@@ -6,7 +6,7 @@ from .helper import assert_raises
 
 def test_node_parent_error():
     """Node Parent Error."""
-    with assert_raises(TreeError, "Parent node 'parent' is not of type 'NodeMixin'."):
+    with assert_raises(TreeError, "Parent node 'parent' is not of type 'NodeMixin' or 'LightNodeMixin'."):
         Node("root", "parent")
 
 
@@ -182,7 +182,7 @@ def test_children_setter_large():
 def test_node_children_type():
 
     root = Node("root")
-    with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
+    with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin' or 'LightNodeMixin'."):
         root.children = ["string"]
 
 
@@ -257,7 +257,7 @@ def test_ancestors():
     assert s0a.ancestors == tuple([root, s0])
     assert s1ca.ancestors == tuple([root, s1, s1c])
     # deprecated typo
-    assert s1ca.anchestors == tuple([root, s1, s1c])
+    assert s1ca.anchestors == tuple([root, s1, s1c])  # codespell:ignore anchestors
 
 
 def test_node_children_init():
@@ -549,7 +549,7 @@ def test_hookups():
 def test_any_node_parent_error():
     """Any Node Parent Error."""
 
-    with assert_raises(TreeError, "Parent node 'r' is not of type 'NodeMixin'."):
+    with assert_raises(TreeError, "Parent node 'r' is not of type 'NodeMixin' or 'LightNodeMixin'."):
         AnyNode("r")
 
 
@@ -598,12 +598,12 @@ def test_eq_overwrite():
 
 def test_tuple():
     """Tuple as parent."""
-    with assert_raises(TreeError, "Parent node (1, 0, 3) is not of type 'NodeMixin'."):
+    with assert_raises(TreeError, "Parent node (1, 0, 3) is not of type 'NodeMixin' or 'LightNodeMixin'."):
         Node((0, 1, 2), parent=(1, 0, 3))
 
 
 def test_tuple_as_children():
     """Tuple as children."""
     n = Node("foo")
-    with assert_raises(TreeError, "Cannot add non-node object (0, 1, 2). It is not a subclass of 'NodeMixin'."):
+    with assert_raises(TreeError, "Cannot add non-node object (0, 1, 2). It is not a subclass of 'NodeMixin' or 'LightNodeMixin'."):
         n.children = [(0, 1, 2)]

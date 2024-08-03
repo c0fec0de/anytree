@@ -1,14 +1,28 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
+
 from .symlinknodemixin import SymlinkNodeMixin
 from .util import _repr
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
-class SymlinkNode(SymlinkNodeMixin):
+    from .lightnodemixin import LightNodeMixin
+    from .nodemixin import NodeMixin
+
+
+NodeT_co = TypeVar("NodeT_co", bound="NodeMixin[Any] | LightNodeMixin[Any]", covariant=True)
+
+
+class SymlinkNode(SymlinkNodeMixin, Generic[NodeT_co]):
     """
     Tree node which references to another tree node.
 
     Args:
-        target: Symbolic Link Target. Another tree node, which is refered to.
+        target: Symbolic Link Target. Another tree node, which is referred to.
 
     Keyword Args:
         parent: Reference to parent node.
@@ -43,12 +57,18 @@ class SymlinkNode(SymlinkNodeMixin):
     9
     """
 
-    def __init__(self, target, parent=None, children=None, **kwargs):
+    def __init__(
+        self,
+        target: NodeT_co,
+        parent: SymlinkNode[NodeT_co] | None = None,
+        children: Iterable[SymlinkNode[NodeT_co]] | None = None,
+        **kwargs: Any,
+    ) -> None:
         self.target = target
         self.target.__dict__.update(kwargs)
         self.parent = parent
         if children:
             self.children = children
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return _repr(self, [repr(self.target)], nameblacklist=("target",))

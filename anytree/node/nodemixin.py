@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
 import warnings
+from typing import TYPE_CHECKING, Generic, TypeVar, Union, cast
 
 from anytree.iterators import PreOrderIter
 
@@ -8,9 +11,16 @@ from ..config import ASSERTIONS
 from .exceptions import LoopError, TreeError
 from .lightnodemixin import LightNodeMixin
 
+if TYPE_CHECKING:
+    from collections.abc import Generator, Iterable
 
-class NodeMixin:
+    from typing_extensions import Any, TypeGuard
 
+
+NodeT_co = TypeVar("NodeT_co", bound=Union["NodeMixin[Any]", "LightNodeMixin[Any]"], covariant=True)
+
+
+class NodeMixin(Generic[NodeT_co]):
     """
     The :any:`NodeMixin` class extends any Python class to a tree node.
 
@@ -81,7 +91,7 @@ class NodeMixin:
     separator = "/"
 
     @property
-    def parent(self):
+    def parent(self) -> NodeT_co | None:
         """
         Parent Node.
 
@@ -121,9 +131,12 @@ class NodeMixin:
         return None
 
     @parent.setter
-    def parent(self, value):
-        if value is not None and not isinstance(value, (NodeMixin, LightNodeMixin)):
-            msg = "Parent node %r is not of type 'NodeMixin'." % (value,)
+    def parent(self, value: object | None) -> None:
+        def guard(value: object | None) -> TypeGuard[NodeT_co | None]:
+            return value is None or isinstance(value, (NodeMixin, LightNodeMixin))
+
+        if not guard(value):
+            msg = "Parent node %r is not of type 'NodeMixin' or 'LightNodeMixin'." % (value,)
             raise TreeError(msg)
         if hasattr(self, "_NodeMixin__parent"):
             parent = self.__parent
@@ -134,7 +147,7 @@ class NodeMixin:
             self.__detach(parent)
             self.__attach(value)
 
-    def __check_loop(self, node):
+    def __check_loop(self, node: NodeT_co | None) -> None:
         if node is not None:
             if node is self:
                 msg = "Cannot set parent. %r cannot be parent of itself."
@@ -143,7 +156,7 @@ class NodeMixin:
                 msg = "Cannot set parent. %r is parent of %r."
                 raise LoopError(msg % (self, node))
 
-    def __detach(self, parent):
+    def __detach(self, parent: NodeT_co | None) -> None:
         # pylint: disable=W0212,W0238
         if parent is not None:
             self._pre_detach(parent)
@@ -152,11 +165,11 @@ class NodeMixin:
                 assert any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
             # ATOMIC START
             parent.__children = [child for child in parentchildren if child is not self]
-            self.__parent = None
+            self.__parent: NodeT_co | None = None
             # ATOMIC END
             self._post_detach(parent)
 
-    def __attach(self, parent):
+    def __attach(self, parent: NodeT_co | None) -> None:
         # pylint: disable=W0212
         if parent is not None:
             self._pre_attach(parent)
@@ -170,13 +183,62 @@ class NodeMixin:
             self._post_attach(parent)
 
     @property
-    def __children_or_empty(self):
+    def __children_or_empty(self) -> list[NodeT_co]:
         if not hasattr(self, "_NodeMixin__children"):
-            self.__children = []
+            self.__children: list[NodeT_co] = []
         return self.__children
 
-    @property
-    def children(self):
+    def __children_get(self) -> tuple[NodeT_co, ...]:
+        return tuple(self.__children_or_empty)
+
+    @staticmethod
+    def __check_children(children: Iterable[object]) -> None:
+        seen = set()
+        for child in children:
+            if not isinstance(child, (NodeMixin, LightNodeMixin)):
+                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin' or 'LightNodeMixin'." % (
+                    child,
+                )
+                raise TreeError(msg)
+            childid = id(child)
+            if childid not in seen:
+                seen.add(childid)
+            else:
+                msg = "Cannot add node %r multiple times as child." % (child,)
+                raise TreeError(msg)
+
+    def __children_set(self, children: Iterable[NodeT_co]) -> None:
+        # convert iterable to tuple
+        children = tuple(children)
+        NodeMixin.__check_children(children)
+        # ATOMIC start
+        old_children = self.children
+        del self.children
+        try:
+            self._pre_attach_children(children)
+            for child in children:
+                child.parent = self
+            self._post_attach_children(children)
+            if ASSERTIONS:  # pragma: no branch
+                assert len(self.children) == len(children)
+        except Exception:
+            self.children = old_children
+            raise
+        # ATOMIC end
+
+    def __children_del(self) -> None:
+        children = self.children
+        self._pre_detach_children(children)
+        for child in self.children:
+            child.parent = None
+        if ASSERTIONS:  # pragma: no branch
+            assert len(self.children) == 0
+        self._post_detach_children(children)
+
+    children = property(
+        __children_get,
+        __children_set,
+        __children_del,
         """
         All child nodes.
 
@@ -223,67 +285,23 @@ class NodeMixin:
         Traceback (most recent call last):
             ...
         anytree.node.exceptions.TreeError: Cannot add node Node('/n/a') multiple times as child.
-        """
-        return tuple(self.__children_or_empty)
+        """,
+    )
 
-    @staticmethod
-    def __check_children(children):
-        seen = set()
-        for child in children:
-            if not isinstance(child, (NodeMixin, LightNodeMixin)):
-                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % (child,)
-                raise TreeError(msg)
-            childid = id(child)
-            if childid not in seen:
-                seen.add(childid)
-            else:
-                msg = "Cannot add node %r multiple times as child." % (child,)
-                raise TreeError(msg)
-
-    @children.setter
-    def children(self, children):
-        # convert iterable to tuple
-        children = tuple(children)
-        NodeMixin.__check_children(children)
-        # ATOMIC start
-        old_children = self.children
-        del self.children
-        try:
-            self._pre_attach_children(children)
-            for child in children:
-                child.parent = self
-            self._post_attach_children(children)
-            if ASSERTIONS:  # pragma: no branch
-                assert len(self.children) == len(children)
-        except Exception:
-            self.children = old_children
-            raise
-        # ATOMIC end
-
-    @children.deleter
-    def children(self):
-        children = self.children
-        self._pre_detach_children(children)
-        for child in self.children:
-            child.parent = None
-        if ASSERTIONS:  # pragma: no branch
-            assert len(self.children) == 0
-        self._post_detach_children(children)
-
-    def _pre_detach_children(self, children):
+    def _pre_detach_children(self, children: tuple[NodeT_co, ...]) -> None:
         """Method call before detaching `children`."""
 
-    def _post_detach_children(self, children):
+    def _post_detach_children(self, children: tuple[NodeT_co, ...]) -> None:
         """Method call after detaching `children`."""
 
-    def _pre_attach_children(self, children):
+    def _pre_attach_children(self, children: tuple[NodeT_co, ...]) -> None:
         """Method call before attaching `children`."""
 
-    def _post_attach_children(self, children):
+    def _post_attach_children(self, children: tuple[NodeT_co, ...]) -> None:
         """Method call after attaching `children`."""
 
     @property
-    def path(self):
+    def path(self) -> tuple[NodeT_co, ...]:
         """
         Path from root node down to this `Node`.
 
@@ -300,7 +318,7 @@ class NodeMixin:
         """
         return self._path
 
-    def iter_path_reverse(self):
+    def iter_path_reverse(self) -> Generator[NodeT_co, None, None]:
         """
         Iterate up the tree from the current node to the root node.
 
@@ -321,17 +339,17 @@ class NodeMixin:
         Node('/Udo/Marc')
         Node('/Udo')
         """
-        node = self
+        node: NodeT_co | None = cast(NodeT_co, self)
         while node is not None:
             yield node
             node = node.parent
 
     @property
-    def _path(self):
+    def _path(self) -> tuple[NodeT_co, ...]:
         return tuple(reversed(list(self.iter_path_reverse())))
 
     @property
-    def ancestors(self):
+    def ancestors(self) -> tuple[NodeT_co, ...]:
         """
         All parent nodes and their parent nodes.
 
@@ -351,18 +369,21 @@ class NodeMixin:
         return self.parent.path
 
     @property
-    def anchestors(self):
+    def anchestors(self) -> tuple[NodeT_co, ...]:  # codespell:ignore anchestors
         """
         All parent nodes and their parent nodes - see :any:`ancestors`.
 
-        The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
+        This attribute is just a typo of `ancestors`. Please use `ancestors`.
         This attribute will be removed in the 3.0.0 release.
         """
-        warnings.warn(".anchestors was a typo and will be removed in version 3.0.0", DeprecationWarning)
+        warnings.warn(
+            ".anchestors was a typo and will be removed in version 3.0.0",  # codespell:ignore anchestors
+            DeprecationWarning,
+        )
         return self.ancestors
 
     @property
-    def descendants(self):
+    def descendants(self) -> tuple[NodeT_co, ...]:
         """
         All child nodes and all their child nodes.
 
@@ -382,7 +403,7 @@ class NodeMixin:
         return tuple(PreOrderIter(self))[1:]
 
     @property
-    def root(self):
+    def root(self) -> NodeT_co:
         """
         Tree Root Node.
 
@@ -397,13 +418,13 @@ class NodeMixin:
         >>> lian.root
         Node('/Udo')
         """
-        node = self
+        node: NodeT_co = cast(NodeT_co, self)
         while node.parent is not None:
             node = node.parent
         return node
 
     @property
-    def siblings(self):
+    def siblings(self) -> tuple[NodeT_co, ...]:
         """
         Tuple of nodes with the same parent.
 
@@ -428,7 +449,7 @@ class NodeMixin:
         return tuple(node for node in parent.children if node is not self)
 
     @property
-    def leaves(self):
+    def leaves(self) -> tuple[NodeT_co, ...]:
         """
         Tuple of all leaf nodes.
 
@@ -446,7 +467,7 @@ class NodeMixin:
         return tuple(PreOrderIter(self, filter_=lambda node: node.is_leaf))
 
     @property
-    def is_leaf(self):
+    def is_leaf(self) -> bool:
         """
         `Node` has no children (External Node).
 
@@ -464,7 +485,7 @@ class NodeMixin:
         return len(self.__children_or_empty) == 0
 
     @property
-    def is_root(self):
+    def is_root(self) -> bool:
         """
         `Node` is tree root.
 
@@ -482,7 +503,7 @@ class NodeMixin:
         return self.parent is None
 
     @property
-    def height(self):
+    def height(self) -> int:
         """
         Number of edges on the longest path to a leaf `Node`.
 
@@ -503,7 +524,7 @@ class NodeMixin:
         return 0
 
     @property
-    def depth(self):
+    def depth(self) -> int:
         """
         Number of edges to the root `Node`.
 
@@ -525,7 +546,7 @@ class NodeMixin:
         return depth
 
     @property
-    def size(self):
+    def size(self) -> int:
         """
         Tree size --- the number of nodes in tree starting at this node.
 
@@ -550,14 +571,14 @@ class NodeMixin:
             continue
         return size
 
-    def _pre_detach(self, parent):
+    def _pre_detach(self, parent: NodeMixin[NodeT_co] | LightNodeMixin[NodeT_co]) -> None:
         """Method call before detaching from `parent`."""
 
-    def _post_detach(self, parent):
+    def _post_detach(self, parent: NodeMixin[NodeT_co] | LightNodeMixin[NodeT_co]) -> None:
         """Method call after detaching from `parent`."""
 
-    def _pre_attach(self, parent):
+    def _pre_attach(self, parent: NodeT_co | None) -> None:
         """Method call before attaching to `parent`."""
 
-    def _post_attach(self, parent):
+    def _post_attach(self, parent: NodeT_co | None) -> None:
         """Method call after attaching to `parent`."""

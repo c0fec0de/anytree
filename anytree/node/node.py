@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 from .nodemixin import NodeMixin
 from .util import _repr
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
-class Node(NodeMixin):
+
+class Node(NodeMixin["Node"]):
     """
     A simple tree node with a `name` and any `kwargs`.
 
@@ -71,13 +78,15 @@ class Node(NodeMixin):
             └── Node('/root/sub1/sub1C/sub1Ca')
     """
 
-    def __init__(self, name, parent=None, children=None, **kwargs):
+    def __init__(
+        self, name: str, parent: Node | None = None, children: Iterable[Node] | None = None, **kwargs: Any
+    ) -> None:
         self.__dict__.update(kwargs)
         self.name = name
         self.parent = parent
         if children:
             self.children = children
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         args = ["%r" % self.separator.join([""] + [str(node.name) for node in self.path])]
         return _repr(self, args=args, nameblacklist=["name"])

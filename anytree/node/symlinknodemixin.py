@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import annotations
+
 from .nodemixin import NodeMixin
 
 
-class SymlinkNodeMixin(NodeMixin):
+class SymlinkNodeMixin(NodeMixin["SymlinkNodeMixin"]):
     """
     The :any:`SymlinkNodeMixin` class extends any Python class to a symbolic link to a tree node.
 
-    The class **MUST** have a `target` attribute refering to another tree node.
+    The class **MUST** have a `target` attribute referring to another tree node.
     The :any:`SymlinkNodeMixin` class has its own parent and its own child nodes.
     All other attribute accesses are just forwarded to the target node.
-    A minimal implementation looks like (see :any:`SymlinkNode` for a full implemenation):
+    A minimal implementation looks like (see :any:`SymlinkNode` for a full implementation):
 
     >>> from anytree import SymlinkNodeMixin, Node, RenderTree
     >>> class SymlinkNode(SymlinkNodeMixin):
@@ -45,14 +48,14 @@ class SymlinkNodeMixin(NodeMixin):
     9
     """
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> object:
         if name in ("_NodeMixin__parent", "_NodeMixin__children"):
-            return super(SymlinkNodeMixin, self).__getattr__(name)
+            return super(SymlinkNodeMixin, self).__getattr__(name)  # type: ignore[misc]
         if name == "__setstate__":
             raise AttributeError(name)
         return getattr(self.target, name)
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: object) -> None:
         if name in ("_NodeMixin__parent", "_NodeMixin__children", "parent", "children", "target"):
             super(SymlinkNodeMixin, self).__setattr__(name, value)
         else:

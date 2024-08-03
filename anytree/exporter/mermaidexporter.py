@@ -10,7 +10,6 @@ _RE_ESC = re.compile(r'["\\]')
 
 
 class MermaidExporter:
-
     """
     Mermaid Exporter.
 
