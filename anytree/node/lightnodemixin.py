@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generic, TypeVar, cast, Union
+from typing import TYPE_CHECKING, Generic, TypeVar, Union, cast
 
 from anytree.iterators import PreOrderIter
 
@@ -10,8 +10,9 @@ from ..config import ASSERTIONS
 from .exceptions import LoopError, TreeError
 
 if TYPE_CHECKING:
-    from typing_extensions import Any
     from collections.abc import Generator, Iterable
+
+    from typing_extensions import Any
 
     from .nodemixin import NodeMixin
 

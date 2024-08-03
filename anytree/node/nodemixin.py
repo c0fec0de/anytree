@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Generic, TypeVar, cast, Union
+from typing import TYPE_CHECKING, Generic, TypeVar, Union, cast
 
 from anytree.iterators import PreOrderIter
 
@@ -12,9 +12,9 @@ from .exceptions import LoopError, TreeError
 from .lightnodemixin import LightNodeMixin
 
 if TYPE_CHECKING:
-    from typing_extensions import TypeGuard, Any
-
     from collections.abc import Generator, Iterable
+
+    from typing_extensions import Any, TypeGuard
 
 
 NodeT_co = TypeVar("NodeT_co", bound=Union["NodeMixin[Any]", "LightNodeMixin[Any]"], covariant=True)
