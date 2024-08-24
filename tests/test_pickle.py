@@ -26,4 +26,4 @@ def test_pickle(tmp_path):
     with open(filepath, "rb") as file:
         loaded = pickle.load(file)
 
-    assert str(RenderTree(root)).splitlines() == lines
+    assert str(RenderTree(loaded)).splitlines() == lines
