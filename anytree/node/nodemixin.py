@@ -8,9 +8,12 @@ from ..config import ASSERTIONS
 from .exceptions import LoopError, TreeError
 from .lightnodemixin import LightNodeMixin
 
+from typing import List, TypeVar, Generic, Union
 
-class NodeMixin:
+Child = TypeVar("Child", bound="NodeMixin")
 
+
+class NodeMixin(Generic[Child]):
     """
     The :any:`NodeMixin` class extends any Python class to a tree node.
 
@@ -176,7 +179,7 @@ class NodeMixin:
         return self.__children
 
     @property
-    def children(self):
+    def children(self) -> List[Union[Child], 'NodeMixin']:
         """
         All child nodes.
 

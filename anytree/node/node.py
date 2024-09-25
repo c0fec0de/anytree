@@ -2,9 +2,12 @@
 
 from .nodemixin import NodeMixin
 from .util import _repr
+from typing import TypeVar
+
+Child = TypeVar("Child", bound="Node")
 
 
-class Node(NodeMixin):
+class Node(NodeMixin[Child]):
     """
     A simple tree node with a `name` and any `kwargs`.
 
