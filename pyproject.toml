@@ -26,6 +26,9 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 
+[project]
+name = "anytree"
+
 [project.urls]
 "Homepage" = "https://github.com/c0fec0de/anytree"
 "Documentation" = "https://anytree.readthedocs.io/en/latest/"
