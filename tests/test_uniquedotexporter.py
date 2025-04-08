@@ -1,15 +1,8 @@
-# -*- coding: utf-8 -*-
-import pathlib
-
 from pytest import fixture
+from test2ref import assert_refdata
 
 from anytree import Node
 from anytree.exporter import UniqueDotExporter
-
-REFDATA = pathlib.Path(__file__).parent / "refdata" / "test_uniquedotexporter"
-
-
-from .util import assert_gen
 
 
 @fixture
@@ -29,7 +22,7 @@ def root():
 def test_tree(tmp_path, root):
     """Tree."""
     UniqueDotExporter(root).to_dotfile(tmp_path / "tree.dot")
-    assert_gen(tmp_path, REFDATA / "tree")
+    assert_refdata(test_tree, tmp_path)
 
 
 def test_tree_custom(tmp_path, root):
@@ -54,25 +47,25 @@ def test_tree_custom(tmp_path, root):
         nodeattrfunc=lambda node: "shape=box",
         edgeattrfunc=edgeattrfunc,
     ).to_dotfile(tmp_path / "tree_custom.dot")
-    assert_gen(tmp_path, REFDATA / "tree_custom")
+    assert_refdata(test_tree_custom, tmp_path)
 
 
 def test_tree_filter(tmp_path, root):
     """Tree with Filter."""
     UniqueDotExporter(root, filter_=lambda node: node.name.startswith("sub")).to_dotfile(tmp_path / "tree_filter.dot")
-    assert_gen(tmp_path, REFDATA / "tree_filter")
+    assert_refdata(test_tree_filter, tmp_path)
 
 
 def test_tree_stop(tmp_path, root):
     """Tree with stop."""
     UniqueDotExporter(root, stop=lambda node: node.name == "sub1").to_dotfile(tmp_path / "tree_stop.dot")
-    assert_gen(tmp_path, REFDATA / "tree_stop")
+    assert_refdata(test_tree_stop, tmp_path)
 
 
 def test_tree_maxlevel(tmp_path, root):
     """Tree with maxlevel."""
     UniqueDotExporter(root, maxlevel=2).to_dotfile(tmp_path / "tree_maxlevel.dot")
-    assert_gen(tmp_path, REFDATA / "tree_maxlevel")
+    assert_refdata(test_tree_maxlevel, tmp_path)
 
 
 def test_esc():

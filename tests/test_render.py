@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import anytree
 
 
@@ -33,7 +32,7 @@ def test_render_repr():
     anytree.Node("sub", parent=root)
     r = anytree.RenderTree(root)
 
-    assert repr(r) == "RenderTree(Node('/root'), style=ContStyle(), " "childiter=<class 'list'>)"
+    assert repr(r) == "RenderTree(Node('/root'), style=ContStyle(), childiter=<class 'list'>)"
 
 
 def test_render():
@@ -119,7 +118,7 @@ def test_doublestyle():
 
 
 def test_by_attr():
-    """by attr."""
+    """By attr."""
     root = anytree.Node("root", lines=["root"])
     s0 = anytree.Node("sub0", parent=root, lines=["su", "b0"])
     anytree.Node("sub0B", parent=s0, lines=["sub", "0B"])
@@ -156,7 +155,7 @@ def test_repr():
 
     class ReprNode(anytree.Node):
         def __repr__(self):
-            return "{name}\n{name}".format(name=self.name)
+            return f"{self.name}\n{self.name}"
 
     root = ReprNode("root", lines=["root"])
     s0 = ReprNode("sub0", parent=root, lines=["su", "b0"])

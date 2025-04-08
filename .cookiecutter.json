@@ -1,0 +1,13 @@
+{
+    "cookiecutter": {
+    "_checkout": null,
+    "_output_dir": "/Users/c0fec0de/projects",
+    "_repo_dir": "/Users/c0fec0de/.cookiecutters/python-template",
+    "_template": "gh:nbiotcloud/python-template",
+    "name": "anytree",
+    "snake_name": "anytree",
+    "title": "Powerful and Lightweight Python Tree Data Structure with various plugins",
+    "user": "c0fec0de",
+    "year": "2016"
+}
+}

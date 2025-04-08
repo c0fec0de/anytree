@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from enum import IntEnum
 
 from pytest import raises
@@ -183,7 +182,7 @@ def test_same_name():
 
 
 def test_ignorecase():
-    """Case insensitive resolver"""
+    """Case insensitive resolver."""
     root = at.Node("root")
     sub0 = at.Node("sUB0", parent=root)
     sub1 = at.Node("sub1", parent=root)
@@ -214,7 +213,7 @@ def test_enum():
 
 
 def test_glob_consistency():
-    """Ensure Consistency"""
+    """Ensure Consistency."""
     node = at.Node("root")
     resolver = at.Resolver()
     assert resolver.glob(node, "/root") == [node]

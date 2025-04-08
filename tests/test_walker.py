@@ -4,7 +4,7 @@ from .helper import assert_raises, eq_
 
 
 def test_walker():
-    """walk test."""
+    """Walk test."""
     f = Node("f")
     b = Node("b", parent=f)
     a = Node("a", parent=b)

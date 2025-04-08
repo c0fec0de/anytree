@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import pickle
 
-from anytree import AnyNode, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, RenderTree, SymlinkNode, TreeError
+from anytree import Node, RenderTree, SymlinkNode
 
 
 def test_pickle(tmp_path):
-    """Pickling Compatibilty."""
+    """Pickling Compatibility."""
     root = Node(name="root")
     a = Node(name="a", parent=root)
     b = Node(name="b", parent=a)
@@ -26,4 +25,4 @@ def test_pickle(tmp_path):
     with open(filepath, "rb") as file:
         loaded = pickle.load(file)
 
-    assert str(RenderTree(root)).splitlines() == lines
+    assert str(RenderTree(loaded)).splitlines() == lines

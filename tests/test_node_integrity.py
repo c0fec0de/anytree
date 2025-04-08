@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from anytree import LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, TreeError
+from anytree import Node
 
 from .helper import assert_raises, eq_
 
@@ -11,16 +10,15 @@ def test_readonly_pre():
         pass
 
     class ReadonlyNode(Node):
-
         _is_readonly = False
 
         def _pre_attach(self, parent):
             if self._is_readonly:
-                raise ReadonlyError()
+                raise ReadonlyError
 
         def _pre_detach(self, parent):
             if self._is_readonly:
-                raise ReadonlyError()
+                raise ReadonlyError
 
     # construct and make readonly!
     root = ReadonlyNode("root")
