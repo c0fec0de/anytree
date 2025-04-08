@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": ".venv/bin/python3",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "files.trimTrailingWhitespace": true
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "charliermarsh.ruff"
+    ]
+  }
+}
