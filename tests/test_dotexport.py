@@ -1,10 +1,10 @@
+from shutil import which
+
 from pytest import mark
 from test2ref import assert_refdata
 
 from anytree import Node
 from anytree.dotexport import RenderTreeGraph
-
-from .helper import GRAPHVIZ_INSTALLED
 
 
 def test_tree1(tmp_path):
@@ -53,7 +53,7 @@ def test_tree2(tmp_path):
     assert_refdata(test_tree2, tmp_path)
 
 
-@mark.skipif(not GRAPHVIZ_INSTALLED, reason="graphviz missing")
+@mark.skipif(which("dot") is None, reason="requires graphviz`s `dot` command")
 def test_tree_png(tmp_path):
     """Tree to png."""
     root = Node("root")
