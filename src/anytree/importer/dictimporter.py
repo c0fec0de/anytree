@@ -1,6 +1,5 @@
 from anytree import AnyNode
-
-from ..config import ASSERTIONS
+from anytree.config import ASSERTIONS
 
 
 class DictImporter:

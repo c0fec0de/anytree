@@ -66,7 +66,7 @@ class Walker:
         startpath = start.path
         endpath = end.path
         if start.root is not end.root:
-            msg = "%r and %r are not part of the same tree." % (start, end)
+            msg = f"{start!r} and {end!r} are not part of the same tree."
             raise WalkError(msg)
         # common
         common = Walker.__calc_common(startpath, endpath)
@@ -75,12 +75,12 @@ class Walker:
         len_common = len(common)
         # upwards
         if start is common[-1]:
-            upwards = tuple()
+            upwards = ()
         else:
             upwards = tuple(reversed(startpath[len_common:]))
         # down
         if end is common[-1]:
-            down = tuple()
+            down = ()
         else:
             down = endpath[len_common:]
         return upwards, common[-1], down

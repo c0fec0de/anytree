@@ -22,89 +22,89 @@ def test_parent_child():
     s1ca = Node("sub1Ca", parent=s1c)
 
     assert root.parent is None
-    assert root.children == tuple([s0, s1])
+    assert root.children == (s0, s1)
     assert s0.parent == root
-    assert s0.children == tuple([s0b, s0a])
+    assert s0.children == (s0b, s0a)
     assert s0b.parent == s0
-    assert s0b.children == tuple()
+    assert s0b.children == ()
     assert s0a.parent == s0
-    assert s0a.children == tuple()
+    assert s0a.children == ()
     assert s1.parent == root
-    assert s1.children == tuple([s1a, s1b, s1c])
+    assert s1.children == (s1a, s1b, s1c)
     assert s1a.parent == s1
-    assert s1a.children == tuple()
+    assert s1a.children == ()
     assert s1b.parent == s1
-    assert s1b.children == tuple()
+    assert s1b.children == ()
     assert s1c.parent == s1
-    assert s1c.children == tuple([s1ca])
+    assert s1c.children == (s1ca,)
     assert s1ca.parent == s1c
-    assert s1ca.children == tuple()
+    assert s1ca.children == ()
 
     # change parent
     s1ca.parent = s0
 
     assert root.parent is None
-    assert root.children == tuple([s0, s1])
+    assert root.children == (s0, s1)
     assert s0.parent == root
-    assert s0.children == tuple([s0b, s0a, s1ca])
+    assert s0.children == (s0b, s0a, s1ca)
     assert s0b.parent == s0
-    assert s0b.children == tuple()
+    assert s0b.children == ()
     assert s0a.parent == s0
-    assert s0a.children == tuple()
+    assert s0a.children == ()
     assert s1.parent == root
-    assert s1.children == tuple([s1a, s1b, s1c])
+    assert s1.children == (s1a, s1b, s1c)
     assert s1a.parent == s1
-    assert s1a.children == tuple()
+    assert s1a.children == ()
     assert s1b.parent == s1
-    assert s1b.children == tuple()
+    assert s1b.children == ()
     assert s1c.parent == s1
-    assert s1c.children == tuple()
+    assert s1c.children == ()
     assert s1ca.parent == s0
-    assert s1ca.children == tuple()
+    assert s1ca.children == ()
 
     # break tree into two
     s1.parent = None
 
     assert root.parent is None
-    assert root.children == tuple([s0])
+    assert root.children == (s0,)
     assert s0.parent == root
-    assert s0.children == tuple([s0b, s0a, s1ca])
+    assert s0.children == (s0b, s0a, s1ca)
     assert s0b.parent == s0
-    assert s0b.children == tuple()
+    assert s0b.children == ()
     assert s0a.parent == s0
-    assert s0a.children == tuple()
+    assert s0a.children == ()
     assert s1.parent is None
-    assert s1.children == tuple([s1a, s1b, s1c])
+    assert s1.children == (s1a, s1b, s1c)
     assert s1a.parent == s1
-    assert s1a.children == tuple()
+    assert s1a.children == ()
     assert s1b.parent == s1
-    assert s1b.children == tuple()
+    assert s1b.children == ()
     assert s1c.parent == s1
-    assert s1c.children == tuple()
+    assert s1c.children == ()
     assert s1ca.parent == s0
-    assert s1ca.children == tuple()
+    assert s1ca.children == ()
 
     # set to the same
     s1b.parent = s1
 
     assert root.parent is None
-    assert root.children == tuple([s0])
+    assert root.children == (s0,)
     assert s0.parent == root
-    assert s0.children == tuple([s0b, s0a, s1ca])
+    assert s0.children == (s0b, s0a, s1ca)
     assert s0b.parent == s0
-    assert s0b.children == tuple()
+    assert s0b.children == ()
     assert s0a.parent == s0
-    assert s0a.children == tuple()
+    assert s0a.children == ()
     assert s1.parent is None
-    assert s1.children == tuple([s1a, s1b, s1c])
+    assert s1.children == (s1a, s1b, s1c)
     assert s1a.parent == s1
-    assert s1a.children == tuple()
+    assert s1a.children == ()
     assert s1b.parent == s1
-    assert s1b.children == tuple()
+    assert s1b.children == ()
     assert s1c.parent == s1
-    assert s1c.children == tuple()
+    assert s1c.children == ()
     assert s1ca.parent == s0
-    assert s1ca.children == tuple()
+    assert s1ca.children == ()
 
 
 def test_detach_children():
@@ -203,7 +203,7 @@ def test_recursion_detection():
         assert str(exc) == "Cannot set parent. Node('/root') cannot be parent of itself."
         assert root.parent is None
     else:
-        assert False
+        raise AssertionError
 
     assert root.parent is None
     try:
@@ -212,7 +212,7 @@ def test_recursion_detection():
         assert str(exc) == ("Cannot set parent. Node('/root') is parent of Node('/root/sub0/sub0A').")
         assert root.parent is None
     else:
-        assert False
+        raise AssertionError
 
     assert s0.parent is root
     try:
@@ -221,7 +221,7 @@ def test_recursion_detection():
         assert str(exc) == ("Cannot set parent. Node('/root/sub0') is parent of Node('/root/sub0/sub0A').")
         assert s0.parent is root
     else:
-        assert False
+        raise AssertionError
 
 
 def test_repr():
@@ -245,13 +245,13 @@ def test_ancestors():
     s1c = Node("sub1C", parent=s1)
     s1ca = Node("sub1Ca", parent=s1c)
 
-    assert root.ancestors == tuple()
-    assert s0.ancestors == tuple([root])
-    assert s0b.ancestors == tuple([root, s0])
-    assert s0a.ancestors == tuple([root, s0])
-    assert s1ca.ancestors == tuple([root, s1, s1c])
+    assert root.ancestors == ()
+    assert s0.ancestors == (root,)
+    assert s0b.ancestors == (root, s0)
+    assert s0a.ancestors == (root, s0)
+    assert s1ca.ancestors == (root, s1, s1c)
     # deprecated typo
-    assert s1ca.ancestors == tuple([root, s1, s1c])
+    assert s1ca.ancestors == (root, s1, s1c)
 
 
 def test_node_children_init():
@@ -276,10 +276,10 @@ def test_descendants():
     s1c = Node("sub1C", parent=s1)
     s1ca = Node("sub1Ca", parent=s1c)
 
-    assert root.descendants == tuple([s0, s0b, s0a, s1, s1c, s1ca])
-    assert s1.descendants == tuple([s1c, s1ca])
-    assert s1c.descendants == tuple([s1ca])
-    assert s1ca.descendants == tuple()
+    assert root.descendants == (s0, s0b, s0a, s1, s1c, s1ca)
+    assert s1.descendants == (s1c, s1ca)
+    assert s1c.descendants == (s1ca,)
+    assert s1ca.descendants == ()
 
 
 def test_root():
@@ -311,13 +311,13 @@ def test_siblings():
     s1c = Node("sub1C", parent=s1)
     s1ca = Node("sub1Ca", parent=s1c)
 
-    assert root.siblings == tuple()
-    assert s0.siblings == tuple([s1])
-    assert s0b.siblings == tuple([s0a])
-    assert s0a.siblings == tuple([s0b])
-    assert s1.siblings == tuple([s0])
-    assert s1c.siblings == tuple()
-    assert s1ca.siblings == tuple()
+    assert root.siblings == ()
+    assert s0.siblings == (s1,)
+    assert s0b.siblings == (s0a,)
+    assert s0a.siblings == (s0b,)
+    assert s1.siblings == (s0,)
+    assert s1c.siblings == ()
+    assert s1ca.siblings == ()
 
 
 def test_is_leaf():
@@ -349,13 +349,13 @@ def test_leaves():
     s1c = Node("sub1C", parent=s1)
     s1ca = Node("sub1Ca", parent=s1c)
 
-    assert root.leaves == tuple([s0b, s0a, s1ca])
-    assert s0.leaves == tuple([s0b, s0a])
-    assert s0b.leaves == tuple([s0b])
-    assert s0a.leaves == tuple([s0a])
-    assert s1.leaves == tuple([s1ca])
-    assert s1c.leaves == tuple([s1ca])
-    assert s1ca.leaves == tuple([s1ca])
+    assert root.leaves == (s0b, s0a, s1ca)
+    assert s0.leaves == (s0b, s0a)
+    assert s0b.leaves == (s0b,)
+    assert s0a.leaves == (s0a,)
+    assert s1.leaves == (s1ca,)
+    assert s1c.leaves == (s1ca,)
+    assert s1ca.leaves == (s1ca,)
 
 
 def test_is_root():
@@ -482,7 +482,7 @@ def test_node_kwargs():
 
     class MyNode(Node):
         def __init__(self, name, parent=None, **kwargs):
-            super(MyNode, self).__init__(name, parent, **kwargs)
+            super().__init__(name, parent, **kwargs)
 
         def _post_attach(self, parent):
             print(self.my_attribute)
@@ -498,22 +498,22 @@ def test_hookups():
     class MyNode(Node):
         def _pre_attach(self, parent):
             assert str(self.parent) == "None"
-            assert self.children == tuple()
+            assert self.children == ()
             assert str(self.path) == "(MyNode('/B'),)"
 
         def _post_attach(self, parent):
             assert str(self.parent) == "MyNode('/A')"
-            assert self.children == tuple()
+            assert self.children == ()
             assert str(self.path) == "(MyNode('/A'), MyNode('/A/B'))"
 
         def _pre_detach(self, parent):
             assert str(self.parent) == "MyNode('/A')"
-            assert self.children == tuple()
+            assert self.children == ()
             assert str(self.path) == "(MyNode('/A'), MyNode('/A/B'))"
 
         def _post_detach(self, parent):
             assert str(self.parent) == "None"
-            assert self.children == tuple()
+            assert self.children == ()
             assert str(self.path) == "(MyNode('/B'),)"
 
     node_a = MyNode("A")
@@ -548,7 +548,7 @@ def test_eq_overwrite():
 
     class EqOverwrittingNode(NodeMixin):
         def __init__(self, a, b, parent=None):
-            super(EqOverwrittingNode, self).__init__()
+            super().__init__()
             self.a = a
             self.b = b
             self.parent = parent

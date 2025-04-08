@@ -241,4 +241,4 @@ class CountError(RuntimeError):
         """Error raised on `mincount` or `maxcount` mismatch."""
         if result:
             msg += " " + repr(result)
-        super(CountError, self).__init__(msg)
+        super().__init__(msg)

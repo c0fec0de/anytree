@@ -7,6 +7,8 @@ class RenderTreeGraph(DotExporter):
     def __init__(self, *args, **kwargs):
         """Legacy. Use :any:`anytree.exporter.DotExporter` instead."""
         warnings.warn(
-            ("anytree.RenderTreeGraph has moved. Use anytree.exporter.DotExporter instead"), DeprecationWarning
+            ("anytree.RenderTreeGraph has moved. Use anytree.exporter.DotExporter instead"),
+            DeprecationWarning,
+            stacklevel=2,
         )
-        super(RenderTreeGraph, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

@@ -223,26 +223,23 @@ class DotExporter:
 
     def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc, filter_):
         yield f"{self.graph} {self.name} {{"
-        for option in self.__iter_options(indent):
-            yield option
-        for node in self.__iter_nodes(indent, nodenamefunc, nodeattrfunc, filter_):
-            yield node
-        for edge in self.__iter_edges(indent, nodenamefunc, edgeattrfunc, edgetypefunc, filter_):
-            yield edge
+        yield from self.__iter_options(indent)
+        yield from self.__iter_nodes(indent, nodenamefunc, nodeattrfunc, filter_)
+        yield from self.__iter_edges(indent, nodenamefunc, edgeattrfunc, edgetypefunc, filter_)
         yield "}"
 
     def __iter_options(self, indent):
         options = self.options
         if options:
             for option in options:
-                yield "%s%s" % (indent, option)
+                yield f"{indent}{option}"
 
     def __iter_nodes(self, indent, nodenamefunc, nodeattrfunc, filter_):
         for node in PreOrderIter(self.node, filter_=filter_, stop=self.stop, maxlevel=self.maxlevel):
             nodename = nodenamefunc(node)
             nodeattr = nodeattrfunc(node)
-            nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
-            yield '%s"%s"%s;' % (indent, DotExporter.esc(nodename), nodeattr)
+            nodeattr = f" [{nodeattr}]" if nodeattr is not None else ""
+            yield f'{indent}"{DotExporter.esc(nodename)}"{nodeattr};'
 
     def __iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc, filter_):
         maxlevel = self.maxlevel - 1 if self.maxlevel else None
@@ -254,14 +251,8 @@ class DotExporter:
                 childname = nodenamefunc(child)
                 edgeattr = edgeattrfunc(node, child)
                 edgetype = edgetypefunc(node, child)
-                edgeattr = " [%s]" % edgeattr if edgeattr is not None else ""
-                yield '%s"%s" %s "%s"%s;' % (
-                    indent,
-                    DotExporter.esc(nodename),
-                    edgetype,
-                    DotExporter.esc(childname),
-                    edgeattr,
-                )
+                edgeattr = f" [{edgeattr}]" if edgeattr is not None else ""
+                yield f'{indent}"{DotExporter.esc(nodename)}" {edgetype} "{DotExporter.esc(childname)}"{edgeattr};'
 
     def to_dotfile(self, filename):
         """
@@ -288,7 +279,7 @@ class DotExporter:
         """
         with codecs.open(filename, "w", "utf-8") as file:
             for line in self:
-                file.write("%s\n" % line)
+                file.write(f"{line}\n")
 
     def to_picture(self, filename):
         """
@@ -302,7 +293,7 @@ class DotExporter:
         with NamedTemporaryFile("wb", delete=False) as dotfile:
             dotfilename = dotfile.name
             for line in self:
-                dotfile.write(("%s\n" % line).encode("utf-8"))
+                dotfile.write((f"{line}\n").encode())
             dotfile.flush()
             cmd = ["dot", dotfilename, "-T", fileformat, "-o", filename]
             check_call(cmd)
@@ -315,7 +306,7 @@ class DotExporter:
     @staticmethod
     def esc(value):
         """Escape Strings."""
-        return _RE_ESC.sub(lambda m: r"\%s" % m.group(0), six.text_type(value))
+        return _RE_ESC.sub(lambda m: rf"\{m.group(0)}", six.text_type(value))
 
 
 class UniqueDotExporter(DotExporter):
@@ -438,7 +429,7 @@ class UniqueDotExporter(DotExporter):
         stop=None,
         maxlevel=None,
     ):
-        super(UniqueDotExporter, self).__init__(
+        super().__init__(
             node,
             graph=graph,
             name=name,
@@ -466,4 +457,4 @@ class UniqueDotExporter(DotExporter):
 
     @staticmethod
     def _default_nodeattrfunc(node):
-        return 'label="%s"' % (node.name,)
+        return f'label="{node.name}"'

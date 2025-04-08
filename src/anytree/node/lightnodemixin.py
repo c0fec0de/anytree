@@ -1,6 +1,6 @@
+from anytree.config import ASSERTIONS
 from anytree.iterators import PreOrderIter
 
-from ..config import ASSERTIONS
 from .exceptions import LoopError, TreeError
 
 
@@ -233,7 +233,7 @@ class LightNodeMixin:
             if childid not in seen:
                 seen.add(childid)
             else:
-                msg = "Cannot add node %r multiple times as child." % (child,)
+                msg = f"Cannot add node {child!r} multiple times as child."
                 raise TreeError(msg)
 
     @children.setter  # type: ignore[no-redef]
@@ -343,7 +343,7 @@ class LightNodeMixin:
         (Node('/Udo'), Node('/Udo/Marc'))
         """
         if self.parent is None:
-            return tuple()
+            return ()
         return self.parent.path
 
     @property
@@ -409,7 +409,7 @@ class LightNodeMixin:
         """
         parent = self.parent
         if parent is None:
-            return tuple()
+            return ()
         return tuple(node for node in parent.children if node is not self)
 
     @property

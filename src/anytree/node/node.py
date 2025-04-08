@@ -77,5 +77,5 @@ class Node(NodeMixin):
             self.children = children
 
     def __repr__(self):
-        args = ["%r" % self.separator.join([""] + [str(node.name) for node in self.path])]
+        args = ["{!r}".format(self.separator.join([""] + [str(node.name) for node in self.path]))]
         return _repr(self, args=args, nameblacklist=["name"])
