@@ -1,7 +1,6 @@
 """Helper Methods for testing."""
 
 from contextlib import contextmanager
-from subprocess import run
 
 
 def eq_(one, other):
@@ -18,13 +17,3 @@ def assert_raises(exccls, msg):
     except Exception as exc:
         assert isinstance(exc, exccls), f"{exc!r} is not a {exccls!r}"
         eq_(str(exc), msg)
-
-
-def is_installed(cmd: tuple[str, ...]) -> bool:
-    try:
-        return run(cmd, check=False).returncode == 0
-    except FileNotFoundError:
-        return False
-
-
-GRAPHVIZ_INSTALLED = is_installed(("dot", "--version"))
