@@ -29,7 +29,7 @@ def test_tree_custom(tmp_path, root):
     """Tree Custom."""
 
     def nodefunc(node):
-        return '("%s")' % (node.name)
+        return f'("{node.name}")'
 
     def edgefunc(node, child):
         return f"--{child.edge}-->"

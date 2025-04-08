@@ -4,39 +4,39 @@ from .helper import assert_raises
 
 
 class TNode(Node):
-    TRACKING = []
+    TRACKING = []  # noqa: RUF012
 
     def _pre_detach(self, parent):
         """Method call before detaching from `parent`."""
-        self.TRACKING.append("_pre_detach(%r, %r)" % (self.name, parent.name))
+        self.TRACKING.append(f"_pre_detach({self.name!r}, {parent.name!r})")
 
     def _post_detach(self, parent):
         """Method call after detaching from `parent`."""
-        self.TRACKING.append("_post_detach(%r, %r)" % (self.name, parent.name))
+        self.TRACKING.append(f"_post_detach({self.name!r}, {parent.name!r})")
 
     def _pre_attach(self, parent):
         """Method call before attaching to `parent`."""
-        self.TRACKING.append("_pre_attach(%r, %r)" % (self.name, parent.name))
+        self.TRACKING.append(f"_pre_attach({self.name!r}, {parent.name!r})")
 
     def _post_attach(self, parent):
         """Method call after attaching to `parent`."""
-        self.TRACKING.append("_post_attach(%r, %r)" % (self.name, parent.name))
+        self.TRACKING.append(f"_post_attach({self.name!r}, {parent.name!r})")
 
     def _pre_detach_children(self, children):
         """Method call before detaching `children`."""
-        self.TRACKING.append("_pre_detach_children(%r, %r)" % (self.name, tuple(child.name for child in children)))
+        self.TRACKING.append(f"_pre_detach_children({self.name!r}, {tuple(child.name for child in children)!r})")
 
     def _post_detach_children(self, children):
         """Method call after detaching `children`."""
-        self.TRACKING.append("_post_detach_children(%r, %r)" % (self.name, tuple(child.name for child in children)))
+        self.TRACKING.append(f"_post_detach_children({self.name!r}, {tuple(child.name for child in children)!r})")
 
     def _pre_attach_children(self, children):
         """Method call before attaching `children`."""
-        self.TRACKING.append("_pre_attach_children(%r, %r)" % (self.name, tuple(child.name for child in children)))
+        self.TRACKING.append(f"_pre_attach_children({self.name!r}, {tuple(child.name for child in children)!r})")
 
     def _post_attach_children(self, children):
         """Method call after attaching `children`."""
-        self.TRACKING.append("_post_attach_children(%r, %r)" % (self.name, tuple(child.name for child in children)))
+        self.TRACKING.append(f"_post_attach_children({self.name!r}, {tuple(child.name for child in children)!r})")
 
 
 def test_parent_child():

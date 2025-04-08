@@ -1,4 +1,5 @@
-from ..config import ASSERTIONS
+from anytree.config import ASSERTIONS
+
 from .abstractiter import AbstractIter
 from .levelordergroupiter import LevelOrderGroupIter
 

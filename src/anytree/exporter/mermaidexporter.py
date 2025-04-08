@@ -166,12 +166,12 @@ class MermaidExporter:
             num = self.__node_ids[node_id]
         except KeyError:
             num = self.__node_ids[node_id] = next(self.__node_counter)
-        return "N%d" % (num,)
+        return f"N{num}"
 
     @staticmethod
     def _default_nodefunc(node):
         # pylint: disable=W0613
-        return '["%s"]' % (MermaidExporter.esc(node.name),)
+        return f'["{MermaidExporter.esc(node.name)}"]'
 
     @staticmethod
     def _default_edgefunc(node, child):
@@ -180,24 +180,20 @@ class MermaidExporter:
 
     def __iter(self, indent, nodenamefunc, nodefunc, edgefunc, filter_, stop):
         yield f"{self.graph} {self.name}"
-        for option in self.__iter_options(indent):
-            yield option
-        for node in self.__iter_nodes(indent, nodenamefunc, nodefunc, filter_, stop):
-            yield node
-        for edge in self.__iter_edges(indent, nodenamefunc, edgefunc, filter_, stop):
-            yield edge
+        yield from self.__iter_options(indent)
+        yield from self.__iter_nodes(indent, nodenamefunc, nodefunc, filter_, stop)
+        yield from self.__iter_edges(indent, nodenamefunc, edgefunc, filter_, stop)
 
     def __iter_options(self, indent):
         options = self.options
         if options:
             for option in options:
-                yield "%s%s" % (indent, option)
+                yield f"{indent}{option}"
 
     def __iter_nodes(self, indent, nodenamefunc, nodefunc, filter_, stop):
         for node in PreOrderIter(self.node, filter_=filter_, stop=stop, maxlevel=self.maxlevel):
             nodename = nodenamefunc(node)
-            node = nodefunc(node)
-            yield "%s%s%s" % (indent, nodename, node)
+            yield f"{indent}{nodename}{nodefunc(node)}"
 
     def __iter_edges(self, indent, nodenamefunc, edgefunc, filter_, stop):
         maxlevel = self.maxlevel - 1 if self.maxlevel else None
@@ -207,12 +203,7 @@ class MermaidExporter:
                 if filter_(child) and not stop(child):
                     childname = nodenamefunc(child)
                     edge = edgefunc(node, child)
-                    yield "%s%s%s%s" % (
-                        indent,
-                        nodename,
-                        edge,
-                        childname,
-                    )
+                    yield f"{indent}{nodename}{edge}{childname}"
 
     def to_file(self, filename):
         """
@@ -235,10 +226,10 @@ class MermaidExporter:
         with codecs.open(filename, "w", "utf-8") as file:
             file.write("```mermaid\n")
             for line in self:
-                file.write("%s\n" % line)
+                file.write(f"{line}\n")
             file.write("```")
 
     @staticmethod
     def esc(value):
         """Escape Strings."""
-        return _RE_ESC.sub(lambda m: r"\%s" % m.group(0), six.text_type(value))
+        return _RE_ESC.sub(lambda m: rf"\{m.group(0)}", six.text_type(value))

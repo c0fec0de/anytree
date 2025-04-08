@@ -1,8 +1,8 @@
 import warnings
 
+from anytree.config import ASSERTIONS
 from anytree.iterators import PreOrderIter
 
-from ..config import ASSERTIONS
 from .exceptions import LoopError, TreeError
 from .lightnodemixin import LightNodeMixin
 
@@ -120,7 +120,7 @@ class NodeMixin:
     @parent.setter
     def parent(self, value):
         if value is not None and not isinstance(value, (NodeMixin, LightNodeMixin)):
-            msg = "Parent node %r is not of type 'NodeMixin'." % (value,)
+            msg = f"Parent node {value!r} is not of type 'NodeMixin'."
             raise TreeError(msg)
         if hasattr(self, "_NodeMixin__parent"):
             parent = self.__parent
@@ -228,13 +228,13 @@ class NodeMixin:
         seen = set()
         for child in children:
             if not isinstance(child, (NodeMixin, LightNodeMixin)):
-                msg = "Cannot add non-node object %r. It is not a subclass of 'NodeMixin'." % (child,)
+                msg = f"Cannot add non-node object {child!r}. It is not a subclass of 'NodeMixin'."
                 raise TreeError(msg)
             childid = id(child)
             if childid not in seen:
                 seen.add(childid)
             else:
-                msg = "Cannot add node %r multiple times as child." % (child,)
+                msg = f"Cannot add node {child!r} multiple times as child."
                 raise TreeError(msg)
 
     @children.setter  # type: ignore[no-redef]
@@ -344,7 +344,7 @@ class NodeMixin:
         (Node('/Udo'), Node('/Udo/Marc'))
         """
         if self.parent is None:
-            return tuple()
+            return ()
         return self.parent.path
 
     @property
@@ -355,7 +355,7 @@ class NodeMixin:
         The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.
         This attribute will be removed in the 3.0.0 release.
         """
-        warnings.warn(".anchestors was a typo and will be removed in version 3.0.0", DeprecationWarning)
+        warnings.warn(".anchestors was a typo and will be removed in version 3.0.0", DeprecationWarning, stacklevel=2)
         return self.ancestors
 
     @property
@@ -421,7 +421,7 @@ class NodeMixin:
         """
         parent = self.parent
         if parent is None:
-            return tuple()
+            return ()
         return tuple(node for node in parent.children if node is not self)
 
     @property

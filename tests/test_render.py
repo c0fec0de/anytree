@@ -55,9 +55,9 @@ def test_render():
 
     def multi(root):
         for pre, fill, node in anytree.RenderTree(root):
-            yield "%s%s" % (pre, node.lines[0]), node
+            yield f"{pre}{node.lines[0]}", node
             for line in node.lines[1:]:
-                yield "%s%s" % (fill, line), node
+                yield f"{fill}{line}", node
 
     assert list(multi(root)) == [
         ("c0fe", root),

@@ -31,15 +31,13 @@ class AbstractStyle:
     """
 
     def __init__(self, vertical, cont, end):
-        super(AbstractStyle, self).__init__()
+        super().__init__()
         self.vertical = vertical
         self.cont = cont
         self.end = end
         if ASSERTIONS:  # pragma: no branch
-            assert len(cont) == len(vertical) == len(end), "'%s', '%s' and '%s' need to have equal length" % (
-                vertical,
-                cont,
-                end,
+            assert len(cont) == len(vertical) == len(end), (
+                f"'{vertical}', '{cont}' and '{end}' need to have equal length"
             )
 
     @property
@@ -49,7 +47,7 @@ class AbstractStyle:
 
     def __repr__(self):
         classname = self.__class__.__name__
-        return "%s()" % classname
+        return f"{classname}()"
 
 
 class AsciiStyle(AbstractStyle):
@@ -72,7 +70,7 @@ class AsciiStyle(AbstractStyle):
     """
 
     def __init__(self):
-        super(AsciiStyle, self).__init__("|   ", "|-- ", "+-- ")
+        super().__init__("|   ", "|-- ", "+-- ")
 
 
 class ContStyle(AbstractStyle):
@@ -95,7 +93,10 @@ class ContStyle(AbstractStyle):
     """
 
     def __init__(self):
-        super(ContStyle, self).__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2514\u2500\u2500 ")
+        super().__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2514\u2500\u2500 ")
+
+
+CONT_STYLE = ContStyle()
 
 
 class ContRoundStyle(AbstractStyle):
@@ -118,7 +119,7 @@ class ContRoundStyle(AbstractStyle):
     """
 
     def __init__(self):
-        super(ContRoundStyle, self).__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2570\u2500\u2500 ")
+        super().__init__("\u2502   ", "\u251c\u2500\u2500 ", "\u2570\u2500\u2500 ")
 
 
 class DoubleStyle(AbstractStyle):
@@ -142,7 +143,7 @@ class DoubleStyle(AbstractStyle):
     """
 
     def __init__(self):
-        super(DoubleStyle, self).__init__("\u2551   ", "\u2560\u2550\u2550 ", "\u255a\u2550\u2550 ")
+        super().__init__("\u2551   ", "\u2560\u2550\u2550 ", "\u255a\u2550\u2550 ")
 
 
 @six.python_2_unicode_compatible
@@ -262,7 +263,7 @@ class RenderTree:
     └── Z
     """
 
-    def __init__(self, node, style=ContStyle(), childiter=list, maxlevel=None):
+    def __init__(self, node, style=CONT_STYLE, childiter=list, maxlevel=None):
         if not isinstance(style, AbstractStyle):
             style = style()
         self.node = node
@@ -271,7 +272,7 @@ class RenderTree:
         self.maxlevel = maxlevel
 
     def __iter__(self):
-        return self.__next(self.node, tuple())
+        return self.__next(self.node, ())
 
     def __next(self, node, continues, level=0):
         yield RenderTree.__item(node, continues, self.style)
@@ -281,8 +282,7 @@ class RenderTree:
             if children:
                 children = self.childiter(children)
                 for child, is_last in _is_last(children):
-                    for grandchild in self.__next(child, continues + (not is_last,), level=level):
-                        yield grandchild
+                    yield from self.__next(child, (*continues, not is_last), level=level)
 
     @staticmethod
     def __item(node, continues, style):
@@ -299,16 +299,16 @@ class RenderTree:
         def get():
             for row in self:
                 lines = repr(row.node).splitlines() or [""]
-                yield "%s%s" % (row.pre, lines[0])
+                yield f"{row.pre}{lines[0]}"
                 for line in lines[1:]:
-                    yield "%s%s" % (row.fill, line)
+                    yield f"{row.fill}{line}"
 
         return "\n".join(get())
 
     def __repr__(self):
         classname = self.__class__.__name__
-        args = [repr(self.node), "style=%s" % repr(self.style), "childiter=%s" % repr(self.childiter)]
-        return "%s(%s)" % (classname, ", ".join(args))
+        args = [repr(self.node), f"style={self.style!r}", f"childiter={self.childiter!r}"]
+        return "{}({})".format(classname, ", ".join(args))
 
     def by_attr(self, attrname="name"):
         """
@@ -355,9 +355,9 @@ def _format_row_any(row, attr):
         lines = attr or [""]
     else:
         lines = str(attr).splitlines() or [""]
-    yield "%s%s" % (row.pre, lines[0])
+    yield f"{row.pre}{lines[0]}"
     for line in lines[1:]:
-        yield "%s%s" % (row.fill, line)
+        yield f"{row.fill}{line}"
 
 
 def _is_last(iterable):

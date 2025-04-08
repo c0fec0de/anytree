@@ -14,9 +14,9 @@ def assert_raises(exccls, msg):
     """Check exception of class `exccls` to be raised with message `msg`."""
     try:
         yield
-        assert False, "%r not raised" % exccls
+        raise AssertionError(f"{exccls!r} not raised")
     except Exception as exc:
-        assert isinstance(exc, exccls), "%r is not a %r" % (exc, exccls)
+        assert isinstance(exc, exccls), f"{exc!r} is not a {exccls!r}"
         eq_(str(exc), msg)
 
 

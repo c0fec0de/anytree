@@ -44,7 +44,6 @@ class PostOrderIter(AbstractIter):
         if not AbstractIter._abort_at_level(level, maxlevel):
             for child in children:
                 grandchildren = AbstractIter._get_children(child.children, stop)
-                for grandchild in PostOrderIter.__next(grandchildren, level + 1, filter_, stop, maxlevel):
-                    yield grandchild
+                yield from PostOrderIter.__next(grandchildren, level + 1, filter_, stop, maxlevel)
                 if filter_(child):
                     yield child

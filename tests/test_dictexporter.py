@@ -103,7 +103,7 @@ def test_dict_exporter_mixin():
 
     class MyClass(NodeMixin):
         def __init__(self, foo, parent=None):
-            super(MyClass, self).__init__()
+            super().__init__()
             self.foo = foo
             self.parent = parent
 

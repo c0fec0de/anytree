@@ -17,10 +17,10 @@ class Resolver:
         relax (bool): Do not raise an exception.
     """
 
-    _match_cache = {}  # type: ignore[var-annotated]
+    _match_cache = {}  # type: ignore[var-annotated]  # noqa: RUF012
 
     def __init__(self, pathattr="name", ignorecase=False, relax=False):
-        super(Resolver, self).__init__()
+        super().__init__()
         self.pathattr = pathattr
         self.ignorecase = ignorecase
         self.relax = relax
@@ -325,7 +325,7 @@ class Resolver:
 class ResolverError(RuntimeError):
     def __init__(self, node, child, msg):
         """Resolve Error at `node` handling `child`."""
-        super(ResolverError, self).__init__(msg)
+        super().__init__(msg)
         self.node = node
         self.child = child
 
@@ -333,16 +333,16 @@ class ResolverError(RuntimeError):
 class RootResolverError(ResolverError):
     def __init__(self, root):
         """Root Resolve Error, cannot go above root node."""
-        msg = "Cannot go above root node %r" % (root,)
-        super(RootResolverError, self).__init__(root, None, msg)
+        msg = f"Cannot go above root node {root!r}"
+        super().__init__(root, None, msg)
 
 
 class ChildResolverError(ResolverError):
     def __init__(self, node, child, pathattr):
         """Child Resolve Error at `node` handling `child`."""
         names = [repr(_getattr(c, pathattr)) for c in node.children]
-        msg = "%r has no child %s. Children are: %s." % (node, child, ", ".join(names))
-        super(ChildResolverError, self).__init__(node, child, msg)
+        msg = "{!r} has no child {}. Children are: {}.".format(node, child, ", ".join(names))
+        super().__init__(node, child, msg)
 
 
 def _getattr(node, name):

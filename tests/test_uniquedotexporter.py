@@ -29,13 +29,13 @@ def test_tree_custom(tmp_path, root):
     """Tree Custom."""
 
     def nodenamefunc(node):
-        return "%s:%s" % (node.name, node.depth)
+        return f"{node.name}:{node.depth}"
 
     def edgeattrfunc(node, child):
-        return 'label="%s:%s"' % (node.name, child.name)
+        return f'label="{node.name}:{child.name}"'
 
     def nodefunc(node):
-        return '("%s")' % (node.name)
+        return f'("{node.name}")'
 
     def edgefunc(node, child):
         return f"--{child.edge}-->"

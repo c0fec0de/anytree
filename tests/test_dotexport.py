@@ -36,10 +36,10 @@ def test_tree2(tmp_path):
     Node("sub1Ca", parent=s1c, edge=42)
 
     def nodenamefunc(node):
-        return "%s:%s" % (node.name, node.depth)
+        return f"{node.name}:{node.depth}"
 
     def edgeattrfunc(node, child):
-        return 'label="%s:%s"' % (node.name, child.name)
+        return f'label="{node.name}:{child.name}"'
 
     r = RenderTreeGraph(
         root,

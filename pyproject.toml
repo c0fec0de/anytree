@@ -68,63 +68,63 @@ select = [
     "W",
     # pydocstyle
     "D",
-    # # pep8-naming
-    # "N",
-    # # flake8-2020
-    # "YTT",
-    # # flake8-bugbear
-    # "B",
-    # # flake8-quotes
-    # "Q",
-    # # flake8-debugger
-    # "T10",
-    # # flake8-gettext
-    # "INT",
-    # # pylint
-    # "PL",
-    # # misc lints
-    # "PIE",
-    # # flake8-pyi
+    # pep8-naming
+    "N",
+    # flake8-2020
+    "YTT",
+    # flake8-bugbear
+    "B",
+    # flake8-quotes
+    "Q",
+    # flake8-debugger
+    "T10",
+    # flake8-gettext
+    "INT",
+    # pylint
+    "PL",
+    # misc lints
+    "PIE",
+    # flake8-pyi
     # "PYI",
-    # # tidy imports
-    # "TID",
-    # # implicit string concatenation
-    # "ISC",
-    # # type-checking imports
-    # "TC",
-    # # comprehensions
+    # tidy imports
+    "TID",
+    # implicit string concatenation
+    "ISC",
+    # type-checking imports
+    "TC",
+    # comprehensions
     # "C",
-    # "C4",
-    # # pygrep-hooks
-    # "PGH",
-    # # Ruff-specific rules
-    # "RUF",
-    # # flake8-bandit: exec-builtin
-    # "S102",
-    # # numpy-legacy-random
-    # "NPY002",
-    # # Perflint
+    "C4",
+    # pygrep-hooks
+    "PGH",
+    # Ruff-specific rules
+    "RUF",
+    # flake8-bandit: exec-builtin
+    "S102",
+    # numpy-legacy-random
+    "NPY002",
+    # Perflint
     # "PERF",
-    # # flynt
-    # "FLY",
-    # # flake8-logging-format
-    # "G",
-    # # pyupgrade
-    # "UP",
-    # # annotation
-    # # "ANN"
-    # # bandit
+    # flynt
+    "FLY",
+    # flake8-logging-format
+    "G",
+    # pyupgrade
+    "UP",
+    # annotation
+    # "ANN"
+    # bandit
     # "S",
-    # # Argument
-    # # "ARG",
-    # # Pathlib
+    # Argument
+    # "ARG",
+    # Pathlib
     # "PTH",
-    # # Simplify
-    # # "SIM",
-    # # Return
-    # "RET",
-    # # Raise
-    # "RSE",
+    # Simplify
+    # "SIM",
+    # Return
+    "RET",
+    # Raise
+    "RSE",
 ]
 ignore = [
     # too-many-arguments
@@ -150,6 +150,8 @@ ignore = [
     'TC001',
     # Indent of doctest
     'D412',
+    # unused loop
+    'B007',
 ]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
@@ -164,6 +166,8 @@ ignore = [
     "D103",
     # Unused variables
     "F841",
+    # complexity
+    'PLR0915',
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -195,7 +199,3 @@ exclude_lines = [
 [tool.mypy]
 disable_error_code = "misc"
 ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-allow_untyped_defs = true

@@ -192,11 +192,10 @@ class MyNode(NodeMixin):
     def __new__(cls, *args, **kwargs):
         for attr in SPECIAL_METHODS:
             setattr(cls, attr, functools.partial(prevent_access, attr))
-        instance = super(NodeMixin, cls).__new__(cls)
-        return instance
+        return super(NodeMixin, cls).__new__(cls)
 
     def __init__(self, name, parent=None, children=None):
-        super(MyNode, self).__init__()
+        super().__init__()
         self.name = name
         self.parent = parent
         if children:
@@ -207,7 +206,7 @@ class TestConsistency(unittest.TestCase):
     """Control the access to special methods."""
 
     def setUp(self):
-        super(TestConsistency, self).setUp()
+        super().setUp()
         self.root1 = MyNode("root1")
         self.child1 = MyNode("child1", parent=self.root1)
         self.child2a = MyNode("child2a", parent=self.child1)
@@ -313,7 +312,7 @@ class MyMapping(NodeMixin, Mapping):
     """
 
     def __init__(self, name, parent=None, children=None):
-        super(MyMapping, self).__init__()
+        super().__init__()
         self.name = name
         self.parent = parent
         if children:
@@ -323,8 +322,7 @@ class MyMapping(NodeMixin, Mapping):
         """Iterate over all children recursively."""
         for child in self.children:
             yield child
-            for item in child:
-                yield item
+            yield from child
 
     def __len__(self):
         """Total number of children."""
@@ -339,7 +337,7 @@ class MyMapping(NodeMixin, Mapping):
 
 class TestMyMapping(unittest.TestCase):
     def setUp(self):
-        super(TestMyMapping, self).setUp()
+        super().setUp()
         self.root1 = MyMapping("root1")
         self.child1 = MyMapping("child1", parent=self.root1)
         self.child2a = MyMapping("child2a", parent=self.child1)

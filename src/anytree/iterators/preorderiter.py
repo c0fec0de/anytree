@@ -47,5 +47,4 @@ class PreOrderIter(AbstractIter):
                 yield child_
             if not AbstractIter._abort_at_level(2, maxlevel):
                 descendantmaxlevel = maxlevel - 1 if maxlevel else None
-                for descendant_ in PreOrderIter._iter(child_.children, filter_, stop, descendantmaxlevel):
-                    yield descendant_
+                yield from PreOrderIter._iter(child_.children, filter_, stop, descendantmaxlevel)

@@ -1,4 +1,9 @@
 """Importer."""
 
-from .dictimporter import DictImporter  # noqa
-from .jsonimporter import JsonImporter  # noqa
+from .dictimporter import DictImporter
+from .jsonimporter import JsonImporter
+
+__all__ = [
+    "DictImporter",
+    "JsonImporter",
+]
