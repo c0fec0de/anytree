@@ -1,30 +1,13 @@
-from filecmp import cmp
-from os import makedirs
-from os.path import dirname, exists, join
-from shutil import rmtree
+from pytest import mark
+from test2ref import assert_refdata
 
 from anytree import Node
 from anytree.dotexport import RenderTreeGraph
 
-from .helper import with_setup
-
-TESTPATH = dirname(__file__)
-GENPATH = join(TESTPATH, "dotexport")
-REFPATH = join(TESTPATH, "refdata")
+from .helper import GRAPHVIZ_INSTALLED
 
 
-def setup():
-    if not exists(GENPATH):
-        makedirs(GENPATH)
-
-
-def teardown():
-    if exists(GENPATH):
-        rmtree(GENPATH)
-
-
-@with_setup(setup, teardown)
-def test_tree1():
+def test_tree1(tmp_path):
     """Tree1."""
     root = Node("root")
     s0 = Node("sub0", parent=root)
@@ -36,12 +19,11 @@ def test_tree1():
     s1c = Node("sub1C", parent=s1)
     Node(99, parent=s1c)
 
-    RenderTreeGraph(root).to_dotfile(join(GENPATH, "tree1.dot"))
-    assert cmp(join(GENPATH, "tree1.dot"), join(REFPATH, "tree1.dot"))
+    RenderTreeGraph(root).to_dotfile(tmp_path / "tree1.dot")
+    assert_refdata(test_tree1, tmp_path)
 
 
-@with_setup(setup, teardown)
-def test_tree2():
+def test_tree2(tmp_path):
     """Tree2."""
     root = Node("root")
     s0 = Node("sub0", parent=root, edge=2)
@@ -67,12 +49,12 @@ def test_tree2():
         edgeattrfunc=edgeattrfunc,
     )
 
-    r.to_dotfile(join(GENPATH, "tree2.dot"))
-    assert cmp(join(GENPATH, "tree2.dot"), join(REFPATH, "tree2.dot"))
+    r.to_dotfile(tmp_path / "tree2.dot")
+    assert_refdata(test_tree2, tmp_path)
 
 
-@with_setup(setup, teardown)
-def test_tree_png():
+@mark.skipif(not GRAPHVIZ_INSTALLED, reason="graphviz missing")
+def test_tree_png(tmp_path):
     """Tree to png."""
     root = Node("root")
     s0 = Node("sub0", parent=root)
@@ -84,4 +66,4 @@ def test_tree_png():
     s1c = Node("sub1C", parent=s1)
     Node("sub1Ca", parent=s1c)
 
-    RenderTreeGraph(root).to_picture(join(GENPATH, "tree1.png"))
+    RenderTreeGraph(root).to_picture(tmp_path / "tree1.png")

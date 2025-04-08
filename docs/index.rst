@@ -17,24 +17,8 @@ Any Python Tree Data
 .. image:: https://readthedocs.org/projects/anytree/badge/?version=stable
     :target: https://anytree.readthedocs.io/en/stable/
 
-.. image:: https://api.codeclimate.com/v1/badges/e6d325d6fd23a93aab20/maintainability
-   :target: https://codeclimate.com/github/c0fec0de/anytree/maintainability
-   :alt: Maintainability
-
 .. image:: https://img.shields.io/pypi/pyversions/anytree.svg
    :target: https://pypi.python.org/pypi/anytree
-
-.. image:: https://img.shields.io/badge/code%20style-pep8-brightgreen.svg
-   :target: https://www.python.org/dev/peps/pep-0008/
-
-.. image:: https://img.shields.io/badge/code%20style-pep257-brightgreen.svg
-   :target: https://www.python.org/dev/peps/pep-0257/
-
-.. image:: https://img.shields.io/badge/linter-pylint-%231674b1?style=flat
-   :target: https://www.pylint.org/
-
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/psf/black
 
 .. image:: https://img.shields.io/github/contributors/c0fec0de/anytree.svg
    :target: https://github.com/c0fec0de/anytree/graphs/contributors/
@@ -135,7 +119,7 @@ For details see :any:`Node` and :any:`RenderTree`.
 
 >>> from anytree.exporter import UniqueDotExporter
 >>> # graphviz needs to be installed for the next line!
->>> UniqueDotExporter(udo).to_picture("udo.png")
+>>> UniqueDotExporter(udo).to_picture("udo.png") # doctest: +SKIP
 
 .. image:: static/udo.png
 
@@ -144,7 +128,7 @@ The :any:`UniqueDotExporter` can be started at any node and has various formatti
 >>> UniqueDotExporter(dan,
 ...                   nodeattrfunc=lambda node: "fixedsize=true, width=1, height=1, shape=diamond",
 ...                   edgeattrfunc=lambda parent, child: "style=bold"
-... ).to_picture("dan.png")
+... ).to_picture("dan.png") # doctest: +SKIP
 
 .. image:: static/dan.png
 
@@ -204,7 +188,7 @@ Node('/Mary')
 
 **Extending any python class to become a tree node**
 
-The enitre tree magic is encapsulated by :any:`NodeMixin`,
+The entire tree magic is encapsulated by :any:`NodeMixin`,
 add it as base class and the class becomes a tree node:
 
 >>> from anytree import NodeMixin, RenderTree

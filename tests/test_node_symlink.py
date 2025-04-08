@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-from anytree import AnyNode, Node, NodeMixin, PostOrderIter, PreOrderIter, SymlinkNode
+from anytree import Node, PostOrderIter, PreOrderIter, SymlinkNode
 
 from .helper import eq_
 
 
 def test_symlink():
-
     root = Node("root")
     s0 = Node("sub0", parent=root)
     s0b = Node("sub0B", parent=s0)

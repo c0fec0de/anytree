@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 """Test custom node separator."""
-
-import six
 
 import anytree as at
 
@@ -9,7 +6,6 @@ from .helper import assert_raises, eq_
 
 
 class MyNode(at.Node):
-
     separator = "|"
 
 

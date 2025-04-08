@@ -1,14 +1,14 @@
 """Helper Methods for testing."""
-from contextlib import contextmanager
 
-import six
+from contextlib import contextmanager
+from subprocess import run
 
 
 def eq_(one, other):
-    assert one == other, "{one} != {other}".format(one=one, other=other)
+    assert one == other, f"{one} != {other}"
 
 
-# hack own assert_raises, because py26 has a different impelmentation
+# hack own assert_raises, because py26 has a different implementation
 @contextmanager
 def assert_raises(exccls, msg):
     """Check exception of class `exccls` to be raised with message `msg`."""
@@ -20,30 +20,11 @@ def assert_raises(exccls, msg):
         eq_(str(exc), msg)
 
 
-def with_setup(setup=None, teardown=None):
-    def decorate(func, setup=setup, teardown=teardown):
-        if setup:
-            if hasattr(func, "setup"):
-                _old_s = func.setup
+def is_installed(cmd: tuple[str, ...]) -> bool:
+    try:
+        return run(cmd, check=False).returncode == 0
+    except FileNotFoundError:
+        return False
 
-                def _s():
-                    setup()
-                    _old_s()
 
-                func.setup = _s
-            else:
-                func.setup = setup
-        if teardown:
-            if hasattr(func, "teardown"):
-                _old_t = func.teardown
-
-                def _t():
-                    _old_t()
-                    teardown()
-
-                func.teardown = _t
-            else:
-                func.teardown = teardown
-        return func
-
-    return decorate
+GRAPHVIZ_INSTALLED = is_installed(("dot", "--version"))
