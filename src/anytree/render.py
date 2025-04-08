@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tree Rendering.
 
@@ -211,7 +210,7 @@ class RenderTree:
     └── Node('/root/sub1', lines=['Z'])
 
     The `childiter` is responsible for iterating over child nodes at the
-    same level. An reversed order can be achived by using `reversed`.
+    same level. An reversed order can be achieved by using `reversed`.
 
     >>> for row in RenderTree(root, childiter=reversed):
     ...     print("%s%s" % (row.pre, row.node.name))

@@ -10,9 +10,6 @@
 .. image:: https://coveralls.io/repos/github/c0fec0de/anytree/badge.svg
     :target: https://coveralls.io/github/c0fec0de/anytree
 
-.. image:: https://readthedocs.org/projects/anytree/badge/?version=stable
-    :target: https://anytree.readthedocs.io/en/stable
-
 .. image:: https://api.codeclimate.com/v1/badges/e6d325d6fd23a93aab20/maintainability
    :target: https://codeclimate.com/github/c0fec0de/anytree/maintainability
    :alt: Maintainability

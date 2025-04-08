@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from .symlinknodemixin import SymlinkNodeMixin
 from .util import _repr
 
@@ -8,7 +7,7 @@ class SymlinkNode(SymlinkNodeMixin):
     Tree node which references to another tree node.
 
     Args:
-        target: Symbolic Link Target. Another tree node, which is refered to.
+        target: Symbolic Link Target. Another tree node, which is referred to.
 
     Keyword Args:
         parent: Reference to parent node.

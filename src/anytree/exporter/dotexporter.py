@@ -67,7 +67,7 @@ class DotExporter:
     >>> s1c = Node("sub1C", parent=s1, edge=22)
     >>> s1ca = Node("sub1Ca", parent=s1c, edge=42)
 
-    .. note:: If the node names are not unqiue, see :any:`UniqueDotExporter`.
+    .. note:: If the node names are not unique, see :any:`UniqueDotExporter`.
 
     A directed graph:
 
@@ -222,7 +222,7 @@ class DotExporter:
         return True
 
     def __iter(self, indent, nodenamefunc, nodeattrfunc, edgeattrfunc, edgetypefunc, filter_):
-        yield "{self.graph} {self.name} {{".format(self=self)
+        yield f"{self.graph} {self.name} {{"
         for option in self.__iter_options(indent):
             yield option
         for node in self.__iter_nodes(indent, nodenamefunc, nodeattrfunc, filter_):
@@ -320,7 +320,7 @@ class DotExporter:
 
 class UniqueDotExporter(DotExporter):
     """
-    Unqiue Dot Language Exporter.
+    Unique Dot Language Exporter.
 
     Handle trees with random or conflicting node names gracefully.
 

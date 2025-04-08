@@ -47,7 +47,7 @@ class JsonExporter:
       ]
     }
 
-    .. note:: Whenever the json output does not meet your expections, see the :any:`json` documentation.
+    .. note:: Whenever the json output does not meet your expectations, see the :any:`json` documentation.
               For instance, if you have unicode/ascii issues, please try `JsonExporter(..., ensure_ascii=False)`.
     """
 

@@ -10,4 +10,3 @@ In case of any concerns about the internal data consistency or just for safety, 
 
 >>> import anytree
 >>> anytree.config.ASSERTIONS = True
-

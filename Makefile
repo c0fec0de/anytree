@@ -31,19 +31,23 @@ test: .venv/.valid ## [ALL] Run Unittests via 'pytest' with {PYTEST_OPTIONS}
 	@echo  "See coverage report:\n\n    file://${PWD}/htmlcov/index.html\n"
 
 
+.PHONY: test2refdata
+test2refdata: .venv/.valid ## Run Unittests via 'pytest' with {PYTEST_OPTIONS} and update tests/refdata
+	rm -rf tests/refdata
+	touch .test2ref
+	${ENV} pytest -vv ${PYTEST_OPTIONS}
+	@echo  "See coverage report:\n\n    file://${PWD}/htmlcov/index.html\n"
+	rm .test2ref
+
+
 .PHONY: checktypes
 checktypes: .venv/.valid ## [ALL] Run Type-Checking via 'mypy'
-	${ENV} mypy .
+	${ENV} mypy src
 
 
 .PHONY: doc
 doc: .venv/.valid ## [ALL] Build Documentation via 'mkdocs'
-	${ENV} mkdocs build --strict
-
-
-.PHONY: doc-serve
-doc-serve: .venv/.valid ## Start Local Documentation Server via 'mkdocs'
-	${ENV} mkdocs serve --no-strict
+	${ENV} make html -C docs
 
 
 .PHONY: code

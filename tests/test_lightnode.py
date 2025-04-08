@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 from anytree import LightNodeMixin, LoopError, PostOrderIter, PreOrderIter, TreeError
-from anytree.node.util import _repr
 
 from .helper import assert_raises
 
 
 class LightNode(LightNodeMixin):
-
     __slots__ = ["name"]
 
     def __init__(self, name, parent=None, children=None):
@@ -119,7 +116,6 @@ def test_parent_child():
 
 
 def test_detach_children():
-
     root = LightNode("root")
     s0 = LightNode("sub0", parent=root)
     s0b = LightNode("sub0B", parent=s0)
@@ -138,7 +134,6 @@ def test_detach_children():
 
 
 def test_children_setter():
-
     root = LightNode("root")
     s0 = LightNode("sub0")
     s1 = LightNode("sub0A")
@@ -169,7 +164,6 @@ def test_children_setter():
 
 
 def test_children_setter_large():
-
     root = LightNode("root")
     s0 = LightNode("sub0")
     s0b = LightNode("sub0B")
@@ -192,7 +186,6 @@ def test_children_setter_large():
 
 
 def test_node_children_multiple():
-
     root = LightNode("root")
     sub = LightNode("sub")
     with assert_raises(TreeError, "Cannot add node LightNode('/sub') multiple times as child."):
@@ -386,25 +379,6 @@ def test_height():
     assert s1.height == 2
     assert s1c.height == 1
     assert s1ca.height == 0
-
-
-def test_size():
-    """Node.size."""
-    root = LightNode("root")
-    s0 = LightNode("sub0", parent=root)
-    s0b = LightNode("sub0B", parent=s0)
-    s0a = LightNode("sub0A", parent=s0)
-    s1 = LightNode("sub1", parent=root)
-    s1c = LightNode("sub1C", parent=s1)
-    s1ca = LightNode("sub1Ca", parent=s1c)
-
-    assert root.size == 7
-    assert s0.size == 3
-    assert s0b.size == 1
-    assert s0a.size == 1
-    assert s1.size == 3
-    assert s1c.size == 2
-    assert s1ca.size == 1
 
 
 def test_size():

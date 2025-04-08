@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from anytree.iterators import PreOrderIter
 
 from ..config import ASSERTIONS
@@ -7,7 +5,6 @@ from .exceptions import LoopError, TreeError
 
 
 class LightNodeMixin:
-
     """
     The :any:`LightNodeMixin` behaves identical to :any:`NodeMixin`, but uses `__slots__`.
 
@@ -81,7 +78,7 @@ class LightNodeMixin:
     └── my2  0 2
     """
 
-    __slots__ = ["__parent", "__children"]
+    __slots__ = ["__children", "__parent"]
 
     separator = "/"
 
@@ -239,7 +236,7 @@ class LightNodeMixin:
                 msg = "Cannot add node %r multiple times as child." % (child,)
                 raise TreeError(msg)
 
-    @children.setter
+    @children.setter  # type: ignore[no-redef]
     def children(self, children):
         # convert iterable to tuple
         children = tuple(children)
@@ -259,7 +256,7 @@ class LightNodeMixin:
             raise
         # ATOMIC end
 
-    @children.deleter
+    @children.deleter  # type: ignore[no-redef]
     def children(self):
         children = self.children
         self._pre_detach_children(children)

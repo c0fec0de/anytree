@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from .nodemixin import NodeMixin
 from .util import _repr
 
@@ -93,7 +91,6 @@ class AnyNode(NodeMixin):
     """
 
     def __init__(self, parent=None, children=None, **kwargs):
-
         self.__dict__.update(kwargs)
         self.parent = parent
         if children:

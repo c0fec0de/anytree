@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from anytree import AnyNode, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, TreeError
 
 from .helper import assert_raises
@@ -109,7 +108,6 @@ def test_parent_child():
 
 
 def test_detach_children():
-
     root = Node("root")
     s0 = Node("sub0", parent=root)
     s0b = Node("sub0B", parent=s0)
@@ -128,7 +126,6 @@ def test_detach_children():
 
 
 def test_children_setter():
-
     root = Node("root")
     s0 = Node("sub0")
     s1 = Node("sub0A")
@@ -157,7 +154,6 @@ def test_children_setter():
 
 
 def test_children_setter_large():
-
     root = Node("root")
     s0 = Node("sub0")
     s0b = Node("sub0B")
@@ -180,14 +176,12 @@ def test_children_setter_large():
 
 
 def test_node_children_type():
-
     root = Node("root")
     with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
         root.children = ["string"]
 
 
 def test_node_children_multiple():
-
     root = Node("root")
     sub = Node("sub")
     with assert_raises(TreeError, "Cannot add node Node('/sub') multiple times as child."):
@@ -257,7 +251,7 @@ def test_ancestors():
     assert s0a.ancestors == tuple([root, s0])
     assert s1ca.ancestors == tuple([root, s1, s1c])
     # deprecated typo
-    assert s1ca.anchestors == tuple([root, s1, s1c])
+    assert s1ca.ancestors == tuple([root, s1, s1c])
 
 
 def test_node_children_init():
@@ -421,25 +415,6 @@ def test_size():
     assert s1ca.size == 1
 
 
-def test_size():
-    """Node.size."""
-    root = Node("root")
-    s0 = Node("sub0", parent=root)
-    s0b = Node("sub0B", parent=s0)
-    s0a = Node("sub0A", parent=s0)
-    s1 = Node("sub1", parent=root)
-    s1c = Node("sub1C", parent=s1)
-    s1ca = Node("sub1Ca", parent=s1c)
-
-    assert root.size == 7
-    assert s0.size == 3
-    assert s0b.size == 1
-    assert s0a.size == 1
-    assert s1.size == 3
-    assert s1c.size == 2
-    assert s1ca.size == 1
-
-
 def test_depth():
     """Node.depth."""
     root = Node("root")
@@ -548,7 +523,6 @@ def test_hookups():
 
 def test_any_node_parent_error():
     """Any Node Parent Error."""
-
     with assert_raises(TreeError, "Parent node 'r' is not of type 'NodeMixin'."):
         AnyNode("r")
 
@@ -582,8 +556,7 @@ def test_eq_overwrite():
         def __eq__(self, other):
             if isinstance(other, EqOverwrittingNode):
                 return self.a == other.a and self.b == other.b
-            else:
-                return NotImplemented
+            return NotImplemented
 
     r = EqOverwrittingNode(0, 0)
     a = EqOverwrittingNode(1, 0, parent=r)

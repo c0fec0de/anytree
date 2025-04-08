@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from .nodemixin import NodeMixin
 from .util import _repr
 

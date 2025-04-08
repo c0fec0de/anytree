@@ -12,6 +12,7 @@ Please install these tools:
 * [`make`](https://www.gnu.org/software/make/)
 * [`git`](https://git-scm.com/)
 * [Visual Studio Code](https://code.visualstudio.com/)
+* [`graphviz`](https://graphviz.org/)
 
 
 ### Editor
@@ -31,6 +32,8 @@ make all
 
 See `make help` for any further details.
 
+Please note that `tests/refdata` contains reference data from test runs.
+`make test2refdata` updates this directory.
 
 ## Project Structure
 
@@ -63,6 +66,8 @@ Next to that, there are some temporary files ignored by version control system.
     * 2.x.x can be merged to 3.x.x
 * `main`
     * 2.x.x can be merged to main
+
+
 ### Release
 
 ```bash

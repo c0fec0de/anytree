@@ -98,4 +98,3 @@ AnyNode(a='root')
 .. _YAML: https://en.wikipedia.org/wiki/YAML
 
 .. _PYYAML: http://pyyaml.org/wiki/PyYAMLDocumentation
-

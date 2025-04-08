@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
-from __future__ import print_function
-
 import re
 
 from anytree.iterators.preorderiter import PreOrderIter
@@ -22,7 +17,7 @@ class Resolver:
         relax (bool): Do not raise an exception.
     """
 
-    _match_cache = {}
+    _match_cache = {}  # type: ignore[var-annotated]
 
     def __init__(self, pathattr="name", ignorecase=False, relax=False):
         super(Resolver, self).__init__()

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import warnings
 
 from anytree.iterators import PreOrderIter
@@ -10,7 +8,6 @@ from .lightnodemixin import LightNodeMixin
 
 
 class NodeMixin:
-
     """
     The :any:`NodeMixin` class extends any Python class to a tree node.
 
@@ -240,7 +237,7 @@ class NodeMixin:
                 msg = "Cannot add node %r multiple times as child." % (child,)
                 raise TreeError(msg)
 
-    @children.setter
+    @children.setter  # type: ignore[no-redef]
     def children(self, children):
         # convert iterable to tuple
         children = tuple(children)
@@ -260,7 +257,7 @@ class NodeMixin:
             raise
         # ATOMIC end
 
-    @children.deleter
+    @children.deleter  # type: ignore[no-redef]
     def children(self):
         children = self.children
         self._pre_detach_children(children)

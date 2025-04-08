@@ -49,7 +49,7 @@ class AbstractIter(six.Iterator):
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
-        raise NotImplementedError()  # pragma: no cover
+        raise NotImplementedError
 
     @staticmethod
     def _abort_at_level(level, maxlevel):

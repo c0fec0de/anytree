@@ -10,7 +10,6 @@ _RE_ESC = re.compile(r'["\\]')
 
 
 class MermaidExporter:
-
     """
     Mermaid Exporter.
 
@@ -180,7 +179,7 @@ class MermaidExporter:
         return "-->"
 
     def __iter(self, indent, nodenamefunc, nodefunc, edgefunc, filter_, stop):
-        yield "{self.graph} {self.name}".format(self=self)
+        yield f"{self.graph} {self.name}"
         for option in self.__iter_options(indent):
             yield option
         for node in self.__iter_nodes(indent, nodenamefunc, nodefunc, filter_, stop):
