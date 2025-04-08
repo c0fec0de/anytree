@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from anytree import Node, RenderTree
 
 from .helper import eq_

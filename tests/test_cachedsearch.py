@@ -1,4 +1,4 @@
-from anytree import AsciiStyle, CountError, Node, PreOrderIter, RenderTree
+from anytree import CountError, Node
 from anytree.cachedsearch import find, find_by_attr, findall, findall_by_attr
 
 from .helper import assert_raises, eq_
@@ -16,12 +16,12 @@ def test_findall():
     eq_(findall(f, filter_=lambda node: d in node.path), (d, c, e))
     with assert_raises(
         CountError,
-        ("Expecting at least 4 elements, but found 3. " "(Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))"),
+        ("Expecting at least 4 elements, but found 3. (Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))"),
     ):
         findall(f, filter_=lambda node: d in node.path, mincount=4)
     with assert_raises(
         CountError,
-        ("Expecting 2 elements at maximum, but found 3. " "(Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))"),
+        ("Expecting 2 elements at maximum, but found 3. (Node('/f/b/d'), Node('/f/b/d/c'), Node('/f/b/d/e'))"),
     ):
         findall(f, filter_=lambda node: d in node.path, maxcount=2)
 

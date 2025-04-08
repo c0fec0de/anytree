@@ -42,4 +42,3 @@ a (0)
 ... ).to_picture("weight.png")  # doctest: +SKIP
 
 .. image:: ../static/weight.png
-

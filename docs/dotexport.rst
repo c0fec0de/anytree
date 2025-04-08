@@ -19,7 +19,7 @@ This tree::
 Can be rendered to a tree by :any:`RenderTreeGraph`::
 
     >>> from anytree.dotexport import RenderTreeGraph
-    >>> RenderTreeGraph(root).to_picture("tree.png")
+    >>> RenderTreeGraph(root).to_picture("tree.png")  # doctest: +SKIP
 
 .. image:: static/tree.png
 

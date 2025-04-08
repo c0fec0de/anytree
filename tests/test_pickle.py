@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import pickle
 
-from anytree import AnyNode, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter, RenderTree, SymlinkNode, TreeError
+from anytree import Node, RenderTree, SymlinkNode
 
 
 def test_pickle(tmp_path):
-    """Pickling Compatibilty."""
+    """Pickling Compatibility."""
     root = Node(name="root")
     a = Node(name="a", parent=root)
     b = Node(name="b", parent=a)

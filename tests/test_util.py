@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from anytree import Node
 from anytree.util import commonancestors, leftsibling, rightsibling
 
@@ -6,7 +5,7 @@ from .helper import eq_
 
 
 def test_commonancestors():
-    """commonancestors."""
+    """Commonancestors."""
     udo = Node("Udo")
     marc = Node("Marc", parent=udo)
     lian = Node("Lian", parent=marc)
@@ -22,7 +21,7 @@ def test_commonancestors():
 
 
 def test_leftsibling():
-    """leftsibling."""
+    """Leftsibling."""
     dan = Node("Dan")
     jet = Node("Jet", parent=dan)
     jan = Node("Jan", parent=dan)
@@ -34,7 +33,7 @@ def test_leftsibling():
 
 
 def test_rightsibling():
-    """rightsibling."""
+    """Rightsibling."""
     dan = Node("Dan")
     jet = Node("Jet", parent=dan)
     jan = Node("Jan", parent=dan)
