@@ -28,7 +28,7 @@ classifiers = [
 [dependency-groups]
 dev = [
     "coveralls>=3.3.1",
-    "mypy>=1.9.0",
+    "mypy>=1.17.0",
     "pytest-cov>=5.0.0",
     "ruff>=0.11.2",
     "pre-commit>=4.2.0",
@@ -194,5 +194,38 @@ exclude_lines = [
 ]
 
 [tool.mypy]
-disable_error_code = "misc"
+files = ["src/anytree"]
+exclude = [
+    # TODO: Remove these exclusions add missing type annotations
+    "src/anytree/importer",
+    "src/anytree/exporter",
+    "src/anytree/iterators/preorderiter.py",
+    "src/anytree/iterators/postorderiter.py",
+    "src/anytree/iterators/levelorderiter.py",
+    "src/anytree/iterators/zigzaggroupiter.py",
+    "src/anytree/iterators/levelordergroupiter.py",
+    "src/anytree/util",
+    "src/anytree/dotexport.py",
+    "src/anytree/cachedsearch.py",
+    "src/anytree/resolver.py",
+    "src/anytree/search.py",
+    "src/anytree/render.py",
+    "src/anytree/walker.py",
+]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
 ignore_missing_imports = true
+no_implicit_optional = true
+no_implicit_reexport = true
+show_column_numbers = true
+show_error_codes = true
+show_traceback = true
+strict = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true

@@ -5,7 +5,7 @@ from .helper import assert_raises
 
 def test_node_parent_error():
     """Node Parent Error."""
-    with assert_raises(TreeError, "Parent node 'parent' is not of type 'NodeMixin'."):
+    with assert_raises(TreeError, "Parent node 'parent' is not of type 'NodeMixin' or 'LightNodeMixin'."):
         Node("root", "parent")
 
 
@@ -177,7 +177,9 @@ def test_children_setter_large():
 
 def test_node_children_type():
     root = Node("root")
-    with assert_raises(TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin'."):
+    with assert_raises(
+        TreeError, "Cannot add non-node object 'string'. It is not a subclass of 'NodeMixin' or 'LightNodeMixin'."
+    ):
         root.children = ["string"]
 
 
@@ -558,6 +560,9 @@ def test_eq_overwrite():
                 return self.a == other.a and self.b == other.b
             return NotImplemented
 
+        def __hash__(self):
+            return NotImplemented
+
     r = EqOverwrittingNode(0, 0)
     a = EqOverwrittingNode(1, 0, parent=r)
     b = EqOverwrittingNode(1, 0, parent=r)
@@ -571,12 +576,14 @@ def test_eq_overwrite():
 
 def test_tuple():
     """Tuple as parent."""
-    with assert_raises(TreeError, "Parent node (1, 0, 3) is not of type 'NodeMixin'."):
+    with assert_raises(TreeError, "Parent node (1, 0, 3) is not of type 'NodeMixin' or 'LightNodeMixin'."):
         Node((0, 1, 2), parent=(1, 0, 3))
 
 
 def test_tuple_as_children():
     """Tuple as children."""
     n = Node("foo")
-    with assert_raises(TreeError, "Cannot add non-node object (0, 1, 2). It is not a subclass of 'NodeMixin'."):
+    with assert_raises(
+        TreeError, "Cannot add non-node object (0, 1, 2). It is not a subclass of 'NodeMixin' or 'LightNodeMixin'."
+    ):
         n.children = [(0, 1, 2)]

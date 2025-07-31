@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 from .nodemixin import NodeMixin
 
 
-class SymlinkNodeMixin(NodeMixin):
+class SymlinkNodeMixin(NodeMixin["SymlinkNodeMixin"]):
     """
     The :any:`SymlinkNodeMixin` class extends any Python class to a symbolic link to a tree node.
 
@@ -44,14 +46,14 @@ class SymlinkNodeMixin(NodeMixin):
     9
     """
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> object:
         if name in ("_NodeMixin__parent", "_NodeMixin__children"):
-            return super().__getattr__(name)
+            return super().__getattr__(name)  # type: ignore[misc]
         if name == "__setstate__":
             raise AttributeError(name)
         return getattr(self.target, name)
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: object) -> None:
         if name in ("_NodeMixin__parent", "_NodeMixin__children", "parent", "children", "target"):
             super().__setattr__(name, value)
         else:

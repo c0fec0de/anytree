@@ -8,12 +8,12 @@ Tree Iteration.
 * :any:`ZigZagGroupIter`: iterate over tree using level-order strategy returning group for every level
 """
 
-from .abstractiter import AbstractIter
-from .levelordergroupiter import LevelOrderGroupIter
-from .levelorderiter import LevelOrderIter
-from .postorderiter import PostOrderIter
-from .preorderiter import PreOrderIter
-from .zigzaggroupiter import ZigZagGroupIter
+from .abstractiter import AbstractIter as AbstractIter  # noqa: PLC0414
+from .levelordergroupiter import LevelOrderGroupIter as LevelOrderGroupIter  # noqa: PLC0414
+from .levelorderiter import LevelOrderIter as LevelOrderIter  # noqa: PLC0414
+from .postorderiter import PostOrderIter as PostOrderIter  # noqa: PLC0414
+from .preorderiter import PreOrderIter as PreOrderIter  # noqa: PLC0414
+from .zigzaggroupiter import ZigZagGroupIter as ZigZagGroupIter  # noqa: PLC0414
 
 __all__ = [
     "AbstractIter",
