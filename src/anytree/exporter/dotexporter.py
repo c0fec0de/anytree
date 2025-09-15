@@ -292,9 +292,10 @@ class DotExporter:
             dotfilename = dotfile.name
             for line in self:
                 dotfile.write((f"{line}\n").encode())
-            dotfile.flush()
-            cmd = ["dot", dotfilename, "-T", fileformat, "-o", filename]
-            check_call(cmd)
+
+        # Call dot outside with block so dotfile is closed to avoid permission issues
+        cmd = ["dot", dotfilename, "-T", fileformat, "-o", filename]
+        check_call(cmd)
         try:
             remove(dotfilename)
         # pylint: disable=broad-exception-caught
