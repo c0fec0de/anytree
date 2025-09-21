@@ -22,17 +22,23 @@ def test_preorder():
     g = Node("g", parent=f)
     i = Node("i", parent=g)
     h = Node("h", parent=i)
+    k = Node("k", parent=a)
+    o = Node("o", parent=k)
+    m = Node("m", parent=e)
 
-    eq_(list(PreOrderIter(f)), [f, b, a, d, c, e, g, i, h])
+    eq_(list(PreOrderIter(f)), [f, b, a, k, o, d, c, e, m, g, i, h])
     eq_(list(PreOrderIter(f, maxlevel=0)), [])
+    eq_(list(PreOrderIter(f, maxlevel=2)), [f, b, g])
     eq_(list(PreOrderIter(f, maxlevel=3)), [f, b, a, d, g, i])
-    eq_(list(PreOrderIter(f, filter_=lambda n: n.name not in ("e", "g"))), [f, b, a, d, c, i, h])
-    eq_(list(PreOrderIter(f, stop=lambda n: n.name == "d")), [f, b, a, g, i, h])
+    eq_(list(PreOrderIter(f, maxlevel=4)), [f, b, a, k, d, c, e, g, i, h])
+    eq_(list(PreOrderIter(f, maxlevel=f.height + 1)), list(PreOrderIter(f)))
+    eq_(list(PreOrderIter(f, filter_=lambda n: n.name not in ("e", "g"))), [f, b, a, k, o, d, c, m, i, h])
+    eq_(list(PreOrderIter(f, stop=lambda n: n.name == "d")), [f, b, a, k, o, g, i, h])
 
     it = PreOrderIter(f)
     eq_(next(it), f)
     eq_(next(it), b)
-    eq_(list(it), [a, d, c, e, g, i, h])
+    eq_(list(it), [a, k, o, d, c, e, m, g, i, h])
 
 
 def test_postorder():

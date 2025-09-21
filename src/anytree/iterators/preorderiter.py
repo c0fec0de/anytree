@@ -40,11 +40,18 @@ class PreOrderIter(AbstractIter):
 
     @staticmethod
     def _iter(children, filter_, stop, maxlevel):
-        for child_ in children:
+        cur_children = list(reversed(children))
+        descendantmaxlevel = maxlevel
+        while cur_children:
+            child_ = cur_children.pop()
             if stop(child_):
                 continue
             if filter_(child_):
                 yield child_
-            if not AbstractIter._abort_at_level(2, maxlevel):
-                descendantmaxlevel = maxlevel - 1 if maxlevel else None
+            if not AbstractIter._abort_at_level(2, descendantmaxlevel):
+                descendantmaxlevel = descendantmaxlevel - 1 if descendantmaxlevel else None
+                if len(child_.children) == 1:
+                    cur_children.append(child_.children[0])
+                    continue
                 yield from PreOrderIter._iter(child_.children, filter_, stop, descendantmaxlevel)
+            descendantmaxlevel = maxlevel
