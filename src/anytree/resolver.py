@@ -117,6 +117,8 @@ class Resolver:
                 pass
             else:
                 node = self.__get(node, part)
+                if node is None:
+                    return None
         return node
 
     def __get(self, node, name):
