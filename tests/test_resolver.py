@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-from pytest import raises
+from pytest import mark, raises
 
 import anytree as at
 from anytree import Node, Resolver
@@ -56,6 +56,25 @@ def test_get_relaxed():
     assert r.get(top, "..") is None
     assert r.get(sub0sub0, "/") is None
     assert r.get(sub0sub0, "/bar") is None
+
+
+@mark.parametrize("separator", ["/", "|"])
+@mark.parametrize("ignorecase", [False, True])
+@mark.parametrize("path", ["missing/child", "missing/..", "sub0/missing/child", "/top/sub0/missing/.."])
+def test_get_relaxed_missing_intermediate_node(separator, ignorecase, path):
+    top = at.Node("top", separator=separator)
+    sub0 = at.Node("sub0", parent=top, separator=separator)
+    if ignorecase:
+        path = path.upper()
+    path = path.replace("/", separator)
+
+    with raises(at.ChildResolverError) as exc_info:
+        at.Resolver(ignorecase=ignorecase).get(top, path)
+    assert exc_info.value.node is (sub0 if "sub0" in path.lower() else top)
+    assert exc_info.value.child == ("MISSING" if ignorecase else "missing")
+
+    resolver = at.Resolver(ignorecase=ignorecase, relax=True)
+    assert resolver.get(top, path) is None
 
 
 def test_glob():
