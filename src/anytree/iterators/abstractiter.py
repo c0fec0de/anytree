@@ -21,8 +21,8 @@ class AbstractIter:
     def __init(self):
         node = self.node
         maxlevel = self.maxlevel
-        filter_ = self.filter_ or AbstractIter.__default_filter
-        stop = self.stop or AbstractIter.__default_stop
+        filter_ = self.filter_ if self.filter_ is not None else AbstractIter.__default_filter
+        stop = self.stop if self.stop is not None else AbstractIter.__default_stop
         children = [] if AbstractIter._abort_at_level(1, maxlevel) else AbstractIter._get_children([node], stop)
         return self._iter(children, filter_, stop, maxlevel)
 

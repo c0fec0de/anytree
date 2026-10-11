@@ -1,3 +1,5 @@
+import pytest
+
 from anytree import (
     LevelGroupOrderIter,
     LevelOrderGroupIter,
@@ -153,3 +155,29 @@ def test_zigzaggroup():
     eq_(next(it), (f,))
     eq_(next(it), (g, b))
     eq_(list(it), [(a, d, i), (h, e, c)])
+
+
+class NamePredicate(set):
+    def __init__(self, *, stop=False):
+        super().__init__()
+        self.stop = stop
+
+    def __call__(self, node):
+        return (node.name in self) != self.stop
+
+
+@pytest.mark.parametrize(
+    "iterclass", [PreOrderIter, PostOrderIter, LevelOrderIter, LevelOrderGroupIter, ZigZagGroupIter]
+)
+@pytest.mark.parametrize("keyword", ["filter_", "stop"])
+def test_false_valued_predicate(iterclass, keyword):
+    root = Node("root")
+    branch = Node("branch", parent=root)
+    Node("descendant", parent=branch)
+    Node("sibling", parent=root)
+    predicate = NamePredicate(stop=keyword == "stop")
+    result = list(iterclass(root, **{keyword: predicate}))
+    if keyword == "filter_" and iterclass in (LevelOrderGroupIter, ZigZagGroupIter):
+        assert result == [(), (), ()]
+    else:
+        assert result == []
