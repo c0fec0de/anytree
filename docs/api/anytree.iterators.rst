@@ -2,6 +2,9 @@ Tree Iteration
 ==============
 
 .. automodule:: anytree.iterators
+    :no-members:
+
+.. automodule:: anytree.iterators.abstractiter
 
 .. automodule:: anytree.iterators.preorderiter
 

@@ -46,8 +46,8 @@ checktypes: .venv/.valid ## [ALL] Run Type-Checking via 'mypy'
 
 
 .PHONY: doc
-doc: .venv/.valid ## [ALL] Build Documentation via 'mkdocs'
-	${ENV} make html -C docs
+doc: .venv/.valid ## [ALL] Build Documentation via 'sphinx'
+	${ENV} make html -C docs SPHINXOPTS="-n -W --keep-going"
 
 
 .PHONY: code

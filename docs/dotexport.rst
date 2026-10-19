@@ -1,7 +1,11 @@
 Export to DOT
 =============
 
-Any :any:`anytree` graph can be converted to a graphviz_ graph.
+.. note::
+
+    This is the legacy interface. Use :doc:`exporter/dotexporter` for new code.
+
+Any *anytree* graph can be converted to a graphviz_ graph.
 
 This tree::
 

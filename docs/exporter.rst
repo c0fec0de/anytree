@@ -14,6 +14,12 @@ Available exporters:
     exporter/dotexporter
     exporter/mermaidexporter
 
+.. toctree::
+    :maxdepth: 1
+    :caption: Legacy exporter
+
+    dotexport
+
 Exporter missing? File a request here: Issues_.
 
 .. _Issues: https://github.com/c0fec0de/anytree/issues
