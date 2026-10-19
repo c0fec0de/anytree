@@ -10,8 +10,9 @@ class Walker:
         Walk from `start` node to `end` node.
 
         Returns:
-            (upwards, common, downwards): `upwards` is a list of nodes to go upward to.
-            `common` top node. `downwards` is a list of nodes to go downward to.
+            tuple: ``(upwards, common, downwards)``, where ``upwards`` is a tuple of
+            nodes to go upward to, ``common`` is the common ancestor node, and
+            ``downwards`` is a tuple of nodes to go downward to.
 
         Raises:
             WalkError: on no common root node.

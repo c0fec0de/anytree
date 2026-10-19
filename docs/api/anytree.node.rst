@@ -2,6 +2,7 @@ Node Classes
 ============
 
 .. automodule:: anytree.node
+    :no-members:
 
 .. automodule:: anytree.node.anynode
 
