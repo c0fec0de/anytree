@@ -52,7 +52,7 @@ def leftsibling(node):
     >>> print(util.leftsibling(joe))
     Node('/Dan/Jan')
     """
-    if node.parent:
+    if node.parent is not None:
         pchildren = node.parent.children
         idx = pchildren.index(node)
         if idx:
@@ -78,7 +78,7 @@ def rightsibling(node):
     >>> print(util.rightsibling(joe))
     None
     """
-    if node.parent:
+    if node.parent is not None:
         pchildren = node.parent.children
         idx = pchildren.index(node)
         try:

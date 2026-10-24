@@ -4,6 +4,29 @@ from anytree.util import commonancestors, leftsibling, rightsibling
 from .helper import eq_
 
 
+class FalseNode(Node):
+    def __bool__(self):
+        return False
+
+
+def test_leftsibling_false_parent():
+    """Find left siblings even when the parent evaluates to false."""
+    parent = FalseNode("parent")
+    first, middle, last = [Node(str(index), parent=parent) for index in range(3)]
+    assert leftsibling(first) is None
+    assert leftsibling(middle) is first
+    assert leftsibling(last) is middle
+
+
+def test_rightsibling_false_parent():
+    """Find right siblings even when the parent evaluates to false."""
+    parent = FalseNode("parent")
+    first, middle, last = [Node(str(index), parent=parent) for index in range(3)]
+    assert rightsibling(first) is middle
+    assert rightsibling(middle) is last
+    assert rightsibling(last) is None
+
+
 def test_commonancestors():
     """Commonancestors."""
     udo = Node("Udo")
