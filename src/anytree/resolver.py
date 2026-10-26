@@ -256,10 +256,12 @@ class Resolver:
         # handle recursive
         if name == "**":
             matches = []
+            seen = set()
             for subnode in PreOrderIter(node):
                 try:
                     for match in self.__glob(subnode, remainder):
-                        if match not in matches:
+                        if id(match) not in seen:
+                            seen.add(id(match))
                             matches.append(match)
                 except ChildResolverError:
                     pass

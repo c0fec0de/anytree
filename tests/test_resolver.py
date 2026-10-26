@@ -278,3 +278,26 @@ def test_glob_consistency_relax():
 
     assert resolver.glob(node, "/bla") == []
     assert resolver.get(node, "/bla") is None
+
+
+def test_recursive_glob_preserves_distinct_equal_nodes():
+    """Recursive globs deduplicate node identities, not equal values."""
+
+    class ValueNode(Node):
+        def __eq__(self, other):
+            if not isinstance(other, ValueNode):
+                return NotImplemented
+            return self.name == other.name
+
+    root = ValueNode("root")
+    left = ValueNode("left", parent=root)
+    right = ValueNode("right", parent=root)
+    first = ValueNode("leaf", parent=left)
+    second = ValueNode("leaf", parent=right)
+    resolver = Resolver()
+
+    for path in ("**/leaf", "**/**/leaf"):
+        matches = resolver.glob(root, path)
+        assert len(matches) == 2
+        assert matches[0] is first
+        assert matches[1] is second
