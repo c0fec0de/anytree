@@ -455,4 +455,4 @@ class UniqueDotExporter(DotExporter):
 
     @staticmethod
     def _default_nodeattrfunc(node):
-        return f'label="{node.name}"'
+        return f'label="{DotExporter.esc(node.name)}"'

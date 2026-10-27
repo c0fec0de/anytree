@@ -69,10 +69,10 @@ def test_tree_maxlevel(tmp_path, root):
 
 
 def test_esc():
-    """Test proper escape of quotes."""
+    """Test proper escape of quotes and backslashes in default labels."""
     n = Node(r'6"-6\"')
     assert tuple(UniqueDotExporter(n)) == (
         "digraph tree {",
-        '    "0x0" [label="6"-6\\""];',
+        r'    "0x0" [label="6\"-6\\\""];',
         "}",
     )
