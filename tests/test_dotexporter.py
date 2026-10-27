@@ -1,8 +1,8 @@
-from pytest import fixture
+from pytest import fixture, mark
 from test2ref import assert_refdata
 
 from anytree import Node
-from anytree.exporter import DotExporter
+from anytree.exporter import DotExporter, UniqueDotExporter
 
 
 @fixture
@@ -76,3 +76,18 @@ def test_esc():
         r'    "6\"-6\\\"";',
         r"}",
     )
+
+
+@mark.parametrize("exportercls", [DotExporter, UniqueDotExporter])
+@mark.parametrize("stopped", ["child", "grandchild"])
+def test_stopped_nodes_have_no_incoming_edges(exportercls, stopped):
+    root = Node("root")
+    child = Node("child", parent=root)
+    Node("grandchild", parent=child)
+    Node("kept", parent=root)
+    exporter = exportercls(root, stop=lambda node: node.name == stopped, nodenamefunc=lambda node: node.name)
+    lines = tuple(exporter)
+    assert not any(f'"{stopped}"' in line for line in lines)
+    assert '    "root" -> "kept";' in lines
+    if stopped == "grandchild":
+        assert '    "root" -> "child";' in lines

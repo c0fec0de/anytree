@@ -244,7 +244,7 @@ class DotExporter:
         for node in PreOrderIter(self.node, filter_=filter_, stop=self.stop, maxlevel=maxlevel):
             nodename = nodenamefunc(node)
             for child in node.children:
-                if not filter_(child):
+                if not filter_(child) or (self.stop is not None and self.stop(child)):
                     continue
                 childname = nodenamefunc(child)
                 edgeattr = edgeattrfunc(node, child)
