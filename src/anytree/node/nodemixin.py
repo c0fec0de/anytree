@@ -3,6 +3,7 @@ import warnings
 from anytree.config import ASSERTIONS
 from anytree.iterators import PreOrderIter
 
+from ._children import _get_children
 from .exceptions import LoopError, TreeError
 from .lightnodemixin import LightNodeMixin
 
@@ -144,11 +145,11 @@ class NodeMixin:
         # pylint: disable=W0212,W0238
         if parent is not None:
             self._pre_detach(parent)
-            parentchildren = parent.__children_or_empty
+            parentchildren = _get_children(parent)
             if ASSERTIONS:  # pragma: no branch
                 assert any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
             # ATOMIC START
-            parent.__children = [child for child in parentchildren if child is not self]
+            parentchildren[:] = [child for child in parentchildren if child is not self]
             self.__parent = None
             # ATOMIC END
             self._post_detach(parent)
@@ -157,7 +158,7 @@ class NodeMixin:
         # pylint: disable=W0212
         if parent is not None:
             self._pre_attach(parent)
-            parentchildren = parent.__children_or_empty
+            parentchildren = _get_children(parent)
             if ASSERTIONS:  # pragma: no branch
                 assert not any(child is self for child in parentchildren), "Tree is corrupt."  # pragma: no cover
             # ATOMIC START
